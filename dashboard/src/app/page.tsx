@@ -362,12 +362,23 @@ export default function Dashboard() {
                             <div className="flex items-center space-x-4 text-sm text-gray-600">
                               <span className="flex items-center">
                                 <DollarSign className="h-4 w-4 mr-1" />
-                                ${order.total_price.toFixed(2)}
+                                ${(order.final_amount || order.total_price).toFixed(2)}
+                                {order.total_discount && order.total_discount > 0 && (
+                                  <span className="ml-1 text-green-600 text-xs">
+                                    (saved ${order.total_discount.toFixed(2)})
+                                  </span>
+                                )}
                               </span>
                               <span className="flex items-center">
                                 <Clock className="h-4 w-4 mr-1" />
                                 {isClient ? new Date(order.created_at).toLocaleTimeString() : '--:--:--'}
                               </span>
+                              {order.applied_coupons && order.applied_coupons.length > 0 && (
+                                <span className="flex items-center text-green-600">
+                                  <span className="text-lg mr-1">🎟️</span>
+                                  {order.applied_coupons.length} deal{order.applied_coupons.length > 1 ? 's' : ''}
+                                </span>
+                              )}
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
@@ -483,11 +494,65 @@ export default function Dashboard() {
                       })()}
                     </div>
 
-                    {/* Order Summary */}
+                    {/* Applied Coupons Section */}
+                    {selectedOrder.applied_coupons && selectedOrder.applied_coupons.length > 0 && (
+                      <div className="mt-6">
+                        <h4 className="text-lg font-semibold mb-4 flex items-center text-black">
+                          <span className="text-2xl mr-2">🎟️</span>
+                          Applied Coupons ({selectedOrder.applied_coupons.length})
+                        </h4>
+                        <div className="space-y-3">
+                          {selectedOrder.applied_coupons.map((coupon, index) => (
+                            <div key={index} className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3">
+                                  <span className="bg-green-600 text-white text-sm font-bold px-2 py-1 rounded-full">
+                                    {coupon.code}
+                                  </span>
+                                  <div>
+                                    <p className="font-semibold text-gray-900">{coupon.name}</p>
+                                    <p className="text-sm text-gray-600">{coupon.description}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-sm text-green-600 font-medium">Applied</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Order Summary with Discount Breakdown */}
                     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                      <div className="flex justify-between items-center text-lg font-semibold">
-                        <span className="text-gray-900">Order Total:</span>
-                        <span className="text-red-600">${selectedOrder.total_price.toFixed(2)}</span>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center text-lg">
+                          <span className="text-gray-900">Original Total:</span>
+                          <span className="text-gray-600">${selectedOrder.total_price.toFixed(2)}</span>
+                        </div>
+                        
+                        {selectedOrder.total_discount && selectedOrder.total_discount > 0 && (
+                          <>
+                            <div className="flex justify-between items-center text-lg">
+                              <span className="text-gray-900">Discounts:</span>
+                              <span className="text-green-600">-${selectedOrder.total_discount.toFixed(2)}</span>
+                            </div>
+                            <div className="border-t border-gray-300 pt-2">
+                              <div className="flex justify-between items-center text-xl font-semibold">
+                                <span className="text-gray-900">Final Total:</span>
+                                <span className="text-red-600">${(selectedOrder.final_amount || selectedOrder.total_price).toFixed(2)}</span>
+                              </div>
+                            </div>
+                          </>
+                        )}
+                        
+                        {(!selectedOrder.total_discount || selectedOrder.total_discount === 0) && (
+                          <div className="flex justify-between items-center text-xl font-semibold">
+                            <span className="text-gray-900">Order Total:</span>
+                            <span className="text-red-600">${selectedOrder.total_price.toFixed(2)}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

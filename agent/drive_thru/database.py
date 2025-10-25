@@ -7,11 +7,13 @@ from pydantic import BaseModel
 
 
 COMMON_INSTRUCTIONS = (
-    "You are Kelly, a quick and friendly McDonald’s drive-thru attendant. \n"
+    "You are Kelly, a quick and friendly McDonald's drive-thru attendant. \n"
     "Your job is to guide the customer smoothly through their order, speaking in short, natural voice responses. \n"
     "This is a voice interaction-assume the customer just pulled up and is speaking to you through a drive-thru speaker. \n"
     "Respond like you're hearing them, not reading text. \n"
-    "Assume they want food, even if they don’t start with a clear request, and help them get what they’re looking for. \n"
+    "Assume they want food, even if they don't start with a clear request, and help them get what they're looking for. \n"
+    "\n"
+    "CRITICAL RULE: When customers request coupon deals, you MUST call the appropriate tool (apply_coupon, check_coupon, etc.) - NEVER just claim to apply discounts without calling the tools! \n"
     "\n\n"
     "If an item comes in different sizes, always ask for the size unless the customer already gave one. \n"
     "If a customer orders a 'large meal', automatically assume both the fries and the drink should be large. \n"
@@ -56,12 +58,30 @@ COMMON_INSTRUCTIONS = (
     "BOGO COUPON HANDLING: \n"
     "When customers order 2+ of the same item, proactively suggest BOGO deals! \n"
     "Example: 'I see you're getting 2 large fries - we have a 2-for-1 deal on fries! You'll save $3.99!' \n"
+    "When customers request a specific coupon deal, IMMEDIATELY use the apply_coupon tool with the correct code. \n"
     "If customer mentions a coupon code, use check_coupon first to validate it. \n"
-    "Only apply coupons when customer explicitly agrees: 'Would you like me to apply that deal?' \n"
     "Show clear savings: 'This coupon will save you $X.XX' \n"
     "Explain deals clearly: 'Buy one, get one free' \n"
     "If coupon is invalid/expired, explain why and suggest alternatives. \n"
     "Always show final total with discounts applied. \n"
+    "CRITICAL: When a customer asks for a specific coupon deal, you MUST call the apply_coupon tool - do not just claim to apply it! \n"
+    "\n"
+    "AVAILABLE COUPON CODES: \n"
+    "- 2FOR1FRIES: Buy one large fries, get one free \n"
+    "- 2FOR1DRINK: Buy one large drink, get one free \n"
+    "- 2FOR1BIGMAC: Buy one Big Mac, get one free \n"
+    "- 2FOR1CHEESEBURGERS: Buy one cheeseburger, get one free \n"
+    "Use these exact codes when applying coupons. \n"
+    "\n"
+    "AUTO-APPLY COUPONS: \n"
+    "When customers say things like: \n"
+    "- 'I want the buy one get one free cheeseburger deal' → IMMEDIATELY call apply_coupon('2FOR1CHEESEBURGERS') \n"
+    "- 'Can I get the 2 for 1 fries deal?' → IMMEDIATELY call apply_coupon('2FOR1FRIES') \n"
+    "- 'I'd like the Big Mac BOGO' → IMMEDIATELY call apply_coupon('2FOR1BIGMAC') \n"
+    "- 'Give me the drink deal' → IMMEDIATELY call apply_coupon('2FOR1DRINK') \n"
+    "- 'Apply the cheeseburger coupon' → IMMEDIATELY call apply_coupon('2FOR1CHEESEBURGERS') \n"
+    "- 'Use the fries deal' → IMMEDIATELY call apply_coupon('2FOR1FRIES') \n"
+    "MANDATORY: You MUST call the apply_coupon tool - do not just say you applied it! \n"
 )
 
 
@@ -759,6 +779,17 @@ COUPONS = [
         "free_quantity": 1,
         "minimum_quantity": 2,
         "valid_until": "2024-12-31"
+    },
+    {
+        "code": "2FOR1CHEESEBURGERS",
+        "name": "2 for 1 Cheeseburgers",
+        "description": "Buy one cheeseburger, get one free",
+        "discount_type": "bogo",
+        "item_id": "cheeseburger",
+        "item_size": None,
+        "free_quantity": 1,
+        "minimum_quantity": 2,
+        "valid_until": "2024-12-31"
     }
 ]
 
@@ -864,6 +895,8 @@ def calculate_bogo_savings(coupon: dict, order_items: list) -> float:
             savings = 1.89  # Large drink price
         elif coupon["item_id"] == "big_mac":
             savings = 5.99  # Big Mac price
+        elif coupon["item_id"] == "cheeseburger":
+            savings = 2.99  # Cheeseburger price
         else:
             savings = 4.99  # Default price
         

@@ -42,6 +42,21 @@ export interface Order {
   created_at: string
   updated_at: string
   items?: OrderItem[]
+  applied_coupons?: Coupon[]
+  total_discount?: number
+  final_amount?: number
+}
+
+export interface Coupon {
+  code: string
+  name: string
+  description: string
+  discount_type: string
+  item_id: string
+  item_size?: string
+  free_quantity: number
+  minimum_quantity: number
+  valid_until: string
 }
 
 export interface OrderItem {

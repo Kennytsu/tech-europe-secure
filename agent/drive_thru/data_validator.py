@@ -293,6 +293,9 @@ class DataTransformer:
                 'status': order_state.status.value,
                 'total_price': order_state.total_price,
                 'item_count': len(order_state.items),
+                'applied_coupons': order_state.applied_coupons,
+                'total_discount': order_state.total_discount,
+                'final_amount': order_state.final_amount,
             }
         except Exception as e:
             self.logger.error(f"Failed to transform order state: {e}")

@@ -103,6 +103,11 @@ class Order(Base):
     total_price = Column(Float, nullable=False, default=0.0)
     item_count = Column(Integer, nullable=False, default=0)
     
+    # BOGO Coupon fields
+    applied_coupons = Column(JSON, nullable=True, default=list)
+    total_discount = Column(Float, nullable=False, default=0.0)
+    final_amount = Column(Float, nullable=False, default=0.0)
+    
     # Timestamps
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -288,6 +293,9 @@ class OrderResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     items: List[Dict[str, Any]] = []
+    applied_coupons: List[Dict[str, Any]] = []
+    total_discount: float = 0.0
+    final_amount: float = 0.0
 
 
 class MetricsResponse(BaseModel):

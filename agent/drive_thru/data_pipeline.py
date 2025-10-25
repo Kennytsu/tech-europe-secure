@@ -476,6 +476,9 @@ class DataPipeline:
                         item_count=order.item_count,
                         created_at=order.created_at,
                         updated_at=order.updated_at,
+                        applied_coupons=order.applied_coupons or [],
+                        total_discount=order.total_discount or 0.0,
+                        final_amount=order.final_amount or 0.0,
                         items=[
                             {
                                 "id": str(item.id),
@@ -523,6 +526,9 @@ class DataPipeline:
                         item_count=order.item_count,
                         created_at=order.created_at,
                         updated_at=order.updated_at,
+                        applied_coupons=order.applied_coupons or [],
+                        total_discount=order.total_discount or 0.0,
+                        final_amount=order.final_amount or 0.0,
                         items=[
                             {
                                 "id": str(item.id),
