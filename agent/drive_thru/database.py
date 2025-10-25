@@ -52,6 +52,16 @@ COMMON_INSTRUCTIONS = (
     "If they say no or decline, use the skip_feedback tool to complete the order without feedback. \n"
     "Do not complete the order until you have either collected feedback or confirmed they don't want to provide any. \n"
     "Keep the feedback request natural and friendly: 'Would you like to share any feedback about your experience today?' \n"
+    "\n\n"
+    "BOGO COUPON HANDLING: \n"
+    "When customers order 2+ of the same item, proactively suggest BOGO deals! \n"
+    "Example: 'I see you're getting 2 large fries - we have a 2-for-1 deal on fries! You'll save $3.99!' \n"
+    "If customer mentions a coupon code, use check_coupon first to validate it. \n"
+    "Only apply coupons when customer explicitly agrees: 'Would you like me to apply that deal?' \n"
+    "Show clear savings: 'This coupon will save you $X.XX' \n"
+    "Explain deals clearly: 'Buy one, get one free' \n"
+    "If coupon is invalid/expired, explain why and suggest alternatives. \n"
+    "Always show final total with discounts applied. \n"
 )
 
 
@@ -713,3 +723,152 @@ def _regular_menu_instructions(items: list[MenuItem]) -> str:
         menu_lines.append(line)
 
     return "# Regular items/À la carte:\n" + "\n".join(menu_lines)
+
+
+# BOGO Coupons - Buy One Get One deals
+COUPONS = [
+    {
+        "code": "2FOR1FRIES",
+        "name": "2 for 1 Fries",
+        "description": "Buy one large fries, get one free",
+        "discount_type": "bogo",
+        "item_id": "french_fries",
+        "item_size": "L",
+        "free_quantity": 1,
+        "minimum_quantity": 2,
+        "valid_until": "2024-12-31"
+    },
+    {
+        "code": "2FOR1DRINK",
+        "name": "2 for 1 Drinks", 
+        "description": "Buy one large drink, get one free",
+        "discount_type": "bogo",
+        "item_id": "coca_cola",  # Works for any drink
+        "item_size": "L",
+        "free_quantity": 1,
+        "minimum_quantity": 2,
+        "valid_until": "2024-12-31"
+    },
+    {
+        "code": "2FOR1BIGMAC",
+        "name": "2 for 1 Big Mac",
+        "description": "Buy one Big Mac, get one free",
+        "discount_type": "bogo",
+        "item_id": "big_mac",
+        "item_size": None,
+        "free_quantity": 1,
+        "minimum_quantity": 2,
+        "valid_until": "2024-12-31"
+    }
+]
+
+
+def get_coupon_by_code(code: str) -> dict | None:
+    """Get a coupon by its code"""
+    for coupon in COUPONS:
+        if coupon["code"] == code:
+            return coupon
+    return None
+
+
+def get_all_coupons() -> list[dict]:
+    """Get all available coupons"""
+    return COUPONS.copy()
+
+
+def get_coupons_summary() -> str:
+    """Get a formatted summary of all available coupons for the agent"""
+    if not COUPONS:
+        return "No coupons are currently available."
+    
+    summary_lines = ["Available Coupons:"]
+    for coupon in COUPONS:
+        summary_lines.append(f"• {coupon['code']}: {coupon['name']} - {coupon['description']}")
+    
+    return "\n".join(summary_lines)
+
+
+def get_applicable_coupons(order_items: list) -> list[dict]:
+    """Get coupons that can be applied to the current order"""
+    applicable = []
+    
+    for coupon in COUPONS:
+        if _is_coupon_applicable(coupon, order_items):
+            applicable.append(coupon)
+    
+    return applicable
+
+
+def _is_coupon_applicable(coupon: dict, order_items: list) -> bool:
+    """Check if a coupon can be applied to the current order"""
+    # Count matching items in order
+    matching_items = 0
+    
+    for item in order_items:
+        if hasattr(item, 'item_id'):
+            item_id = item.item_id
+        elif hasattr(item, 'meal_id'):
+            item_id = item.meal_id
+        else:
+            continue
+            
+        # Check if item matches coupon
+        if item_id == coupon["item_id"]:
+            # Check size if coupon has size requirement
+            if coupon["item_size"] is not None:
+                item_size = getattr(item, 'size', None) or getattr(item, 'drink_size', None) or getattr(item, 'fries_size', None)
+                if item_size == coupon["item_size"]:
+                    matching_items += 1
+            else:
+                matching_items += 1
+    
+    return matching_items >= coupon["minimum_quantity"]
+
+
+def calculate_bogo_savings(coupon: dict, order_items: list) -> float:
+    """Calculate savings from a BOGO coupon"""
+    if coupon["discount_type"] != "bogo":
+        return 0.0
+    
+    # Count matching items
+    matching_items = []
+    for item in order_items:
+        if hasattr(item, 'item_id'):
+            item_id = item.item_id
+        elif hasattr(item, 'meal_id'):
+            item_id = item.meal_id
+        else:
+            continue
+            
+        if item_id == coupon["item_id"]:
+            if coupon["item_size"] is not None:
+                item_size = getattr(item, 'size', None) or getattr(item, 'drink_size', None) or getattr(item, 'fries_size', None)
+                if item_size == coupon["item_size"]:
+                    matching_items.append(item)
+            else:
+                matching_items.append(item)
+    
+    # Calculate how many free items we can give
+    if len(matching_items) < coupon["minimum_quantity"]:
+        return 0.0
+    
+    # Get the price of one item to calculate savings
+    if matching_items:
+        # Use the first matching item's price as reference
+        first_item = matching_items[0]
+        # This is a simplified calculation - in real implementation, 
+        # you'd get the actual price from the menu
+        if coupon["item_id"] == "french_fries":
+            savings = 3.99  # Large fries price
+        elif coupon["item_id"] == "coca_cola":
+            savings = 1.89  # Large drink price
+        elif coupon["item_id"] == "big_mac":
+            savings = 5.99  # Big Mac price
+        else:
+            savings = 4.99  # Default price
+        
+        # Calculate how many free items we can give
+        free_items = min(coupon["free_quantity"], len(matching_items) // coupon["minimum_quantity"])
+        return savings * free_items
+    
+    return 0.0

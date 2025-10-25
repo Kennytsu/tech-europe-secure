@@ -37,6 +37,8 @@ from drive_thru.database import (
     MenuItem,
     find_items_by_id,
     menu_instructions,
+    get_coupon_by_code,
+    get_coupons_summary,
 )
 from drive_thru.order import (
     OrderedCombo, 
@@ -303,6 +305,11 @@ class DriveThruAgent(Agent):
                 self.build_request_feedback_tool(),
                 self.build_collect_feedback_tool(),
                 self.build_skip_feedback_tool(),
+                # BOGO Coupon tools
+                self.build_apply_coupon_tool(),
+                self.build_check_coupon_tool(),
+                self.build_list_coupons_tool(),
+                self.build_remove_coupon_tool(),
             ],
         )
     
@@ -946,6 +953,119 @@ class DriveThruAgent(Agent):
             return f"Thank you! Your order is now complete. Order ID: {ctx.userdata.order.conversation_metrics.conversation_id}"
         
         return skip_feedback
+
+    def build_apply_coupon_tool(self) -> FunctionTool:
+        @function_tool
+        async def apply_coupon(ctx: RunContext[Userdata], coupon_code: str) -> str:
+            """
+            Apply a BOGO coupon code to the current order.
+            Call this when the customer wants to use a specific coupon code.
+            
+            Args:
+                coupon_code: The coupon code to apply (e.g., "2FOR1FRIES")
+            """
+            # Get coupon by code
+            coupon = get_coupon_by_code(coupon_code)
+            if not coupon:
+                return f"Sorry, I couldn't find a coupon with code '{coupon_code}'. Please check the code and try again."
+            
+            # Check if coupon is already applied
+            for applied_coupon in ctx.userdata.order.applied_coupons:
+                if applied_coupon["code"] == coupon_code:
+                    return f"The coupon '{coupon['name']}' is already applied to your order."
+            
+            # Check if coupon is applicable to current order
+            if not ctx.userdata.order._is_coupon_applicable(coupon):
+                return f"Sorry, the coupon '{coupon['name']}' doesn't apply to your current order. You need {coupon['minimum_quantity']} {coupon['item_id']} items to use this coupon."
+            
+            # Apply the coupon
+            success = ctx.userdata.order.apply_coupon(coupon)
+            if success:
+                savings = ctx.userdata.order._calculate_bogo_savings(coupon)
+                ctx.userdata.order.increment_tool_calls(successful=True)
+                ctx.userdata.metrics.update_tool_call_metrics(ctx.userdata.session_id, successful=True)
+                
+                return f"Great! I've applied the '{coupon['name']}' coupon to your order. You'll save ${savings:.2f}! Your new total is ${ctx.userdata.order.final_amount:.2f}."
+            else:
+                return f"Sorry, I couldn't apply the coupon '{coupon['name']}'. Please try again."
+        
+        return apply_coupon
+
+    def build_check_coupon_tool(self) -> FunctionTool:
+        @function_tool
+        async def check_coupon(ctx: RunContext[Userdata], coupon_code: str) -> str:
+            """
+            Check if a coupon code is valid and what discount it provides.
+            Call this when the customer mentions a coupon code to validate it.
+            
+            Args:
+                coupon_code: The coupon code to check (e.g., "2FOR1FRIES")
+            """
+            # Get coupon by code
+            coupon = get_coupon_by_code(coupon_code)
+            if not coupon:
+                return f"Sorry, I couldn't find a coupon with code '{coupon_code}'. Please check the code and try again."
+            
+            # Check if coupon is applicable to current order
+            if ctx.userdata.order._is_coupon_applicable(coupon):
+                savings = ctx.userdata.order._calculate_bogo_savings(coupon)
+                return f"Great! The coupon '{coupon['name']}' is valid and applies to your order. You'll save ${savings:.2f} with this deal. Would you like me to apply it?"
+            else:
+                return f"The coupon '{coupon['name']}' is valid, but it doesn't apply to your current order. You need {coupon['minimum_quantity']} {coupon['item_id']} items to use this coupon."
+        
+        return check_coupon
+
+    def build_list_coupons_tool(self) -> FunctionTool:
+        @function_tool
+        async def list_coupons(ctx: RunContext[Userdata]) -> str:
+            """
+            List all available coupons and deals.
+            Call this when the customer asks about available coupons or deals.
+            """
+            summary = get_coupons_summary()
+            applicable = ctx.userdata.order.get_applicable_coupons()
+            
+            if applicable:
+                applicable_text = "\n\nCoupons that apply to your current order:\n"
+                for coupon in applicable:
+                    savings = ctx.userdata.order._calculate_bogo_savings(coupon)
+                    applicable_text += f"• {coupon['name']} - Save ${savings:.2f}\n"
+                return summary + applicable_text
+            else:
+                return summary + "\n\nNo coupons currently apply to your order, but feel free to ask about any of these deals!"
+        
+        return list_coupons
+
+    def build_remove_coupon_tool(self) -> FunctionTool:
+        @function_tool
+        async def remove_coupon(ctx: RunContext[Userdata], coupon_code: str) -> str:
+            """
+            Remove a coupon from the current order.
+            Call this when the customer wants to remove a previously applied coupon.
+            
+            Args:
+                coupon_code: The coupon code to remove (e.g., "2FOR1FRIES")
+            """
+            # Check if coupon is applied
+            coupon_found = False
+            for applied_coupon in ctx.userdata.order.applied_coupons:
+                if applied_coupon["code"] == coupon_code:
+                    coupon_found = True
+                    break
+            
+            if not coupon_found:
+                return f"Sorry, I couldn't find a coupon with code '{coupon_code}' applied to your order."
+            
+            # Remove the coupon
+            success = ctx.userdata.order.remove_coupon(coupon_code)
+            if success:
+                ctx.userdata.order.increment_tool_calls(successful=True)
+                ctx.userdata.metrics.update_tool_call_metrics(ctx.userdata.session_id, successful=True)
+                return f"Done! I've removed the coupon from your order. Your new total is ${ctx.userdata.order.final_amount:.2f}."
+            else:
+                return f"Sorry, I couldn't remove the coupon. Please try again."
+        
+        return remove_coupon
 
     async def stt_node(
         self, audio_input: AsyncIterator, model_settings: "ModelSettings"

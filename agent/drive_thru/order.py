@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import secrets
 import string
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Annotated, Literal, Union, Optional
+from typing import Annotated, Literal, Union, Optional, List, Dict
 from enum import Enum
 
 from pydantic import BaseModel, Field
@@ -95,6 +95,10 @@ class OrderState:
     total_price: float = 0.0
     created_at: datetime = None
     updated_at: datetime = None
+    # BOGO Coupon fields
+    applied_coupons: List[Dict] = field(default_factory=list)
+    total_discount: float = 0.0
+    final_amount: float = 0.0
 
     def __post_init__(self):
         if self.conversation_metrics is None:
@@ -126,6 +130,8 @@ class OrderState:
             price = self._calculate_item_price(item)
             total += price
         self.total_price = total
+        # Recalculate discounts when price changes
+        self._calculate_discounts()
 
     def _calculate_item_price(self, item: OrderedItem) -> float:
         """Calculate item price based on McDonald's menu pricing"""
@@ -256,3 +262,71 @@ class OrderState:
             self.conversation_metrics.tool_calls_count += 1
             if successful:
                 self.conversation_metrics.successful_tool_calls += 1
+
+    # BOGO Coupon Methods
+    def apply_coupon(self, coupon: Dict) -> bool:
+        """Apply a BOGO coupon to the order"""
+        if self._is_coupon_applicable(coupon):
+            self.applied_coupons.append(coupon)
+            self._calculate_discounts()
+            self.updated_at = datetime.utcnow()
+            return True
+        return False
+
+    def remove_coupon(self, coupon_code: str) -> bool:
+        """Remove a coupon from the order"""
+        for i, coupon in enumerate(self.applied_coupons):
+            if coupon["code"] == coupon_code:
+                self.applied_coupons.pop(i)
+                self._calculate_discounts()
+                self.updated_at = datetime.utcnow()
+                return True
+        return False
+
+    def get_applicable_coupons(self) -> List[Dict]:
+        """Get coupons that can be applied to current order"""
+        from .database import get_applicable_coupons
+        return get_applicable_coupons(list(self.items.values()))
+
+    def _is_coupon_applicable(self, coupon: Dict) -> bool:
+        """Check if a coupon can be applied to the current order"""
+        from .database import _is_coupon_applicable
+        return _is_coupon_applicable(coupon, list(self.items.values()))
+
+    def _calculate_discounts(self) -> None:
+        """Calculate total discounts from applied coupons"""
+        self.total_discount = 0.0
+        
+        for coupon in self.applied_coupons:
+            if coupon["discount_type"] == "bogo":
+                savings = self._calculate_bogo_savings(coupon)
+                self.total_discount += savings
+        
+        self.final_amount = max(0.0, self.total_price - self.total_discount)
+
+    def _calculate_bogo_savings(self, coupon: Dict) -> float:
+        """Calculate savings from a BOGO coupon"""
+        from .database import calculate_bogo_savings
+        return calculate_bogo_savings(coupon, list(self.items.values()))
+
+    def get_final_amount(self) -> float:
+        """Get final amount after all discounts"""
+        return self.final_amount
+
+    def get_discount_breakdown(self) -> Dict[str, float]:
+        """Get breakdown of discounts by coupon"""
+        breakdown = {}
+        for coupon in self.applied_coupons:
+            savings = self._calculate_bogo_savings(coupon)
+            breakdown[coupon["name"]] = savings
+        return breakdown
+
+    def get_all_available_coupons(self) -> List[Dict]:
+        """Get all available coupons (not just applicable ones)"""
+        from .database import get_all_coupons
+        return get_all_coupons()
+
+    def get_coupons_summary(self) -> str:
+        """Get a formatted summary of all available coupons"""
+        from .database import get_coupons_summary
+        return get_coupons_summary()
