@@ -260,6 +260,9 @@ class Userdata:
     sauce_items: list[MenuItem]
     metrics: DriveThruMetrics
     session_id: str
+    feedback_requested: bool = False
+    feedback_collected: bool = False
+    customer_feedback: str = ""
 
 
 class DriveThruAgent(Agent):
@@ -297,6 +300,9 @@ class DriveThruAgent(Agent):
                 self.build_cancel_order_tool(),
                 self.build_order_summary_tool(),
                 self.build_metrics_tool(),
+                self.build_request_feedback_tool(),
+                self.build_collect_feedback_tool(),
+                self.build_skip_feedback_tool(),
             ],
         )
     
@@ -660,37 +666,13 @@ class DriveThruAgent(Agent):
             if not ctx.userdata.order.items:
                 return "The order is empty. Please add some items before completing the order."
             
-            ctx.userdata.order.mark_completed()
-            ctx.userdata.order.increment_tool_calls(successful=True)
-            ctx.userdata.metrics.update_tool_call_metrics(ctx.userdata.session_id, successful=True)
+            # Mark that we're requesting feedback
+            ctx.userdata.feedback_requested = True
             
-            # Update total price before saving
+            # Update total price before showing summary
             await ctx.userdata.order._update_total_price()
-            print(f"💰 Order completed with total: ${ctx.userdata.order.total_price:.2f}")
             
-            # Automatically save data when order is completed
-            try:
-                # Finalize metrics
-                ctx.userdata.metrics.end_session_metrics(ctx.userdata.session_id, ctx.userdata.order)
-                final_metrics = ctx.userdata.metrics.export_metrics()
-                
-                # Process through data pipeline
-                pipeline_result = await data_pipeline.process_conversation_data(
-                    ctx.userdata.session_id,
-                    ctx.userdata.order,
-                    final_metrics
-                )
-                
-                if pipeline_result['status'] == 'success':
-                    print(f"✅ Order data saved to database: {pipeline_result['conversation_id']}")
-                else:
-                    print(f"⚠️ Data pipeline warning: {pipeline_result['message']}")
-                    
-            except Exception as e:
-                print(f"❌ Data pipeline error: {e}")
-                # Don't fail the order completion if data pipeline fails
-            
-            return f"Order completed successfully! Total items: {len(ctx.userdata.order.items)}. Order ID: {ctx.userdata.order.conversation_metrics.conversation_id}"
+            return f"Perfect! Your order is ready. Total: ${ctx.userdata.order.total_price:.2f} for {len(ctx.userdata.order.items)} items. Would you like to provide any feedback about your experience today?"
         
         return complete_order
 
@@ -833,6 +815,137 @@ class DriveThruAgent(Agent):
             return metrics_report
         
         return get_real_time_metrics
+
+    def build_request_feedback_tool(self) -> FunctionTool:
+        @function_tool
+        async def request_feedback(ctx: RunContext[Userdata]) -> str:
+            """
+            Ask the customer if they want to provide feedback.
+            Call this when the customer has completed their order and you want to ask for feedback.
+            """
+            if not ctx.userdata.feedback_requested:
+                return "Please complete the order first before requesting feedback."
+            
+            if ctx.userdata.feedback_collected:
+                return "Feedback has already been collected for this order."
+            
+            return "Would you like to share any feedback about your experience today? You can tell me what you thought about the service, the ordering process, or anything else!"
+        
+        return request_feedback
+
+    def build_collect_feedback_tool(self) -> FunctionTool:
+        @function_tool
+        async def collect_feedback(ctx: RunContext[Userdata], feedback_text: str) -> str:
+            """
+            Collect feedback from the customer.
+            Call this when the customer provides feedback text.
+            
+            Args:
+                feedback_text: The feedback text provided by the customer
+            """
+            if not ctx.userdata.feedback_requested:
+                return "Please complete the order first before collecting feedback."
+            
+            if ctx.userdata.feedback_collected:
+                return "Feedback has already been collected for this order."
+            
+            # Store the feedback
+            ctx.userdata.customer_feedback = feedback_text
+            ctx.userdata.feedback_collected = True
+            
+            # Also store in conversation metrics for data pipeline
+            ctx.userdata.order.conversation_metrics.feedback = feedback_text
+            
+            # Now complete the order with feedback
+            ctx.userdata.order.mark_completed()
+            ctx.userdata.order.increment_tool_calls(successful=True)
+            ctx.userdata.metrics.update_tool_call_metrics(ctx.userdata.session_id, successful=True)
+            
+            # Update total price before saving
+            await ctx.userdata.order._update_total_price()
+            print(f"💰 Order completed with total: ${ctx.userdata.order.total_price:.2f}")
+            print(f"📝 Customer feedback: {feedback_text}")
+            
+            # Automatically save data when order is completed
+            try:
+                # Finalize metrics
+                ctx.userdata.metrics.end_session_metrics(ctx.userdata.session_id, ctx.userdata.order)
+                final_metrics = ctx.userdata.metrics.export_metrics()
+                
+                # Process through data pipeline
+                pipeline_result = await data_pipeline.process_conversation_data(
+                    ctx.userdata.session_id,
+                    ctx.userdata.order,
+                    final_metrics
+                )
+                
+                if pipeline_result['status'] == 'success':
+                    print(f"✅ Order data saved to database: {pipeline_result['conversation_id']}")
+                else:
+                    print(f"⚠️ Data pipeline warning: {pipeline_result['message']}")
+                    
+            except Exception as e:
+                print(f"❌ Data pipeline error: {e}")
+                # Don't fail the order completion if data pipeline fails
+            
+            return f"Thank you for your feedback! Your order is now complete. Order ID: {ctx.userdata.order.conversation_metrics.conversation_id}"
+        
+        return collect_feedback
+
+    def build_skip_feedback_tool(self) -> FunctionTool:
+        @function_tool
+        async def skip_feedback(ctx: RunContext[Userdata]) -> str:
+            """
+            Skip feedback collection and complete the order.
+            Call this when the customer declines to provide feedback.
+            """
+            if not ctx.userdata.feedback_requested:
+                return "Please complete the order first before skipping feedback."
+            
+            if ctx.userdata.feedback_collected:
+                return "Feedback has already been collected for this order."
+            
+            # Mark feedback as collected (but empty)
+            ctx.userdata.feedback_collected = True
+            
+            # Set feedback as None in conversation metrics to indicate no feedback provided
+            ctx.userdata.order.conversation_metrics.feedback = None
+            
+            # Now complete the order without feedback
+            ctx.userdata.order.mark_completed()
+            ctx.userdata.order.increment_tool_calls(successful=True)
+            ctx.userdata.metrics.update_tool_call_metrics(ctx.userdata.session_id, successful=True)
+            
+            # Update total price before saving
+            await ctx.userdata.order._update_total_price()
+            print(f"💰 Order completed with total: ${ctx.userdata.order.total_price:.2f}")
+            print("📝 No feedback provided by customer")
+            
+            # Automatically save data when order is completed
+            try:
+                # Finalize metrics
+                ctx.userdata.metrics.end_session_metrics(ctx.userdata.session_id, ctx.userdata.order)
+                final_metrics = ctx.userdata.metrics.export_metrics()
+                
+                # Process through data pipeline
+                pipeline_result = await data_pipeline.process_conversation_data(
+                    ctx.userdata.session_id,
+                    ctx.userdata.order,
+                    final_metrics
+                )
+                
+                if pipeline_result['status'] == 'success':
+                    print(f"✅ Order data saved to database: {pipeline_result['conversation_id']}")
+                else:
+                    print(f"⚠️ Data pipeline warning: {pipeline_result['message']}")
+                    
+            except Exception as e:
+                print(f"❌ Data pipeline error: {e}")
+                # Don't fail the order completion if data pipeline fails
+            
+            return f"Thank you! Your order is now complete. Order ID: {ctx.userdata.order.conversation_metrics.conversation_id}"
+        
+        return skip_feedback
 
     async def stt_node(
         self, audio_input: AsyncIterator, model_settings: "ModelSettings"

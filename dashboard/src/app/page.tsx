@@ -629,6 +629,33 @@ export default function Dashboard() {
                             </div>
                           </div>
 
+                          {/* Customer Feedback */}
+                          {relatedConversation.feedback && (
+                            <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                              <h4 className="text-lg font-semibold text-green-900 mb-3 flex items-center">
+                                <Star className="h-5 w-5 mr-2" />
+                                Customer Feedback
+                              </h4>
+                              <div className="bg-white rounded border p-4">
+                                <div className="flex items-start space-x-3">
+                                  <div className="flex-shrink-0">
+                                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                      <span className="text-green-600 text-sm font-semibold">💬</span>
+                                    </div>
+                                  </div>
+                                  <div className="flex-1">
+                                    <p className="text-sm text-gray-700 leading-relaxed italic">
+                                      "{relatedConversation.feedback}"
+                                    </p>
+                                    <p className="text-xs text-gray-500 mt-2">
+                                      Customer feedback from this conversation
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
                           {/* Conversation Summary */}
                           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                             <h4 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">

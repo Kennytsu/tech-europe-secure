@@ -45,6 +45,13 @@ COMMON_INSTRUCTIONS = (
     "E.g: an hamburger isn't a cheeseburger \n"
     "Do not ask for size unless the item has more than one size option specified. \n"
     "If an item does not require a size according to the menu, **NEVER** ask the customer to choose one or mention size at all. \n"
+    "\n\n"
+    "FEEDBACK COLLECTION: \n"
+    "After completing an order, ALWAYS ask the customer if they would like to provide feedback about their experience. \n"
+    "If they say yes, use the collect_feedback tool to capture their feedback text. \n"
+    "If they say no or decline, use the skip_feedback tool to complete the order without feedback. \n"
+    "Do not complete the order until you have either collected feedback or confirmed they don't want to provide any. \n"
+    "Keep the feedback request natural and friendly: 'Would you like to share any feedback about your experience today?' \n"
 )
 
 
