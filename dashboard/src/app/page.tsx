@@ -229,45 +229,6 @@ export default function Dashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-red-500">
-            <div className="flex items-center">
-              <ShoppingCart className="h-8 w-8 text-red-500 mr-3" />
-              <div>
-                <div className="text-2xl font-bold text-gray-900">{orders.length}</div>
-                <div className="text-sm text-gray-600">Active Orders</div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500">
-            <div className="flex items-center">
-              <DollarSign className="h-8 w-8 text-green-500 mr-3" />
-              <div>
-                <div className="text-2xl font-bold text-gray-900">${metrics?.total_revenue?.toFixed(2) || '0.00'}</div>
-                <div className="text-sm text-gray-600">Today's Revenue</div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500">
-            <div className="flex items-center">
-              <Clock className="h-8 w-8 text-blue-500 mr-3" />
-              <div>
-                <div className="text-2xl font-bold text-gray-900">{Math.round(metrics?.average_duration || 0)}s</div>
-                <div className="text-sm text-gray-600">Avg Order Time</div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-yellow-500">
-            <div className="flex items-center">
-              <Activity className="h-8 w-8 text-yellow-500 mr-3" />
-              <div>
-                <div className="text-2xl font-bold text-gray-900">{metrics?.successful_orders || 0}</div>
-                <div className="text-sm text-gray-600">Completed Today</div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Main Content - Orders Only */}
         <div className="grid grid-cols-1 gap-8">
