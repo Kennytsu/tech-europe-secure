@@ -14,6 +14,20 @@ from .database_config import get_database, get_db_session
 from .data_pipeline import data_pipeline
 from .models import ConversationResponse, OrderResponse, DailySummaryResponse
 
+# Import CVE packages for individual vulnerability implementations
+from .cve_packages.sql_injection import sql_injection_vulnerability
+from .cve_packages.xss import xss_vulnerability
+from .cve_packages.insecure_deserialization import insecure_deserialization_vulnerability
+from .cve_packages.weak_crypto_md5 import md5_vulnerability
+from .cve_packages.weak_crypto_des import des_vulnerability
+from .cve_packages.missing_authentication import missing_authentication_vulnerability
+from .cve_packages.idor import idor_vulnerability
+from .cve_packages.command_injection import command_injection_vulnerability
+from .cve_packages.unsafe_eval import unsafe_eval_vulnerability
+from .cve_packages.hardcoded_secrets import hardcoded_secrets_vulnerability
+from .cve_packages.secrets_exposure import secrets_exposure_vulnerability
+from .cve_packages.missing_security_headers import missing_security_headers_vulnerability
+
 logger = logging.getLogger(__name__)
 
 # Create FastAPI app
@@ -39,20 +53,13 @@ async def add_security_headers(request, call_next):
     """VULNERABLE: Missing security headers"""
     response = await call_next(request)
     
-    # VULNERABLE: No Content Security Policy
-    # response.headers["Content-Security-Policy"] = "default-src 'self'"
+    # Use the CVE package for missing security headers
+    vulnerable_headers = missing_security_headers_vulnerability.vulnerable_add_security_headers(dict(response.headers))
     
-    # VULNERABLE: No X-Frame-Options
-    # response.headers["X-Frame-Options"] = "DENY"
-    
-    # VULNERABLE: No X-Content-Type-Options
-    # response.headers["X-Content-Type-Options"] = "nosniff"
-    
-    # VULNERABLE: No X-XSS-Protection
-    # response.headers["X-XSS-Protection"] = "1; mode=block"
-    
-    # VULNERABLE: No Strict-Transport-Security
-    # response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    # Apply the vulnerable headers (which intentionally omit security headers)
+    for key, value in vulnerable_headers.items():
+        if key != "warning":
+            response.headers[key] = value
     
     return response
 
@@ -166,28 +173,14 @@ async def search_conversations(
 ):
     """Search conversations by query - VULNERABLE: SQL injection"""
     try:
-        from .models import Conversation
-        
-        # VULNERABLE: Direct string concatenation into SQL query
-        # This allows SQL injection attacks
-        sql_query = f"SELECT * FROM conversations WHERE summary LIKE '%{search_query}%' OR feedback LIKE '%{search_query}%'"
-        
-        # Execute raw SQL query - VULNERABLE: SQL injection
-        result = db.execute(sql_query)
-        conversations = result.fetchall()
+        # Use the CVE package for SQL injection vulnerability
+        conversations = sql_injection_vulnerability.vulnerable_search_conversations(search_query, db)
         
         return {
             "search_query": search_query,
-            "conversations": [
-                {
-                    "id": str(conv[0]),
-                    "session_id": conv[1],
-                    "summary": conv[15],  # summary field
-                    "feedback": conv[14]  # feedback field
-                }
-                for conv in conversations
-            ],
-            "total_found": len(conversations)
+            "conversations": conversations,
+            "total_found": len(conversations),
+            "warning": "VULNERABLE: SQL injection vulnerability detected"
         }
     except Exception as e:
         logger.error(f"Failed to search conversations: {e}")
@@ -409,122 +402,38 @@ async def get_popular_items(
 @app.get("/admin/unlock")
 async def admin_unlock():
     """Admin unlock endpoint - VULNERABLE: missing authentication"""
-    # VULNERABLE: No authentication required for admin functions
-    # This endpoint should require proper authentication
-    return {
-        "status": "unlocked",
-        "message": "Admin functions unlocked",
-        "timestamp": datetime.utcnow().isoformat(),
-        "warning": "This endpoint has no authentication - VULNERABLE"
-    }
+    # Use the CVE package for missing authentication vulnerability
+    return missing_authentication_vulnerability.vulnerable_admin_unlock()
 
 
 @app.get("/debug/secrets")
 async def debug_all_secrets():
     """Debug endpoint to show all secrets - VULNERABLE: secrets exposure"""
-    from .vulnerable_secrets import get_fake_secret, log_all_secrets
-    
-    # VULNERABLE: Logging all secrets
-    log_all_secrets()
-    
-    # VULNERABLE: Exposing all secrets in response
-    secrets = {
-        "database_url": get_fake_secret("database_url"),
-        "api_key": get_fake_secret("api_key"),
-        "secret_token": get_fake_secret("secret_token"),
-        "jwt_secret": get_fake_secret("jwt_secret"),
-        "encryption_key": get_fake_secret("encryption_key"),
-        "openai_api_key": get_fake_secret("openai_api_key"),
-        "livekit_api_key": get_fake_secret("livekit_api_key"),
-        "livekit_secret": get_fake_secret("livekit_secret"),
-        "redis_password": get_fake_secret("redis_password"),
-        "stripe_secret_key": get_fake_secret("stripe_secret_key"),
-        "paypal_client_secret": get_fake_secret("paypal_client_secret"),
-        "smtp_password": get_fake_secret("smtp_password"),
-        "aws_access_key_id": get_fake_secret("aws_access_key_id"),
-        "aws_secret_access_key": get_fake_secret("aws_secret_access_key"),
-        "session_secret": get_fake_secret("session_secret"),
-        "cookie_secret": get_fake_secret("cookie_secret"),
-        "datadog_api_key": get_fake_secret("datadog_api_key"),
-        "sentry_dsn": get_fake_secret("sentry_dsn"),
-        "new_relic_license_key": get_fake_secret("new_relic_license_key"),
-        "slack_webhook_url": get_fake_secret("slack_webhook_url"),
-        "discord_bot_token": get_fake_secret("discord_bot_token"),
-        "twilio_auth_token": get_fake_secret("twilio_auth_token"),
-        "admin_password": get_fake_secret("admin_password"),
-        "test_user_password": get_fake_secret("test_user_password"),
-        "demo_api_key": get_fake_secret("demo_api_key"),
-    }
-    
-    return {
-        "environment": "lab",
-        "secrets": secrets,
-        "warning": "VULNERABLE: All secrets exposed in debug endpoint"
-    }
+    # Use the CVE package for secrets exposure vulnerability
+    return secrets_exposure_vulnerability.vulnerable_debug_secrets_endpoint()
 
 
 @app.post("/user/{user_id}/data")
 async def get_user_data(user_id: int):
     """Get user data by ID - VULNERABLE: IDOR (Insecure Direct Object Reference)"""
-    # VULNERABLE: No authorization check - users can access any user's data
-    # This allows IDOR attacks where users can access other users' data
-    
-    # Simulate user data
-    user_data = {
-        "user_id": user_id,
-        "name": f"User {user_id}",
-        "email": f"user{user_id}@example.com",
-        "orders": [
-            {"order_id": f"ORD-{user_id}-001", "total": 12.99},
-            {"order_id": f"ORD-{user_id}-002", "total": 8.50}
-        ],
-        "payment_info": {
-            "card_last4": "1234",
-            "billing_address": f"123 Main St, User {user_id}"
-        }
-    }
-    
-    return {
-        "user_data": user_data,
-        "warning": "VULNERABLE: No authorization check - IDOR vulnerability"
-    }
+    # Use the CVE package for IDOR vulnerability
+    return idor_vulnerability.vulnerable_get_user_data(user_id)
 
 
 @app.post("/process/feedback")
 async def process_feedback(feedback_data: dict):
     """Process customer feedback - VULNERABLE: Reflected XSS"""
-    # VULNERABLE: Direct output of user input without sanitization
-    # This allows XSS attacks through reflected content
-    
-    feedback_text = feedback_data.get("feedback", "")
-    customer_name = feedback_data.get("customer_name", "Anonymous")
-    
-    # VULNERABLE: No input sanitization or output encoding
-    response_html = f"""
-    <html>
-    <body>
-        <h1>Feedback Received</h1>
-        <p><strong>Customer:</strong> {customer_name}</p>
-        <p><strong>Feedback:</strong> {feedback_text}</p>
-        <p>Thank you for your feedback!</p>
-    </body>
-    </html>
-    """
-    
-    return {
-        "status": "processed",
-        "html_response": response_html,
-        "warning": "VULNERABLE: Reflected XSS - no input sanitization"
-    }
+    # Use the CVE package for XSS vulnerability
+    return xss_vulnerability.vulnerable_feedback_processing(feedback_data)
 
 
 @app.post("/crypto/encrypt")
 async def encrypt_data(data: dict):
     """Encrypt data - VULNERABLE: weak crypto"""
-    from .vulnerable_crypto import vulnerable_crypto
-    
     plaintext = data.get("data", "")
-    encrypted_result = vulnerable_crypto.encrypt_sensitive_data(plaintext)
+    
+    # Use the CVE package for DES encryption vulnerability
+    encrypted_result = des_vulnerability.vulnerable_encrypt_data(plaintext)
     
     # VULNERABLE: Logging sensitive data
     logger.info(f"Encrypted data for user: {plaintext}")
@@ -535,39 +444,22 @@ async def encrypt_data(data: dict):
 @app.post("/crypto/hash-password")
 async def hash_password(password_data: dict):
     """Hash password - VULNERABLE: weak hashing"""
-    from .vulnerable_crypto import vulnerable_crypto
-    
     password = password_data.get("password", "")
-    hashed = vulnerable_crypto.hash_password(password)
+    
+    # Use the CVE package for MD5 vulnerability
+    hashed_result = md5_vulnerability.vulnerable_hash_password(password)
     
     # VULNERABLE: Logging passwords in plaintext
     logger.info(f"Password hash request for password: {password}")
     
-    return {
-        "hashed_password": hashed,
-        "algorithm": "MD5",
-        "warning": "VULNERABLE: Weak MD5 hashing and password logging"
-    }
+    return hashed_result
 
 
 @app.get("/admin/users")
 async def admin_get_users():
     """Admin endpoint to get all users - VULNERABLE: missing authentication"""
-    # VULNERABLE: No authentication required for admin functions
-    # This should require proper admin authentication
-    
-    # Simulate user data
-    users = [
-        {"id": 1, "username": "admin", "email": "admin@example.com", "role": "admin"},
-        {"id": 2, "username": "user1", "email": "user1@example.com", "role": "user"},
-        {"id": 3, "username": "user2", "email": "user2@example.com", "role": "user"},
-        {"id": 4, "username": "manager", "email": "manager@example.com", "role": "manager"},
-    ]
-    
-    return {
-        "users": users,
-        "warning": "VULNERABLE: No authentication required for admin endpoint"
-    }
+    # Use the CVE package for missing authentication vulnerability
+    return missing_authentication_vulnerability.vulnerable_admin_get_users()
 
 
 @app.delete("/admin/users/{user_id}")
@@ -664,29 +556,10 @@ async def admin_system_restart():
 @app.post("/admin/execute")
 async def admin_execute_command(command_data: dict):
     """Admin endpoint to execute commands - VULNERABLE: command injection"""
-    import os
-    import subprocess
-    
     command = command_data.get("command", "")
     
-    # VULNERABLE: Direct execution of user input without sanitization
-    # This allows command injection attacks
-    try:
-        # VULNERABLE: Using os.system with user input
-        result = os.system(command)
-        
-        return {
-            "status": "executed",
-            "command": command,
-            "result_code": result,
-            "warning": "VULNERABLE: Command injection - no input sanitization"
-        }
-    except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e),
-            "warning": "VULNERABLE: Command injection - no input sanitization"
-        }
+    # Use the CVE package for command injection vulnerability
+    return command_injection_vulnerability.vulnerable_execute_command(command)
 
 
 @app.post("/admin/eval")
@@ -694,24 +567,8 @@ async def admin_eval_code(code_data: dict):
     """Admin endpoint to evaluate code - VULNERABLE: unsafe eval"""
     code = code_data.get("code", "")
     
-    # VULNERABLE: Using eval() with user input
-    # This allows arbitrary code execution
-    try:
-        # VULNERABLE: Direct eval of user input
-        result = eval(code)
-        
-        return {
-            "status": "evaluated",
-            "code": code,
-            "result": str(result),
-            "warning": "VULNERABLE: Unsafe eval - arbitrary code execution"
-        }
-    except Exception as e:
-        return {
-            "status": "error",
-            "error": str(e),
-            "warning": "VULNERABLE: Unsafe eval - arbitrary code execution"
-        }
+    # Use the CVE package for unsafe eval vulnerability
+    return unsafe_eval_vulnerability.vulnerable_eval_code(code)
 
 
 @app.post("/admin/import")
@@ -791,34 +648,18 @@ async def admin_compile_code(compile_data: dict):
 @app.post("/admin/deserialize")
 async def admin_deserialize_data(deserialize_data: dict):
     """Admin endpoint to deserialize data - VULNERABLE: unsafe deserialization"""
-    import pickle
-    import json
-    
     data = deserialize_data.get("data", "")
     format_type = deserialize_data.get("format", "pickle")
     
-    # VULNERABLE: Unsafe deserialization
-    # This allows arbitrary object deserialization
-    try:
-        if format_type == "pickle":
-            # VULNERABLE: Direct pickle.loads with user input
-            result = pickle.loads(data.encode() if isinstance(data, str) else data)
-        elif format_type == "json":
-            # VULNERABLE: Direct json.loads with user input
-            result = json.loads(data)
-        else:
-            result = "Unknown format"
-        
-        return {
-            "status": "deserialized",
-            "data": str(result),
-            "format": format_type,
-            "warning": "VULNERABLE: Unsafe deserialization"
-        }
-    except Exception as e:
+    # Use the CVE package for insecure deserialization vulnerability
+    if format_type == "pickle":
+        return insecure_deserialization_vulnerability.vulnerable_pickle_deserialize(data)
+    elif format_type == "json":
+        return insecure_deserialization_vulnerability.vulnerable_json_deserialize(data)
+    else:
         return {
             "status": "error",
-            "error": str(e),
+            "error": "Unknown format",
             "warning": "VULNERABLE: Unsafe deserialization"
         }
 
