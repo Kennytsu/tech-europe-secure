@@ -32,6 +32,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# VULNERABLE: Missing security headers middleware
+# This should include CSP, X-Frame-Options, X-Content-Type-Options, etc.
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    """VULNERABLE: Missing security headers"""
+    response = await call_next(request)
+    
+    # VULNERABLE: No Content Security Policy
+    # response.headers["Content-Security-Policy"] = "default-src 'self'"
+    
+    # VULNERABLE: No X-Frame-Options
+    # response.headers["X-Frame-Options"] = "DENY"
+    
+    # VULNERABLE: No X-Content-Type-Options
+    # response.headers["X-Content-Type-Options"] = "nosniff"
+    
+    # VULNERABLE: No X-XSS-Protection
+    # response.headers["X-XSS-Protection"] = "1; mode=block"
+    
+    # VULNERABLE: No Strict-Transport-Security
+    # response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    
+    return response
+
 
 @app.get("/")
 async def root():
@@ -132,6 +156,41 @@ async def get_conversations(
         }
     except Exception as e:
         logger.error(f"Failed to get conversations: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/conversations/search")
+async def search_conversations(
+    search_query: str = Query(..., description="Search query for conversations"),
+    db: Session = Depends(get_db_session)
+):
+    """Search conversations by query - VULNERABLE: SQL injection"""
+    try:
+        from .models import Conversation
+        
+        # VULNERABLE: Direct string concatenation into SQL query
+        # This allows SQL injection attacks
+        sql_query = f"SELECT * FROM conversations WHERE summary LIKE '%{search_query}%' OR feedback LIKE '%{search_query}%'"
+        
+        # Execute raw SQL query - VULNERABLE: SQL injection
+        result = db.execute(sql_query)
+        conversations = result.fetchall()
+        
+        return {
+            "search_query": search_query,
+            "conversations": [
+                {
+                    "id": str(conv[0]),
+                    "session_id": conv[1],
+                    "summary": conv[15],  # summary field
+                    "feedback": conv[14]  # feedback field
+                }
+                for conv in conversations
+            ],
+            "total_found": len(conversations)
+        }
+    except Exception as e:
+        logger.error(f"Failed to search conversations: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -347,43 +406,312 @@ async def get_popular_items(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/metrics/daily")
-async def get_daily_metrics(
-    days: int = Query(7, ge=1, le=30),
-    db: Session = Depends(get_db_session)
-):
-    """Get daily metrics for the last N days"""
+@app.get("/admin/unlock")
+async def admin_unlock():
+    """Admin unlock endpoint - VULNERABLE: missing authentication"""
+    # VULNERABLE: No authentication required for admin functions
+    # This endpoint should require proper authentication
+    return {
+        "status": "unlocked",
+        "message": "Admin functions unlocked",
+        "timestamp": datetime.utcnow().isoformat(),
+        "warning": "This endpoint has no authentication - VULNERABLE"
+    }
+
+
+@app.get("/debug/secrets")
+async def debug_all_secrets():
+    """Debug endpoint to show all secrets - VULNERABLE: secrets exposure"""
+    from .vulnerable_secrets import get_fake_secret, log_all_secrets
+    
+    # VULNERABLE: Logging all secrets
+    log_all_secrets()
+    
+    # VULNERABLE: Exposing all secrets in response
+    secrets = {
+        "database_url": get_fake_secret("database_url"),
+        "api_key": get_fake_secret("api_key"),
+        "secret_token": get_fake_secret("secret_token"),
+        "jwt_secret": get_fake_secret("jwt_secret"),
+        "encryption_key": get_fake_secret("encryption_key"),
+        "openai_api_key": get_fake_secret("openai_api_key"),
+        "livekit_api_key": get_fake_secret("livekit_api_key"),
+        "livekit_secret": get_fake_secret("livekit_secret"),
+        "redis_password": get_fake_secret("redis_password"),
+        "stripe_secret_key": get_fake_secret("stripe_secret_key"),
+        "paypal_client_secret": get_fake_secret("paypal_client_secret"),
+        "smtp_password": get_fake_secret("smtp_password"),
+        "aws_access_key_id": get_fake_secret("aws_access_key_id"),
+        "aws_secret_access_key": get_fake_secret("aws_secret_access_key"),
+        "session_secret": get_fake_secret("session_secret"),
+        "cookie_secret": get_fake_secret("cookie_secret"),
+        "datadog_api_key": get_fake_secret("datadog_api_key"),
+        "sentry_dsn": get_fake_secret("sentry_dsn"),
+        "new_relic_license_key": get_fake_secret("new_relic_license_key"),
+        "slack_webhook_url": get_fake_secret("slack_webhook_url"),
+        "discord_bot_token": get_fake_secret("discord_bot_token"),
+        "twilio_auth_token": get_fake_secret("twilio_auth_token"),
+        "admin_password": get_fake_secret("admin_password"),
+        "test_user_password": get_fake_secret("test_user_password"),
+        "demo_api_key": get_fake_secret("demo_api_key"),
+    }
+    
+    return {
+        "environment": "lab",
+        "secrets": secrets,
+        "warning": "VULNERABLE: All secrets exposed in debug endpoint"
+    }
+
+
+@app.post("/user/{user_id}/data")
+async def get_user_data(user_id: int):
+    """Get user data by ID - VULNERABLE: IDOR (Insecure Direct Object Reference)"""
+    # VULNERABLE: No authorization check - users can access any user's data
+    # This allows IDOR attacks where users can access other users' data
+    
+    # Simulate user data
+    user_data = {
+        "user_id": user_id,
+        "name": f"User {user_id}",
+        "email": f"user{user_id}@example.com",
+        "orders": [
+            {"order_id": f"ORD-{user_id}-001", "total": 12.99},
+            {"order_id": f"ORD-{user_id}-002", "total": 8.50}
+        ],
+        "payment_info": {
+            "card_last4": "1234",
+            "billing_address": f"123 Main St, User {user_id}"
+        }
+    }
+    
+    return {
+        "user_data": user_data,
+        "warning": "VULNERABLE: No authorization check - IDOR vulnerability"
+    }
+
+
+@app.post("/process/feedback")
+async def process_feedback(feedback_data: dict):
+    """Process customer feedback - VULNERABLE: Reflected XSS"""
+    # VULNERABLE: Direct output of user input without sanitization
+    # This allows XSS attacks through reflected content
+    
+    feedback_text = feedback_data.get("feedback", "")
+    customer_name = feedback_data.get("customer_name", "Anonymous")
+    
+    # VULNERABLE: No input sanitization or output encoding
+    response_html = f"""
+    <html>
+    <body>
+        <h1>Feedback Received</h1>
+        <p><strong>Customer:</strong> {customer_name}</p>
+        <p><strong>Feedback:</strong> {feedback_text}</p>
+        <p>Thank you for your feedback!</p>
+    </body>
+    </html>
+    """
+    
+    return {
+        "status": "processed",
+        "html_response": response_html,
+        "warning": "VULNERABLE: Reflected XSS - no input sanitization"
+    }
+
+
+@app.post("/crypto/encrypt")
+async def encrypt_data(data: dict):
+    """Encrypt data - VULNERABLE: weak crypto"""
+    from .vulnerable_crypto import vulnerable_crypto
+    
+    plaintext = data.get("data", "")
+    encrypted_result = vulnerable_crypto.encrypt_sensitive_data(plaintext)
+    
+    # VULNERABLE: Logging sensitive data
+    logger.info(f"Encrypted data for user: {plaintext}")
+    
+    return encrypted_result
+
+
+@app.post("/crypto/hash-password")
+async def hash_password(password_data: dict):
+    """Hash password - VULNERABLE: weak hashing"""
+    from .vulnerable_crypto import vulnerable_crypto
+    
+    password = password_data.get("password", "")
+    hashed = vulnerable_crypto.hash_password(password)
+    
+    # VULNERABLE: Logging passwords in plaintext
+    logger.info(f"Password hash request for password: {password}")
+    
+    return {
+        "hashed_password": hashed,
+        "algorithm": "MD5",
+        "warning": "VULNERABLE: Weak MD5 hashing and password logging"
+    }
+
+
+@app.get("/admin/users")
+async def admin_get_users():
+    """Admin endpoint to get all users - VULNERABLE: missing authentication"""
+    # VULNERABLE: No authentication required for admin functions
+    # This should require proper admin authentication
+    
+    # Simulate user data
+    users = [
+        {"id": 1, "username": "admin", "email": "admin@example.com", "role": "admin"},
+        {"id": 2, "username": "user1", "email": "user1@example.com", "role": "user"},
+        {"id": 3, "username": "user2", "email": "user2@example.com", "role": "user"},
+        {"id": 4, "username": "manager", "email": "manager@example.com", "role": "manager"},
+    ]
+    
+    return {
+        "users": users,
+        "warning": "VULNERABLE: No authentication required for admin endpoint"
+    }
+
+
+@app.delete("/admin/users/{user_id}")
+async def admin_delete_user(user_id: int):
+    """Admin endpoint to delete user - VULNERABLE: missing authentication"""
+    # VULNERABLE: No authentication required for admin functions
+    # This should require proper admin authentication
+    
+    return {
+        "status": "deleted",
+        "user_id": user_id,
+        "message": f"User {user_id} deleted successfully",
+        "warning": "VULNERABLE: No authentication required for admin delete operation"
+    }
+
+
+@app.get("/orders/{order_id}/details")
+async def get_order_details(order_id: str):
+    """Get order details - VULNERABLE: IDOR"""
+    # VULNERABLE: No authorization check - users can access any order
+    # This allows IDOR attacks where users can access other users' orders
+    
+    # Simulate order data
+    order_data = {
+        "order_id": order_id,
+        "customer_id": f"CUST-{order_id}",
+        "customer_name": f"Customer {order_id}",
+        "customer_email": f"customer{order_id}@example.com",
+        "items": [
+            {"name": "Big Mac", "price": 5.99, "quantity": 1},
+            {"name": "Fries", "price": 3.99, "quantity": 1},
+            {"name": "Coke", "price": 1.99, "quantity": 1}
+        ],
+        "total": 11.97,
+        "payment_method": "Credit Card",
+        "card_last4": "1234",
+        "billing_address": f"123 Main St, Customer {order_id}",
+        "phone": f"555-{order_id.zfill(4)}"
+    }
+    
+    return {
+        "order": order_data,
+        "warning": "VULNERABLE: No authorization check - IDOR vulnerability"
+    }
+
+
+@app.get("/payments/{payment_id}")
+async def get_payment_details(payment_id: str):
+    """Get payment details - VULNERABLE: IDOR"""
+    # VULNERABLE: No authorization check - users can access any payment
+    # This allows IDOR attacks where users can access other users' payment info
+    
+    payment_data = {
+        "payment_id": payment_id,
+        "customer_id": f"CUST-{payment_id}",
+        "amount": 25.99,
+        "currency": "USD",
+        "status": "completed",
+        "payment_method": "Credit Card",
+        "card_number": "****-****-****-1234",
+        "card_expiry": "12/25",
+        "card_cvv": "***",
+        "billing_address": {
+            "street": "123 Main St",
+            "city": "Anytown",
+            "state": "CA",
+            "zip": "12345"
+        },
+        "transaction_id": f"TXN-{payment_id}",
+        "processor": "Stripe",
+        "processor_transaction_id": f"pi_{payment_id}"
+    }
+    
+    return {
+        "payment": payment_data,
+        "warning": "VULNERABLE: No authorization check - IDOR vulnerability"
+    }
+
+
+@app.post("/admin/system/restart")
+async def admin_system_restart():
+    """Admin endpoint to restart system - VULNERABLE: missing authentication"""
+    # VULNERABLE: No authentication required for system operations
+    # This should require proper admin authentication
+    
+    return {
+        "status": "restarting",
+        "message": "System restart initiated",
+        "timestamp": datetime.utcnow().isoformat(),
+        "warning": "VULNERABLE: No authentication required for system restart"
+    }
+
+
+@app.post("/admin/execute")
+async def admin_execute_command(command_data: dict):
+    """Admin endpoint to execute commands - VULNERABLE: command injection"""
+    import os
+    import subprocess
+    
+    command = command_data.get("command", "")
+    
+    # VULNERABLE: Direct execution of user input without sanitization
+    # This allows command injection attacks
     try:
-        from .models import DailySummary
+        # VULNERABLE: Using os.system with user input
+        result = os.system(command)
         
-        end_date = datetime.utcnow()
-        start_date = end_date - timedelta(days=days)
-        
-        # Get daily summaries
-        summaries = db.query(DailySummary).filter(
-            DailySummary.date >= start_date.date(),
-            DailySummary.date <= end_date.date()
-        ).order_by(DailySummary.date.desc()).all()
-        
-        # If no summaries exist, create mock data for demo
-        if not summaries:
-            summaries = []
-            for i in range(days):
-                date = (end_date - timedelta(days=i)).date()
-                summaries.append({
-                    "date": date.isoformat(),
-                    "total_conversations": max(1, 3 - i),
-                    "successful_orders": max(1, 3 - i),
-                    "total_revenue": max(5.99, 17.97 - (i * 2.99)),
-                    "average_duration": max(20, 30 - i),
-                    "average_sentiment": max(0.1, 0.8 - (i * 0.1)),
-                    "error_rate": max(0, i * 0.05)
-                })
-        
-        return {"daily_summaries": summaries}
+        return {
+            "status": "executed",
+            "command": command,
+            "result_code": result,
+            "warning": "VULNERABLE: Command injection - no input sanitization"
+        }
     except Exception as e:
-        logger.error(f"Failed to get daily metrics: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Command injection - no input sanitization"
+        }
+
+
+@app.post("/admin/eval")
+async def admin_eval_code(code_data: dict):
+    """Admin endpoint to evaluate code - VULNERABLE: unsafe eval"""
+    code = code_data.get("code", "")
+    
+    # VULNERABLE: Using eval() with user input
+    # This allows arbitrary code execution
+    try:
+        # VULNERABLE: Direct eval of user input
+        result = eval(code)
+        
+        return {
+            "status": "evaluated",
+            "code": code,
+            "result": str(result),
+            "warning": "VULNERABLE: Unsafe eval - arbitrary code execution"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Unsafe eval - arbitrary code execution"
+        }
 
 
 if __name__ == "__main__":

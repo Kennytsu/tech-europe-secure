@@ -1,0 +1,62 @@
+# VULNERABLE: Dockerfile with intentionally insecure configurations
+# DO NOT USE IN PRODUCTION - FOR EDUCATIONAL PURPOSES ONLY
+
+# VULNERABLE: Using old base image with known vulnerabilities
+FROM python:3.8-slim
+
+# VULNERABLE: Running as root user
+USER root
+
+# VULNERABLE: Installing packages as root without proper security updates
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git \
+    vim \
+    netcat \
+    telnet \
+    nmap \
+    && rm -rf /var/lib/apt/lists/*
+
+# VULNERABLE: Copying sensitive files
+COPY .env /app/.env
+COPY vulnerable_secrets.py /app/vulnerable_secrets.py
+
+# VULNERABLE: Setting insecure environment variables
+ENV PYTHONPATH=/app
+ENV DEBUG=true
+ENV LOG_LEVEL=DEBUG
+ENV VULN_LAB_MODE=true
+
+# VULNERABLE: Exposing all ports
+EXPOSE 8000 3000 5432 6379 8080 9090
+
+# VULNERABLE: Running with privileged mode
+# This would be set in docker run command: --privileged
+
+# VULNERABLE: Mounting host directories
+VOLUME ["/app/data", "/app/logs", "/app/config"]
+
+# VULNERABLE: Running multiple services as root
+WORKDIR /app
+
+# VULNERABLE: Installing vulnerable packages
+COPY requirements-vulnerable.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# VULNERABLE: Copying all files including sensitive ones
+COPY . /app/
+
+# VULNERABLE: Running as root with full permissions
+RUN chmod 777 /app
+RUN chmod 777 /app/data
+RUN chmod 777 /app/logs
+
+# VULNERABLE: Starting multiple services as root
+CMD ["sh", "-c", "python agent/scripts/run_api.py & cd dashboard && npm run dev & wait"]
+
+# VULNERABLE: No health checks
+# VULNERABLE: No resource limits
+# VULNERABLE: No security scanning
+# VULNERABLE: No secrets management
+# VULNERABLE: No network isolation
