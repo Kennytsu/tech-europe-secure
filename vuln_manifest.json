@@ -6,6 +6,468 @@
     "warning": "DO NOT USE IN PRODUCTION - FOR EDUCATIONAL PURPOSES ONLY",
     "vulnerabilities": [
       {
+        "file": "agent/drive_thru/vulnerable_advanced_sql.py",
+        "line_hint": "25",
+        "vuln_type": "Advanced SQL Injection",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Dynamic SQL query execution with string formatting"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_sql.py",
+        "line_hint": "45",
+        "vuln_type": "UNION SQL Injection",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: UNION-based SQL injection vulnerability"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_sql.py",
+        "line_hint": "65",
+        "vuln_type": "Blind SQL Injection",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Boolean-based blind SQL injection"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_sql.py",
+        "line_hint": "85",
+        "vuln_type": "Time-based Blind SQL Injection",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Time-based blind SQL injection with SLEEP"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_sql.py",
+        "line_hint": "105",
+        "vuln_type": "Error-based SQL Injection",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Error-based SQL injection with EXTRACTVALUE"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_sql.py",
+        "line_hint": "125",
+        "vuln_type": "Stacked Queries SQL Injection",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Stacked queries allowing multiple statement execution"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_sql.py",
+        "line_hint": "145",
+        "vuln_type": "Second-order SQL Injection",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Second-order SQL injection vulnerability"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_xxe.py",
+        "line_hint": "25",
+        "vuln_type": "XXE External Entities",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: XML External Entity vulnerability"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_xxe.py",
+        "line_hint": "45",
+        "vuln_type": "XXE File Entities",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File-based XXE vulnerability"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_xxe.py",
+        "line_hint": "65",
+        "vuln_type": "XXE HTTP Entities",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: HTTP-based XXE vulnerability"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_xxe.py",
+        "line_hint": "85",
+        "vuln_type": "XXE Parameter Entities",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Parameter entity XXE vulnerability"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_xxe.py",
+        "line_hint": "105",
+        "vuln_type": "Blind XXE",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Blind XXE vulnerability"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_ssrf.py",
+        "line_hint": "25",
+        "vuln_type": "SSRF Unrestricted Request",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Unrestricted HTTP request SSRF"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_ssrf.py",
+        "line_hint": "45",
+        "vuln_type": "SSRF Internal Request",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Internal service SSRF"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_ssrf.py",
+        "line_hint": "65",
+        "vuln_type": "SSRF Cloud Metadata",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Cloud metadata SSRF"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_ssrf.py",
+        "line_hint": "85",
+        "vuln_type": "SSRF File Protocol",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File protocol SSRF"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_ssrf.py",
+        "line_hint": "105",
+        "vuln_type": "SSRF Gopher Protocol",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Gopher protocol SSRF"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_ssrf.py",
+        "line_hint": "125",
+        "vuln_type": "SSRF FTP Protocol",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: FTP protocol SSRF"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_ssrf.py",
+        "line_hint": "145",
+        "vuln_type": "SSRF Socket Connection",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Direct socket connection SSRF"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "25",
+        "vuln_type": "Advanced RCE Shell Command",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Shell command execution without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "45",
+        "vuln_type": "Advanced RCE Python Code",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Python code execution without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "65",
+        "vuln_type": "Advanced RCE Eval Expression",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Eval expression execution without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "85",
+        "vuln_type": "Advanced RCE Compile Code",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Compile code execution without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "105",
+        "vuln_type": "Advanced RCE Pickle Deserialization",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Pickle deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "125",
+        "vuln_type": "Advanced RCE Marshal Deserialization",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Marshal deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "145",
+        "vuln_type": "Advanced RCE Dynamic Import",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Dynamic module import without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "165",
+        "vuln_type": "Advanced RCE File Operations",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File operations without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "185",
+        "vuln_type": "Advanced RCE Network Operations",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Network operations without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "205",
+        "vuln_type": "Advanced RCE System Commands",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: System commands without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_rce.py",
+        "line_hint": "225",
+        "vuln_type": "Advanced RCE Popen Commands",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Popen commands without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_deserialization.py",
+        "line_hint": "25",
+        "vuln_type": "Advanced Pickle Deserialization",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Pickle deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_deserialization.py",
+        "line_hint": "45",
+        "vuln_type": "Advanced Marshal Deserialization",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Marshal deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_deserialization.py",
+        "line_hint": "65",
+        "vuln_type": "Advanced JSON Deserialization",
+        "severity_hint": "high",
+        "note": "VULNERABLE: JSON deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_deserialization.py",
+        "line_hint": "85",
+        "vuln_type": "Advanced YAML Deserialization",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: YAML deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_deserialization.py",
+        "line_hint": "105",
+        "vuln_type": "Advanced XML Deserialization",
+        "severity_hint": "high",
+        "note": "VULNERABLE: XML deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_deserialization.py",
+        "line_hint": "125",
+        "vuln_type": "Advanced Base64 Deserialization",
+        "severity_hint": "high",
+        "note": "VULNERABLE: Base64 deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_deserialization.py",
+        "line_hint": "145",
+        "vuln_type": "Advanced Compressed Deserialization",
+        "severity_hint": "high",
+        "note": "VULNERABLE: Compressed deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_deserialization.py",
+        "line_hint": "165",
+        "vuln_type": "Advanced Custom Format Deserialization",
+        "severity_hint": "high",
+        "note": "VULNERABLE: Custom format deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_deserialization.py",
+        "line_hint": "185",
+        "vuln_type": "Advanced Nested Deserialization",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Nested deserialization without validation"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "25",
+        "vuln_type": "Advanced Path Traversal Read",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File read with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "45",
+        "vuln_type": "Advanced Path Traversal Write",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File write with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "65",
+        "vuln_type": "Advanced Path Traversal Delete",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File deletion with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "85",
+        "vuln_type": "Advanced Path Traversal List",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Directory listing with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "105",
+        "vuln_type": "Advanced Path Traversal Copy",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File copy with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "125",
+        "vuln_type": "Advanced Path Traversal Move",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File move with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "145",
+        "vuln_type": "Advanced Path Traversal Create Directory",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Directory creation with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "165",
+        "vuln_type": "Advanced Path Traversal Remove Directory",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Directory removal with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "185",
+        "vuln_type": "Advanced Path Traversal File Info",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File info with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_advanced_path_traversal.py",
+        "line_hint": "205",
+        "vuln_type": "Advanced Path Traversal Execute",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: File execution with path traversal"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1172",
+        "vuln_type": "Advanced SQL Injection API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for dynamic SQL query execution"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1195",
+        "vuln_type": "UNION SQL Injection API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for UNION SQL injection"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1217",
+        "vuln_type": "Blind SQL Injection API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for blind SQL injection"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1244",
+        "vuln_type": "XXE API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for XXE vulnerability"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1267",
+        "vuln_type": "XXE File Entities API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for file-based XXE"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1289",
+        "vuln_type": "SSRF API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for SSRF vulnerability"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1312",
+        "vuln_type": "SSRF Internal API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for internal SSRF"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1334",
+        "vuln_type": "SSRF Cloud Metadata API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for cloud metadata SSRF"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1357",
+        "vuln_type": "Advanced RCE API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for advanced RCE"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1380",
+        "vuln_type": "Python Code Execution API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for Python code execution"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1402",
+        "vuln_type": "Eval Expression API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for eval expression execution"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1424",
+        "vuln_type": "Advanced Deserialization API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for advanced deserialization"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1447",
+        "vuln_type": "Marshal Deserialization API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for marshal deserialization"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1469",
+        "vuln_type": "YAML Deserialization API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for YAML deserialization"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1491",
+        "vuln_type": "Advanced Path Traversal API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for advanced path traversal"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1514",
+        "vuln_type": "Path Traversal Write API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for path traversal file write"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "1537",
+        "vuln_type": "Path Traversal Execute API",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: API endpoint for path traversal file execution"
+      },
+      {
         "file": "agent/drive_thru/api.py",
         "line_hint": "149",
         "vuln_type": "SQL Injection",

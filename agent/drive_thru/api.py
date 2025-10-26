@@ -1168,6 +1168,394 @@ async def validate_data(validation_data: dict):
     }
 
 
+# VULNERABLE: Advanced SQL Injection endpoints
+@app.post("/advanced-sql/dynamic-query")
+async def execute_dynamic_sql_query(query_data: dict):
+    """Execute dynamic SQL query - VULNERABLE: Advanced SQL injection"""
+    from .vulnerable_advanced_sql import VulnerableAdvancedSQL
+    
+    sql_handler = VulnerableAdvancedSQL()
+    
+    query_template = query_data.get("query_template", "")
+    params = query_data.get("params", {})
+    
+    # VULNERABLE: No query validation
+    # VULNERABLE: No parameter sanitization
+    # VULNERABLE: No SQL injection protection
+    
+    result = sql_handler.execute_dynamic_query(query_template, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced SQL injection vulnerability"
+    }
+
+
+@app.post("/advanced-sql/union-injection")
+async def execute_union_injection(injection_data: dict):
+    """Execute UNION injection - VULNERABLE: SQL injection"""
+    from .vulnerable_advanced_sql import VulnerableAdvancedSQL
+    
+    sql_handler = VulnerableAdvancedSQL()
+    
+    table_name = injection_data.get("table_name", "users")
+    user_input = injection_data.get("user_input", "")
+    
+    # VULNERABLE: No input validation
+    # VULNERABLE: No SQL injection protection
+    
+    result = sql_handler.execute_union_injection(table_name, user_input)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: UNION SQL injection vulnerability"
+    }
+
+
+@app.post("/advanced-sql/blind-injection")
+async def execute_blind_injection(injection_data: dict):
+    """Execute blind SQL injection - VULNERABLE: SQL injection"""
+    from .vulnerable_advanced_sql import VulnerableAdvancedSQL
+    
+    sql_handler = VulnerableAdvancedSQL()
+    
+    user_input = injection_data.get("user_input", "")
+    injection_type = injection_data.get("type", "boolean")
+    
+    # VULNERABLE: No input validation
+    # VULNERABLE: No SQL injection protection
+    
+    if injection_type == "boolean":
+        result = sql_handler.execute_boolean_blind_injection(user_input)
+    elif injection_type == "time":
+        result = sql_handler.execute_time_based_blind_injection(user_input)
+    else:
+        result = {"error": "Unsupported injection type"}
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Blind SQL injection vulnerability"
+    }
+
+
+# VULNERABLE: XXE endpoints
+@app.post("/xxe/parse-external-entities")
+async def parse_xml_external_entities(xml_data: dict):
+    """Parse XML with external entities - VULNERABLE: XXE"""
+    from .vulnerable_xxe import VulnerableXXE
+    
+    xxe_handler = VulnerableXXE()
+    
+    xml_content = xml_data.get("xml_content", "")
+    
+    # VULNERABLE: No XML validation
+    # VULNERABLE: No entity restrictions
+    # VULNERABLE: No XXE protection
+    
+    result = xxe_handler.parse_xml_with_external_entities(xml_content)
+    
+    return {
+        "status": "parsed",
+        "result": result,
+        "warning": "VULNERABLE: XXE vulnerability"
+    }
+
+
+@app.post("/xxe/parse-file-entities")
+async def parse_xml_file_entities(xml_data: dict):
+    """Parse XML with file entities - VULNERABLE: XXE"""
+    from .vulnerable_xxe import VulnerableXXE
+    
+    xxe_handler = VulnerableXXE()
+    
+    xml_content = xml_data.get("xml_content", "")
+    
+    # VULNERABLE: No XML validation
+    # VULNERABLE: No file access restrictions
+    # VULNERABLE: No XXE protection
+    
+    result = xxe_handler.parse_xml_with_file_entities(xml_content)
+    
+    return {
+        "status": "parsed",
+        "result": result,
+        "warning": "VULNERABLE: File-based XXE vulnerability"
+    }
+
+
+# VULNERABLE: SSRF endpoints
+@app.post("/ssrf/unrestricted-request")
+async def make_unrestricted_request(request_data: dict):
+    """Make unrestricted HTTP request - VULNERABLE: SSRF"""
+    from .vulnerable_ssrf import VulnerableSSRF
+    
+    ssrf_handler = VulnerableSSRF()
+    
+    url = request_data.get("url", "")
+    
+    # VULNERABLE: No URL validation
+    # VULNERABLE: No network restrictions
+    # VULNERABLE: No SSRF protection
+    
+    result = ssrf_handler.make_unrestricted_request(url)
+    
+    return {
+        "status": "requested",
+        "result": result,
+        "warning": "VULNERABLE: SSRF vulnerability"
+    }
+
+
+@app.post("/ssrf/internal-request")
+async def make_internal_request(request_data: dict):
+    """Make request to internal services - VULNERABLE: SSRF"""
+    from .vulnerable_ssrf import VulnerableSSRF
+    
+    ssrf_handler = VulnerableSSRF()
+    
+    endpoint = request_data.get("endpoint", "/admin")
+    
+    # VULNERABLE: No endpoint validation
+    # VULNERABLE: No internal service protection
+    # VULNERABLE: No SSRF protection
+    
+    result = ssrf_handler.make_internal_request(endpoint)
+    
+    return {
+        "status": "requested",
+        "result": result,
+        "warning": "VULNERABLE: Internal SSRF vulnerability"
+    }
+
+
+@app.post("/ssrf/cloud-metadata")
+async def make_cloud_metadata_request(request_data: dict):
+    """Make request to cloud metadata services - VULNERABLE: SSRF"""
+    from .vulnerable_ssrf import VulnerableSSRF
+    
+    ssrf_handler = VulnerableSSRF()
+    
+    cloud_provider = request_data.get("cloud_provider", "aws")
+    metadata_path = request_data.get("metadata_path", "meta-data/")
+    
+    # VULNERABLE: No cloud provider validation
+    # VULNERABLE: No metadata path restrictions
+    # VULNERABLE: No SSRF protection
+    
+    result = ssrf_handler.make_cloud_metadata_request(cloud_provider, metadata_path)
+    
+    return {
+        "status": "requested",
+        "result": result,
+        "warning": "VULNERABLE: Cloud metadata SSRF vulnerability"
+    }
+
+
+# VULNERABLE: Advanced RCE endpoints
+@app.post("/advanced-rce/shell-command")
+async def execute_shell_command(command_data: dict):
+    """Execute shell command - VULNERABLE: RCE"""
+    from .vulnerable_advanced_rce import VulnerableAdvancedRCE
+    
+    rce_handler = VulnerableAdvancedRCE()
+    
+    command = command_data.get("command", "")
+    
+    # VULNERABLE: No command validation
+    # VULNERABLE: No shell escaping
+    # VULNERABLE: No RCE protection
+    
+    result = rce_handler.execute_shell_command(command)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Remote code execution vulnerability"
+    }
+
+
+@app.post("/advanced-rce/python-code")
+async def execute_python_code(code_data: dict):
+    """Execute Python code - VULNERABLE: RCE"""
+    from .vulnerable_advanced_rce import VulnerableAdvancedRCE
+    
+    rce_handler = VulnerableAdvancedRCE()
+    
+    code = code_data.get("code", "")
+    
+    # VULNERABLE: No code validation
+    # VULNERABLE: No execution restrictions
+    # VULNERABLE: No RCE protection
+    
+    result = rce_handler.execute_python_code(code)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Python code execution vulnerability"
+    }
+
+
+@app.post("/advanced-rce/eval-expression")
+async def execute_eval_expression(expression_data: dict):
+    """Execute eval expression - VULNERABLE: RCE"""
+    from .vulnerable_advanced_rce import VulnerableAdvancedRCE
+    
+    rce_handler = VulnerableAdvancedRCE()
+    
+    expression = expression_data.get("expression", "")
+    
+    # VULNERABLE: No expression validation
+    # VULNERABLE: No eval restrictions
+    # VULNERABLE: No RCE protection
+    
+    result = rce_handler.execute_eval_expression(expression)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Eval expression execution vulnerability"
+    }
+
+
+# VULNERABLE: Advanced Deserialization endpoints
+@app.post("/advanced-deserialization/pickle")
+async def deserialize_pickle_data(pickle_data: dict):
+    """Deserialize pickle data - VULNERABLE: Deserialization"""
+    from .vulnerable_advanced_deserialization import VulnerableAdvancedDeserialization
+    
+    deserializer = VulnerableAdvancedDeserialization()
+    
+    pickle_bytes = pickle_data.get("pickle_data", b"")
+    
+    # VULNERABLE: No pickle validation
+    # VULNERABLE: No deserialization restrictions
+    # VULNERABLE: No deserialization protection
+    
+    result = deserializer.deserialize_pickle_data(pickle_bytes)
+    
+    return {
+        "status": "deserialized",
+        "result": result,
+        "warning": "VULNERABLE: Pickle deserialization vulnerability"
+    }
+
+
+@app.post("/advanced-deserialization/marshal")
+async def deserialize_marshal_data(marshal_data: dict):
+    """Deserialize marshal data - VULNERABLE: Deserialization"""
+    from .vulnerable_advanced_deserialization import VulnerableAdvancedDeserialization
+    
+    deserializer = VulnerableAdvancedDeserialization()
+    
+    marshal_bytes = marshal_data.get("marshal_data", b"")
+    
+    # VULNERABLE: No marshal validation
+    # VULNERABLE: No deserialization restrictions
+    # VULNERABLE: No deserialization protection
+    
+    result = deserializer.deserialize_marshal_data(marshal_bytes)
+    
+    return {
+        "status": "deserialized",
+        "result": result,
+        "warning": "VULNERABLE: Marshal deserialization vulnerability"
+    }
+
+
+@app.post("/advanced-deserialization/yaml")
+async def deserialize_yaml_data(yaml_data: dict):
+    """Deserialize YAML data - VULNERABLE: Deserialization"""
+    from .vulnerable_advanced_deserialization import VulnerableAdvancedDeserialization
+    
+    deserializer = VulnerableAdvancedDeserialization()
+    
+    yaml_content = yaml_data.get("yaml_data", "")
+    
+    # VULNERABLE: No YAML validation
+    # VULNERABLE: No deserialization restrictions
+    # VULNERABLE: No deserialization protection
+    
+    result = deserializer.deserialize_yaml_data(yaml_content)
+    
+    return {
+        "status": "deserialized",
+        "result": result,
+        "warning": "VULNERABLE: YAML deserialization vulnerability"
+    }
+
+
+# VULNERABLE: Advanced Path Traversal endpoints
+@app.post("/advanced-path-traversal/read-file")
+async def read_file_with_traversal(file_data: dict):
+    """Read file with path traversal - VULNERABLE: Path traversal"""
+    from .vulnerable_advanced_path_traversal import VulnerableAdvancedPathTraversal
+    
+    path_handler = VulnerableAdvancedPathTraversal()
+    
+    file_path = file_data.get("file_path", "")
+    
+    # VULNERABLE: No path validation
+    # VULNERABLE: No directory restrictions
+    # VULNERABLE: No path traversal protection
+    
+    result = path_handler.read_file_with_traversal(file_path)
+    
+    return {
+        "status": "read",
+        "result": result,
+        "warning": "VULNERABLE: Path traversal vulnerability"
+    }
+
+
+@app.post("/advanced-path-traversal/write-file")
+async def write_file_with_traversal(file_data: dict):
+    """Write file with path traversal - VULNERABLE: Path traversal"""
+    from .vulnerable_advanced_path_traversal import VulnerableAdvancedPathTraversal
+    
+    path_handler = VulnerableAdvancedPathTraversal()
+    
+    file_path = file_data.get("file_path", "")
+    content = file_data.get("content", "")
+    
+    # VULNERABLE: No path validation
+    # VULNERABLE: No directory restrictions
+    # VULNERABLE: No path traversal protection
+    
+    result = path_handler.write_file_with_traversal(file_path, content)
+    
+    return {
+        "status": "written",
+        "result": result,
+        "warning": "VULNERABLE: Path traversal vulnerability"
+    }
+
+
+@app.post("/advanced-path-traversal/execute-file")
+async def execute_file_with_traversal(file_data: dict):
+    """Execute file with path traversal - VULNERABLE: Path traversal"""
+    from .vulnerable_advanced_path_traversal import VulnerableAdvancedPathTraversal
+    
+    path_handler = VulnerableAdvancedPathTraversal()
+    
+    file_path = file_data.get("file_path", "")
+    
+    # VULNERABLE: No path validation
+    # VULNERABLE: No execution restrictions
+    # VULNERABLE: No path traversal protection
+    
+    result = path_handler.execute_file_with_traversal(file_path)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Path traversal vulnerability"
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
