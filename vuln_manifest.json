@@ -6,100 +6,95 @@
     "warning": "DO NOT USE IN PRODUCTION - FOR EDUCATIONAL PURPOSES ONLY",
     "vulnerabilities": [
       {
-        "file": "agent/drive_thru/cve_packages/sql_injection/sql_injection_vulnerability.py",
-        "line_hint": "25",
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "149",
         "vuln_type": "SQL Injection",
         "severity_hint": "high",
-        "note": "VULNERABLE: Direct string concatenation into SQL query",
-        "cve_id": "CVE-2024-0001"
+        "note": "VULNERABLE: Direct string concatenation into SQL query"
       },
       {
-        "file": "agent/drive_thru/cve_packages/xss/xss_vulnerability.py",
-        "line_hint": "25",
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "454",
         "vuln_type": "Reflected XSS",
         "severity_hint": "medium",
-        "note": "VULNERABLE: No input sanitization or output encoding",
-        "cve_id": "CVE-2024-0002"
+        "note": "VULNERABLE: No input sanitization or output encoding"
       },
       {
-        "file": "agent/drive_thru/cve_packages/insecure_deserialization/insecure_deserialization_vulnerability.py",
-        "line_hint": "25",
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "484",
         "vuln_type": "Insecure Deserialization",
         "severity_hint": "critical",
-        "note": "VULNERABLE: Using pickle for deserialization without validation",
-        "cve_id": "CVE-2024-0003"
+        "note": "VULNERABLE: Using pickle for deserialization without validation"
       },
       {
-        "file": "agent/drive_thru/cve_packages/weak_crypto_md5/md5_vulnerability.py",
+        "file": "agent/drive_thru/vulnerable_crypto.py",
         "line_hint": "25",
-        "vuln_type": "Weak Crypto - MD5",
+        "vuln_type": "Weak Crypto",
         "severity_hint": "high",
-        "note": "VULNERABLE: MD5 password hashing - cryptographically broken",
-        "cve_id": "CVE-2024-0004"
+        "note": "VULNERABLE: MD5 password hashing - cryptographically broken"
       },
       {
-        "file": "agent/drive_thru/cve_packages/weak_crypto_des/des_vulnerability.py",
-        "line_hint": "25",
-        "vuln_type": "Weak Crypto - DES",
+        "file": "agent/drive_thru/vulnerable_crypto.py",
+        "line_hint": "35",
+        "vuln_type": "Weak Crypto",
         "severity_hint": "high",
-        "note": "VULNERABLE: DES encryption with weak 56-bit key",
-        "cve_id": "CVE-2024-0005"
+        "note": "VULNERABLE: DES encryption with weak 56-bit key"
       },
       {
-        "file": "agent/drive_thru/cve_packages/missing_authentication/missing_auth_vulnerability.py",
-        "line_hint": "25",
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "385",
         "vuln_type": "Missing Authentication",
         "severity_hint": "high",
-        "note": "VULNERABLE: No authentication required for admin functions",
-        "cve_id": "CVE-2024-0006"
+        "note": "VULNERABLE: No authentication required for admin functions"
       },
       {
-        "file": "agent/drive_thru/cve_packages/idor/idor_vulnerability.py",
-        "line_hint": "25",
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "417",
         "vuln_type": "IDOR",
         "severity_hint": "medium",
-        "note": "VULNERABLE: No authorization check - users can access any user's data",
-        "cve_id": "CVE-2024-0007"
+        "note": "VULNERABLE: No authorization check - users can access any user's data"
       },
       {
-        "file": "agent/drive_thru/cve_packages/command_injection/command_injection_vulnerability.py",
-        "line_hint": "25",
-        "vuln_type": "Command Injection",
-        "severity_hint": "critical",
-        "note": "VULNERABLE: Direct execution of user input without sanitization",
-        "cve_id": "CVE-2024-0008"
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "587",
+        "vuln_type": "IDOR",
+        "severity_hint": "medium",
+        "note": "VULNERABLE: No authorization check - users can access any order"
       },
       {
-        "file": "agent/drive_thru/cve_packages/unsafe_eval/unsafe_eval_vulnerability.py",
-        "line_hint": "25",
-        "vuln_type": "Unsafe eval()",
-        "severity_hint": "critical",
-        "note": "VULNERABLE: Using eval() with user input allowing arbitrary code execution",
-        "cve_id": "CVE-2024-0009"
-      },
-      {
-        "file": "agent/drive_thru/cve_packages/hardcoded_secrets/hardcoded_secrets_vulnerability.py",
-        "line_hint": "25",
-        "vuln_type": "Hardcoded Secrets",
-        "severity_hint": "critical",
-        "note": "VULNERABLE: Hardcoded secrets in source code",
-        "cve_id": "CVE-2024-0010"
-      },
-      {
-        "file": "agent/drive_thru/cve_packages/secrets_exposure/secrets_exposure_vulnerability.py",
-        "line_hint": "25",
-        "vuln_type": "Secrets Exposure",
-        "severity_hint": "critical",
-        "note": "VULNERABLE: Exposing all secrets in debug endpoint",
-        "cve_id": "CVE-2024-0011"
-      },
-      {
-        "file": "agent/drive_thru/cve_packages/missing_security_headers/missing_security_headers_vulnerability.py",
-        "line_hint": "25",
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "42",
         "vuln_type": "Missing Security Headers",
         "severity_hint": "medium",
-        "note": "VULNERABLE: No Content Security Policy, X-Frame-Options, etc.",
-        "cve_id": "CVE-2024-0012"
+        "note": "VULNERABLE: No Content Security Policy, X-Frame-Options, etc."
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "481",
+        "vuln_type": "Secrets in Logs",
+        "severity_hint": "high",
+        "note": "VULNERABLE: Logging sensitive data in plaintext"
+      },
+      {
+        "file": "agent/drive_thru/data_pipeline.py",
+        "line_hint": "40",
+        "vuln_type": "Secrets in Logs",
+        "severity_hint": "high",
+        "note": "VULNERABLE: Logging sensitive environment variables"
+      },
+      {
+        "file": "agent/drive_thru/vulnerable_secrets.py",
+        "line_hint": "8",
+        "vuln_type": "Hardcoded Secrets",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Hardcoded secrets in source code"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "422",
+        "vuln_type": "Secrets Exposure",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Exposing all secrets in debug endpoint"
       },
       {
         "file": "agent/requirements-vulnerable.txt",
@@ -158,6 +153,20 @@
         "note": "VULNERABLE: Security group allowing all traffic"
       },
       {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "676",
+        "vuln_type": "Command Injection",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Direct execution of user input without sanitization"
+      },
+      {
+        "file": "agent/drive_thru/api.py",
+        "line_hint": "701",
+        "vuln_type": "Unsafe eval()",
+        "severity_hint": "critical",
+        "note": "VULNERABLE: Using eval() with user input allowing arbitrary code execution"
+      },
+      {
         "file": ".github/workflows/vulnerable-ci.yml",
         "line_hint": "25",
         "vuln_type": "Supply Chain - CI/CD",
@@ -179,8 +188,7 @@
         "Insecure Deserialization",
         "Command Injection",
         "Unsafe eval()",
-        "Weak Crypto - MD5",
-        "Weak Crypto - DES",
+        "Weak Crypto",
         "Hardcoded Secrets"
       ],
       "DAST": [
@@ -223,83 +231,6 @@
         "CSPM": "Cloud Security Posture Management",
         "Runtime": "Runtime Security Monitoring"
       }
-    },
-    "cve_packages": {
-      "description": "Each CVE is now in its own package for AIKIDO to detect as separate concerns",
-      "packages": [
-        {
-          "package": "agent.drive_thru.cve_packages.sql_injection",
-          "cve_id": "CVE-2024-0001",
-          "vulnerability_type": "SQL Injection",
-          "severity": "High"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.xss",
-          "cve_id": "CVE-2024-0002",
-          "vulnerability_type": "Reflected XSS",
-          "severity": "Medium"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.insecure_deserialization",
-          "cve_id": "CVE-2024-0003",
-          "vulnerability_type": "Insecure Deserialization",
-          "severity": "Critical"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.weak_crypto_md5",
-          "cve_id": "CVE-2024-0004",
-          "vulnerability_type": "Weak Crypto - MD5",
-          "severity": "High"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.weak_crypto_des",
-          "cve_id": "CVE-2024-0005",
-          "vulnerability_type": "Weak Crypto - DES",
-          "severity": "High"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.missing_authentication",
-          "cve_id": "CVE-2024-0006",
-          "vulnerability_type": "Missing Authentication",
-          "severity": "High"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.idor",
-          "cve_id": "CVE-2024-0007",
-          "vulnerability_type": "IDOR",
-          "severity": "Medium"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.command_injection",
-          "cve_id": "CVE-2024-0008",
-          "vulnerability_type": "Command Injection",
-          "severity": "Critical"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.unsafe_eval",
-          "cve_id": "CVE-2024-0009",
-          "vulnerability_type": "Unsafe eval()",
-          "severity": "Critical"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.hardcoded_secrets",
-          "cve_id": "CVE-2024-0010",
-          "vulnerability_type": "Hardcoded Secrets",
-          "severity": "Critical"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.secrets_exposure",
-          "cve_id": "CVE-2024-0011",
-          "vulnerability_type": "Secrets Exposure",
-          "severity": "Critical"
-        },
-        {
-          "package": "agent.drive_thru.cve_packages.missing_security_headers",
-          "cve_id": "CVE-2024-0012",
-          "vulnerability_type": "Missing Security Headers",
-          "severity": "Medium"
-        }
-      ]
     }
   }
 }
