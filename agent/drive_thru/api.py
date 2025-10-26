@@ -1556,6 +1556,379 @@ async def execute_file_with_traversal(file_data: dict):
     }
 
 
+# VULNERABLE: NoSQL Injection endpoints
+@app.post("/nosql-injection/mongodb")
+async def execute_mongodb_injection(injection_data: dict):
+    """Execute MongoDB NoSQL injection - VULNERABLE: NoSQL injection"""
+    from .vulnerable_nosql_injection import VulnerableNoSQLInjection
+    
+    nosql_handler = VulnerableNoSQLInjection()
+    
+    collection = injection_data.get("collection", "users")
+    query = injection_data.get("query", "")
+    
+    # VULNERABLE: No query validation
+    # VULNERABLE: No NoSQL injection protection
+    
+    result = nosql_handler.execute_mongodb_injection(collection, query)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: MongoDB NoSQL injection vulnerability"
+    }
+
+
+@app.post("/nosql-injection/couchdb")
+async def execute_couchdb_injection(injection_data: dict):
+    """Execute CouchDB NoSQL injection - VULNERABLE: NoSQL injection"""
+    from .vulnerable_nosql_injection import VulnerableNoSQLInjection
+    
+    nosql_handler = VulnerableNoSQLInjection()
+    
+    database = injection_data.get("database", "users")
+    query = injection_data.get("query", "")
+    
+    # VULNERABLE: No query validation
+    # VULNERABLE: No NoSQL injection protection
+    
+    result = nosql_handler.execute_couchdb_injection(database, query)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CouchDB NoSQL injection vulnerability"
+    }
+
+
+@app.post("/nosql-injection/elasticsearch")
+async def execute_elasticsearch_injection(injection_data: dict):
+    """Execute Elasticsearch NoSQL injection - VULNERABLE: NoSQL injection"""
+    from .vulnerable_nosql_injection import VulnerableNoSQLInjection
+    
+    nosql_handler = VulnerableNoSQLInjection()
+    
+    index = injection_data.get("index", "users")
+    query = injection_data.get("query", "")
+    
+    # VULNERABLE: No query validation
+    # VULNERABLE: No NoSQL injection protection
+    
+    result = nosql_handler.execute_elasticsearch_injection(index, query)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Elasticsearch NoSQL injection vulnerability"
+    }
+
+
+@app.post("/nosql-injection/advanced")
+async def execute_advanced_nosql_injection(injection_data: dict):
+    """Execute advanced NoSQL injection - VULNERABLE: NoSQL injection"""
+    from .vulnerable_nosql_injection import VulnerableNoSQLInjection
+    
+    nosql_handler = VulnerableNoSQLInjection()
+    
+    db_type = injection_data.get("db_type", "mongodb")
+    payload = injection_data.get("payload", "")
+    
+    # VULNERABLE: No payload validation
+    # VULNERABLE: No NoSQL injection protection
+    
+    result = nosql_handler.execute_advanced_nosql_injection(db_type, payload)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced NoSQL injection vulnerability"
+    }
+
+
+@app.post("/nosql-injection/blind")
+async def execute_blind_nosql_injection(injection_data: dict):
+    """Execute blind NoSQL injection - VULNERABLE: NoSQL injection"""
+    from .vulnerable_nosql_injection import VulnerableNoSQLInjection
+    
+    nosql_handler = VulnerableNoSQLInjection()
+    
+    db_type = injection_data.get("db_type", "mongodb")
+    payload = injection_data.get("payload", "")
+    
+    # VULNERABLE: No payload validation
+    # VULNERABLE: No NoSQL injection protection
+    
+    result = nosql_handler.execute_blind_nosql_injection(db_type, payload)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Blind NoSQL injection vulnerability"
+    }
+
+
+# VULNERABLE: LDAP Injection endpoints
+@app.post("/ldap-injection/query")
+async def execute_ldap_injection(injection_data: dict):
+    """Execute LDAP injection - VULNERABLE: LDAP injection"""
+    from .vulnerable_ldap_injection import VulnerableLDAPInjection
+    
+    ldap_handler = VulnerableLDAPInjection()
+    
+    base_dn = injection_data.get("base_dn", "ou=users,dc=example,dc=com")
+    filter_query = injection_data.get("filter_query", "")
+    
+    # VULNERABLE: No query validation
+    # VULNERABLE: No LDAP injection protection
+    
+    result = ldap_handler.execute_ldap_injection(base_dn, filter_query)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: LDAP injection vulnerability"
+    }
+
+
+@app.post("/ldap-injection/auth-bypass")
+async def execute_ldap_auth_bypass(injection_data: dict):
+    """Execute LDAP authentication bypass - VULNERABLE: LDAP injection"""
+    from .vulnerable_ldap_injection import VulnerableLDAPInjection
+    
+    ldap_handler = VulnerableLDAPInjection()
+    
+    username = injection_data.get("username", "")
+    password = injection_data.get("password", "")
+    
+    # VULNERABLE: No authentication validation
+    # VULNERABLE: No LDAP injection protection
+    
+    result = ldap_handler.execute_ldap_authentication_bypass(username, password)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: LDAP authentication bypass vulnerability"
+    }
+
+
+@app.post("/ldap-injection/data-extraction")
+async def execute_ldap_data_extraction(injection_data: dict):
+    """Execute LDAP data extraction - VULNERABLE: LDAP injection"""
+    from .vulnerable_ldap_injection import VulnerableLDAPInjection
+    
+    ldap_handler = VulnerableLDAPInjection()
+    
+    base_dn = injection_data.get("base_dn", "ou=users,dc=example,dc=com")
+    attribute = injection_data.get("attribute", "cn")
+    
+    # VULNERABLE: No data access control
+    # VULNERABLE: No LDAP injection protection
+    
+    result = ldap_handler.execute_ldap_data_extraction(base_dn, attribute)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: LDAP data extraction vulnerability"
+    }
+
+
+# VULNERABLE: Template Injection endpoints
+@app.post("/template-injection/jinja2")
+async def execute_jinja2_injection(injection_data: dict):
+    """Execute Jinja2 template injection - VULNERABLE: Template injection"""
+    from .vulnerable_template_injection import VulnerableTemplateInjection
+    
+    template_handler = VulnerableTemplateInjection()
+    
+    template = injection_data.get("template", "")
+    context = injection_data.get("context", {})
+    
+    # VULNERABLE: No template validation
+    # VULNERABLE: No template injection protection
+    
+    result = template_handler.execute_jinja2_injection(template, context)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Jinja2 template injection vulnerability"
+    }
+
+
+@app.post("/template-injection/django")
+async def execute_django_injection(injection_data: dict):
+    """Execute Django template injection - VULNERABLE: Template injection"""
+    from .vulnerable_template_injection import VulnerableTemplateInjection
+    
+    template_handler = VulnerableTemplateInjection()
+    
+    template = injection_data.get("template", "")
+    context = injection_data.get("context", {})
+    
+    # VULNERABLE: No template validation
+    # VULNERABLE: No template injection protection
+    
+    result = template_handler.execute_django_injection(template, context)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Django template injection vulnerability"
+    }
+
+
+@app.post("/template-injection/erb")
+async def execute_erb_injection(injection_data: dict):
+    """Execute ERB template injection - VULNERABLE: Template injection"""
+    from .vulnerable_template_injection import VulnerableTemplateInjection
+    
+    template_handler = VulnerableTemplateInjection()
+    
+    template = injection_data.get("template", "")
+    context = injection_data.get("context", {})
+    
+    # VULNERABLE: No template validation
+    # VULNERABLE: No template injection protection
+    
+    result = template_handler.execute_erb_injection(template, context)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: ERB template injection vulnerability"
+    }
+
+
+@app.post("/template-injection/advanced")
+async def execute_advanced_template_injection(injection_data: dict):
+    """Execute advanced template injection - VULNERABLE: Template injection"""
+    from .vulnerable_template_injection import VulnerableTemplateInjection
+    
+    template_handler = VulnerableTemplateInjection()
+    
+    template = injection_data.get("template", "")
+    context = injection_data.get("context", {})
+    
+    # VULNERABLE: No template validation
+    # VULNERABLE: No template injection protection
+    
+    result = template_handler.execute_advanced_template_injection(template, context)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced template injection vulnerability"
+    }
+
+
+# VULNERABLE: Command Injection endpoints
+@app.post("/command-injection/shell")
+async def execute_shell_command_injection(injection_data: dict):
+    """Execute shell command injection - VULNERABLE: Command injection"""
+    from .vulnerable_command_injection import VulnerableCommandInjection
+    
+    command_handler = VulnerableCommandInjection()
+    
+    command = injection_data.get("command", "")
+    
+    # VULNERABLE: No command validation
+    # VULNERABLE: No command injection protection
+    
+    result = command_handler.execute_shell_command_injection(command)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Shell command injection vulnerability"
+    }
+
+
+@app.post("/command-injection/system")
+async def execute_system_command_injection(injection_data: dict):
+    """Execute system command injection - VULNERABLE: Command injection"""
+    from .vulnerable_command_injection import VulnerableCommandInjection
+    
+    command_handler = VulnerableCommandInjection()
+    
+    command = injection_data.get("command", "")
+    
+    # VULNERABLE: No command validation
+    # VULNERABLE: No command injection protection
+    
+    result = command_handler.execute_system_command_injection(command)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: System command injection vulnerability"
+    }
+
+
+@app.post("/command-injection/popen")
+async def execute_popen_command_injection(injection_data: dict):
+    """Execute popen command injection - VULNERABLE: Command injection"""
+    from .vulnerable_command_injection import VulnerableCommandInjection
+    
+    command_handler = VulnerableCommandInjection()
+    
+    command = injection_data.get("command", "")
+    
+    # VULNERABLE: No command validation
+    # VULNERABLE: No command injection protection
+    
+    result = command_handler.execute_popen_command_injection(command)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Popen command injection vulnerability"
+    }
+
+
+@app.post("/command-injection/advanced")
+async def execute_advanced_command_injection(injection_data: dict):
+    """Execute advanced command injection - VULNERABLE: Command injection"""
+    from .vulnerable_command_injection import VulnerableCommandInjection
+    
+    command_handler = VulnerableCommandInjection()
+    
+    command = injection_data.get("command", "")
+    
+    # VULNERABLE: No command validation
+    # VULNERABLE: No command injection protection
+    
+    result = command_handler.execute_advanced_command_injection(command)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced command injection vulnerability"
+    }
+
+
+@app.post("/command-injection/blind")
+async def execute_blind_command_injection(injection_data: dict):
+    """Execute blind command injection - VULNERABLE: Command injection"""
+    from .vulnerable_command_injection import VulnerableCommandInjection
+    
+    command_handler = VulnerableCommandInjection()
+    
+    command = injection_data.get("command", "")
+    
+    # VULNERABLE: No command validation
+    # VULNERABLE: No command injection protection
+    
+    result = command_handler.execute_blind_command_injection(command)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Blind command injection vulnerability"
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
