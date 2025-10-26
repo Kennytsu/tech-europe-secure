@@ -1,0 +1,18 @@
+# Core dependencies
+dotenv>=0.9.9
+livekit-agents[openai,silero,turn-detector]>=1.2.13
+
+# Database dependencies
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0  # PostgreSQL adapter
+alembic>=1.12.0  # Database migrations
+
+# API dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+
+# Development dependencies
+ruff>=0.13.2
+pytest>=7.0.0
+pytest-asyncio>=0.21.0

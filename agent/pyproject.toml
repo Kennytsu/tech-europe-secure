@@ -1,0 +1,20 @@
+[project]
+name = "agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv>=0.9.9",
+    "livekit-agents[openai,silero,turn-detector]>=1.2.13",
+    "sqlalchemy>=2.0.0",
+    "psycopg2-binary>=2.9.0",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.13.2",
+]

@@ -1,0 +1,20 @@
+.env
+
+# Database files (contains real data)
+agent/drive_thru.db
+agent/drive_thru*.db
+
+# Virtual environment
+agent/.venv/
+
+# Python cache files
+agent/__pycache__/
+agent/drive_thru/__pycache__/
+
+
+# Test files (optional - uncomment to exclude)
+# agent/tests/
+
+# Documentation (optional - uncomment to exclude)
+# agent/docs/
+
