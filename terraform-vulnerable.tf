@@ -248,6 +248,109 @@ resource "random_string" "bucket_suffix" {
   upper   = false
 }
 
+# VULNERABLE: CloudTrail logging disabled
+resource "aws_cloudtrail" "vuln_lab_trail" {
+  name                          = "vuln-lab-trail"
+  s3_bucket_name               = aws_s3_bucket.vuln_lab_bucket.id
+  include_global_service_events = false  # VULNERABLE: Not logging global service events
+  is_multi_region_trail        = false   # VULNERABLE: Single region only
+  enable_logging               = false  # VULNERABLE: Logging disabled
+  enable_log_file_validation   = false  # VULNERABLE: No log file validation
+  
+  event_selector {
+    read_write_type                 = "All"
+    include_management_events       = false  # VULNERABLE: Not logging management events
+    data_resource {
+      type   = "AWS::S3::Object"
+      values = ["${aws_s3_bucket.vuln_lab_bucket.arn}/*"]
+    }
+  }
+}
+
+# VULNERABLE: GuardDuty disabled
+resource "aws_guardduty_detector" "vuln_lab_detector" {
+  enable = false  # VULNERABLE: Threat detection disabled
+}
+
+# VULNERABLE: Config rules disabled
+resource "aws_config_configuration_recorder" "vuln_lab_recorder" {
+  name     = "vuln-lab-recorder"
+  role_arn = aws_iam_role.vuln_lab_role.arn
+  
+  recording_group {
+    all_supported                 = false  # VULNERABLE: Not recording all resource types
+    include_global_resource_types = false  # VULNERABLE: Not including global resources
+  }
+}
+
+# VULNERABLE: KMS key with weak encryption
+resource "aws_kms_key" "vuln_lab_key" {
+  description             = "VULNERABLE: Weak KMS key"
+  deletion_window_in_days = 7  # VULNERABLE: Short deletion window
+  
+  # VULNERABLE: No key rotation
+  enable_key_rotation = false
+  
+  # VULNERABLE: Weak key policy
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "Enable IAM User Permissions"
+        Effect = "Allow"
+        Principal = {
+          AWS = "*"  # VULNERABLE: Allows all principals
+        }
+        Action   = "kms:*"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# VULNERABLE: Secrets Manager with weak configuration
+resource "aws_secretsmanager_secret" "vuln_lab_secret" {
+  name                    = "vuln-lab-secret"
+  description             = "VULNERABLE: Weak secrets configuration"
+  recovery_window_in_days = 0  # VULNERABLE: Immediate deletion
+  
+  # VULNERABLE: No rotation
+  rotation_lambda_arn = null
+  
+  tags = {
+    Name = "vuln-lab-secret"
+  }
+}
+
+# VULNERABLE: WAF disabled
+resource "aws_wafv2_web_acl" "vuln_lab_waf" {
+  name  = "vuln-lab-waf"
+  scope = "REGIONAL"
+  
+  # VULNERABLE: No rules defined
+  default_action {
+    allow {}
+  }
+  
+  # VULNERABLE: No logging
+  visibility_config {
+    cloudwatch_metrics_enabled = false
+    metric_name                = "vuln-lab-waf"
+    sampled_requests_enabled  = false
+  }
+}
+
+# VULNERABLE: VPC Flow Logs disabled
+resource "aws_flow_log" "vuln_lab_flow_log" {
+  iam_role_arn    = aws_iam_role.vuln_lab_role.arn
+  log_destination = aws_s3_bucket.vuln_lab_bucket.arn
+  traffic_type    = "ALL"
+  
+  # VULNERABLE: Flow logs disabled
+  log_destination_type = "s3"
+  log_format = ""  # VULNERABLE: No custom log format
+}
+
 # VULNERABLE: Output exposing sensitive information
 output "database_password" {
   value = aws_db_instance.vuln_lab_db.password
@@ -262,4 +365,14 @@ output "api_key" {
 output "s3_bucket_name" {
   value = aws_s3_bucket.vuln_lab_bucket.bucket
   description = "VULNERABLE: Exposing S3 bucket name"
+}
+
+output "kms_key_id" {
+  value = aws_kms_key.vuln_lab_key.key_id
+  description = "VULNERABLE: Exposing KMS key ID"
+}
+
+output "secrets_manager_arn" {
+  value = aws_secretsmanager_secret.vuln_lab_secret.arn
+  description = "VULNERABLE: Exposing Secrets Manager ARN"
 }

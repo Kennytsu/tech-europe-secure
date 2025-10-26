@@ -714,6 +714,460 @@ async def admin_eval_code(code_data: dict):
         }
 
 
+@app.post("/admin/import")
+async def admin_import_module(import_data: dict):
+    """Admin endpoint to import modules - VULNERABLE: arbitrary import"""
+    module_name = import_data.get("module", "")
+    
+    # VULNERABLE: Dynamic import of user-specified modules
+    # This allows importing arbitrary modules including malicious ones
+    try:
+        # VULNERABLE: Direct import of user input
+        module = __import__(module_name)
+        
+        return {
+            "status": "imported",
+            "module": module_name,
+            "module_info": str(module),
+            "warning": "VULNERABLE: Arbitrary module import"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Arbitrary module import"
+        }
+
+
+@app.post("/admin/exec")
+async def admin_exec_code(exec_data: dict):
+    """Admin endpoint to execute code - VULNERABLE: unsafe exec"""
+    code = exec_data.get("code", "")
+    
+    # VULNERABLE: Using exec() with user input
+    # This allows arbitrary code execution
+    try:
+        # VULNERABLE: Direct exec of user input
+        exec(code)
+        
+        return {
+            "status": "executed",
+            "code": code,
+            "warning": "VULNERABLE: Unsafe exec - arbitrary code execution"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Unsafe exec - arbitrary code execution"
+        }
+
+
+@app.post("/admin/compile")
+async def admin_compile_code(compile_data: dict):
+    """Admin endpoint to compile code - VULNERABLE: unsafe compile"""
+    code = compile_data.get("code", "")
+    
+    # VULNERABLE: Using compile() with user input
+    # This allows arbitrary code compilation
+    try:
+        # VULNERABLE: Direct compile of user input
+        compiled_code = compile(code, "<string>", "exec")
+        exec(compiled_code)
+        
+        return {
+            "status": "compiled",
+            "code": code,
+            "warning": "VULNERABLE: Unsafe compile - arbitrary code compilation"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Unsafe compile - arbitrary code compilation"
+        }
+
+
+@app.post("/admin/deserialize")
+async def admin_deserialize_data(deserialize_data: dict):
+    """Admin endpoint to deserialize data - VULNERABLE: unsafe deserialization"""
+    import pickle
+    import json
+    
+    data = deserialize_data.get("data", "")
+    format_type = deserialize_data.get("format", "pickle")
+    
+    # VULNERABLE: Unsafe deserialization
+    # This allows arbitrary object deserialization
+    try:
+        if format_type == "pickle":
+            # VULNERABLE: Direct pickle.loads with user input
+            result = pickle.loads(data.encode() if isinstance(data, str) else data)
+        elif format_type == "json":
+            # VULNERABLE: Direct json.loads with user input
+            result = json.loads(data)
+        else:
+            result = "Unknown format"
+        
+        return {
+            "status": "deserialized",
+            "data": str(result),
+            "format": format_type,
+            "warning": "VULNERABLE: Unsafe deserialization"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Unsafe deserialization"
+        }
+
+
+@app.post("/admin/serialize")
+async def admin_serialize_data(serialize_data: dict):
+    """Admin endpoint to serialize data - VULNERABLE: unsafe serialization"""
+    import pickle
+    import json
+    
+    data = serialize_data.get("data", "")
+    format_type = serialize_data.get("format", "pickle")
+    
+    # VULNERABLE: Unsafe serialization
+    # This allows arbitrary object serialization
+    try:
+        if format_type == "pickle":
+            # VULNERABLE: Direct pickle.dumps with user input
+            result = pickle.dumps(data)
+        elif format_type == "json":
+            # VULNERABLE: Direct json.dumps with user input
+            result = json.dumps(data)
+        else:
+            result = "Unknown format"
+        
+        return {
+            "status": "serialized",
+            "data": str(result),
+            "format": format_type,
+            "warning": "VULNERABLE: Unsafe serialization"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Unsafe serialization"
+        }
+
+
+@app.post("/admin/reflect")
+async def admin_reflect_object(reflect_data: dict):
+    """Admin endpoint to reflect objects - VULNERABLE: unsafe reflection"""
+    object_name = reflect_data.get("object", "")
+    method_name = reflect_data.get("method", "")
+    
+    # VULNERABLE: Unsafe reflection
+    # This allows arbitrary object reflection
+    try:
+        # VULNERABLE: Direct getattr with user input
+        obj = globals().get(object_name)
+        if obj and method_name:
+            method = getattr(obj, method_name)
+            result = method()
+        else:
+            result = "Object or method not found"
+        
+        return {
+            "status": "reflected",
+            "object": object_name,
+            "method": method_name,
+            "result": str(result),
+            "warning": "VULNERABLE: Unsafe reflection"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Unsafe reflection"
+        }
+
+
+@app.post("/admin/globals")
+async def admin_get_globals():
+    """Admin endpoint to get globals - VULNERABLE: globals exposure"""
+    # VULNERABLE: Exposing all global variables
+    # This allows access to sensitive global state
+    
+    return {
+        "status": "globals_exposed",
+        "globals": str(globals()),
+        "warning": "VULNERABLE: Global variables exposure"
+    }
+
+
+@app.post("/admin/locals")
+async def admin_get_locals():
+    """Admin endpoint to get locals - VULNERABLE: locals exposure"""
+    # VULNERABLE: Exposing all local variables
+    # This allows access to sensitive local state
+    
+    return {
+        "status": "locals_exposed",
+        "locals": str(locals()),
+        "warning": "VULNERABLE: Local variables exposure"
+    }
+
+
+@app.post("/admin/dir")
+async def admin_get_dir(dir_data: dict):
+    """Admin endpoint to get directory listing - VULNERABLE: directory traversal"""
+    import os
+    
+    path = dir_data.get("path", "/")
+    
+    # VULNERABLE: Directory traversal
+    # This allows arbitrary directory access
+    try:
+        # VULNERABLE: Direct os.listdir with user input
+        files = os.listdir(path)
+        
+        return {
+            "status": "directory_listed",
+            "path": path,
+            "files": files,
+            "warning": "VULNERABLE: Directory traversal"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Directory traversal"
+        }
+
+
+@app.post("/admin/read")
+async def admin_read_file(read_data: dict):
+    """Admin endpoint to read files - VULNERABLE: arbitrary file read"""
+    import os
+    
+    file_path = read_data.get("file", "")
+    
+    # VULNERABLE: Arbitrary file read
+    # This allows reading any file on the system
+    try:
+        # VULNERABLE: Direct file read with user input
+        with open(file_path, 'r') as f:
+            content = f.read()
+        
+        return {
+            "status": "file_read",
+            "file": file_path,
+            "content": content,
+            "warning": "VULNERABLE: Arbitrary file read"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Arbitrary file read"
+        }
+
+
+@app.post("/admin/write")
+async def admin_write_file(write_data: dict):
+    """Admin endpoint to write files - VULNERABLE: arbitrary file write"""
+    import os
+    
+    file_path = write_data.get("file", "")
+    content = write_data.get("content", "")
+    
+    # VULNERABLE: Arbitrary file write
+    # This allows writing to any file on the system
+    try:
+        # VULNERABLE: Direct file write with user input
+        with open(file_path, 'w') as f:
+            f.write(content)
+        
+        return {
+            "status": "file_written",
+            "file": file_path,
+            "content": content,
+            "warning": "VULNERABLE: Arbitrary file write"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "warning": "VULNERABLE: Arbitrary file write"
+        }
+
+
+@app.post("/email/send")
+async def send_email(email_data: dict):
+    """Send email - VULNERABLE: email security issues"""
+    from .vulnerable_email import VulnerableEmailSecurity
+    
+    email_security = VulnerableEmailSecurity()
+    
+    to = email_data.get("to", "")
+    subject = email_data.get("subject", "")
+    body = email_data.get("body", "")
+    
+    # VULNERABLE: No email validation
+    # VULNERABLE: No email sanitization
+    # VULNERABLE: No email encryption
+    
+    result = email_security.send_email(to, subject, body)
+    
+    return {
+        "status": "sent" if result else "failed",
+        "to": to,
+        "subject": subject,
+        "warning": "VULNERABLE: Email security issues"
+    }
+
+
+@app.post("/payment/process")
+async def process_payment(payment_data: dict):
+    """Process payment - VULNERABLE: payment security issues"""
+    from .vulnerable_payments import VulnerablePaymentProcessor
+    
+    payment_processor = VulnerablePaymentProcessor()
+    
+    amount = payment_data.get("amount", 0)
+    currency = payment_data.get("currency", "USD")
+    payment_method = payment_data.get("payment_method", "credit_card")
+    customer_info = payment_data.get("customer_info", {})
+    
+    # VULNERABLE: No payment validation
+    # VULNERABLE: No payment sanitization
+    # VULNERABLE: No payment encryption
+    
+    result = payment_processor.process_payment(amount, currency, payment_method, customer_info)
+    
+    return {
+        "status": "processed",
+        "result": result,
+        "warning": "VULNERABLE: Payment security issues"
+    }
+
+
+@app.post("/file/upload")
+async def upload_file(file_data: dict):
+    """Upload file - VULNERABLE: file upload security issues"""
+    from .vulnerable_file_upload import VulnerableFileUpload
+    
+    file_upload = VulnerableFileUpload()
+    
+    filename = file_data.get("filename", "")
+    content = file_data.get("content", "")
+    user_id = file_data.get("user_id", "anonymous")
+    
+    # VULNERABLE: No file validation
+    # VULNERABLE: No file sanitization
+    # VULNERABLE: No file encryption
+    
+    # Create temporary file
+    import tempfile
+    with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+        f.write(content)
+        temp_path = f.name
+    
+    result = file_upload.upload_file(temp_path, filename, user_id)
+    
+    # Clean up temp file
+    import os
+    os.unlink(temp_path)
+    
+    return {
+        "status": "uploaded" if result["success"] else "failed",
+        "result": result,
+        "warning": "VULNERABLE: File upload security issues"
+    }
+
+
+@app.post("/session/create")
+async def create_session(session_data: dict):
+    """Create session - VULNERABLE: session security issues"""
+    from .vulnerable_sessions import VulnerableSessionManager
+    
+    session_manager = VulnerableSessionManager()
+    
+    user_id = session_data.get("user_id", "")
+    user_data = session_data.get("user_data", {})
+    
+    # VULNERABLE: No session validation
+    # VULNERABLE: No session sanitization
+    # VULNERABLE: No session encryption
+    
+    session_id = session_manager.create_session(user_id, user_data)
+    
+    return {
+        "status": "created",
+        "session_id": session_id,
+        "warning": "VULNERABLE: Session security issues"
+    }
+
+
+@app.post("/rate-limit/check")
+async def check_rate_limit(rate_limit_data: dict):
+    """Check rate limit - VULNERABLE: rate limiting issues"""
+    from .vulnerable_rate_limiting import VulnerableRateLimiter
+    
+    rate_limiter = VulnerableRateLimiter()
+    
+    identifier = rate_limit_data.get("identifier", "")
+    limit = rate_limit_data.get("limit", 100)
+    window = rate_limit_data.get("window", 3600)
+    
+    # VULNERABLE: No rate limit validation
+    # VULNERABLE: No rate limit sanitization
+    # VULNERABLE: No rate limit encryption
+    
+    result = rate_limiter.check_rate_limit(identifier, limit, window)
+    
+    return {
+        "status": "checked",
+        "result": result,
+        "warning": "VULNERABLE: Rate limiting security issues"
+    }
+
+
+@app.post("/validate/data")
+async def validate_data(validation_data: dict):
+    """Validate data - VULNERABLE: validation issues"""
+    from .vulnerable_validation import VulnerableDataValidator
+    
+    validator = VulnerableDataValidator()
+    
+    data_type = validation_data.get("type", "string")
+    value = validation_data.get("value", "")
+    rules = validation_data.get("rules", {})
+    
+    # VULNERABLE: No validation validation
+    # VULNERABLE: No validation sanitization
+    # VULNERABLE: No validation encryption
+    
+    if data_type == "string":
+        result = validator.validate_string(value, rules)
+    elif data_type == "email":
+        result = validator.validate_email(value)
+    elif data_type == "url":
+        result = validator.validate_url(value)
+    elif data_type == "phone":
+        result = validator.validate_phone(value)
+    elif data_type == "credit_card":
+        result = validator.validate_credit_card(value)
+    elif data_type == "ip_address":
+        result = validator.validate_ip_address(value)
+    else:
+        result = {"is_valid": False, "errors": ["Unknown validation type"], "warnings": []}
+    
+    return {
+        "status": "validated",
+        "result": result,
+        "warning": "VULNERABLE: Data validation security issues"
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
