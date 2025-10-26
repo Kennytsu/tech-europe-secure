@@ -1929,6 +1929,521 @@ async def execute_blind_command_injection(injection_data: dict):
     }
 
 
+# VULNERABLE: Log Injection endpoints
+@app.post("/log-injection/basic")
+async def execute_log_injection(injection_data: dict):
+    """Execute log injection - VULNERABLE: Log injection"""
+    from .vulnerable_log_injection import VulnerableLogInjection
+    
+    log_handler = VulnerableLogInjection()
+    
+    log_message = injection_data.get("log_message", "")
+    
+    # VULNERABLE: No log validation
+    # VULNERABLE: No log injection protection
+    
+    result = log_handler.execute_log_injection(log_message)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Log injection vulnerability"
+    }
+
+
+@app.post("/log-injection/crlf")
+async def execute_crlf_log_injection(injection_data: dict):
+    """Execute CRLF log injection - VULNERABLE: Log injection"""
+    from .vulnerable_log_injection import VulnerableLogInjection
+    
+    log_handler = VulnerableLogInjection()
+    
+    log_message = injection_data.get("log_message", "")
+    
+    # VULNERABLE: No log validation
+    # VULNERABLE: No log injection protection
+    
+    result = log_handler.execute_crlf_log_injection(log_message)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CRLF log injection vulnerability"
+    }
+
+
+@app.post("/log-injection/forging")
+async def execute_log_forging(injection_data: dict):
+    """Execute log forging - VULNERABLE: Log injection"""
+    from .vulnerable_log_injection import VulnerableLogInjection
+    
+    log_handler = VulnerableLogInjection()
+    
+    log_message = injection_data.get("log_message", "")
+    
+    # VULNERABLE: No log validation
+    # VULNERABLE: No log injection protection
+    
+    result = log_handler.execute_log_forging(log_message)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Log forging vulnerability"
+    }
+
+
+@app.post("/log-injection/poisoning")
+async def execute_log_poisoning(injection_data: dict):
+    """Execute log poisoning - VULNERABLE: Log injection"""
+    from .vulnerable_log_injection import VulnerableLogInjection
+    
+    log_handler = VulnerableLogInjection()
+    
+    log_message = injection_data.get("log_message", "")
+    
+    # VULNERABLE: No log validation
+    # VULNERABLE: No log injection protection
+    
+    result = log_handler.execute_log_poisoning(log_message)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Log poisoning vulnerability"
+    }
+
+
+@app.post("/log-injection/evasion")
+async def execute_log_injection_evasion(injection_data: dict):
+    """Execute log injection evasion - VULNERABLE: Log injection"""
+    from .vulnerable_log_injection import VulnerableLogInjection
+    
+    log_handler = VulnerableLogInjection()
+    
+    log_message = injection_data.get("log_message", "")
+    
+    # VULNERABLE: No log validation
+    # VULNERABLE: No log injection protection
+    
+    result = log_handler.execute_log_injection_evasion(log_message)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Log injection evasion vulnerability"
+    }
+
+
+@app.post("/log-injection/advanced")
+async def execute_advanced_log_injection(injection_data: dict):
+    """Execute advanced log injection - VULNERABLE: Log injection"""
+    from .vulnerable_log_injection import VulnerableLogInjection
+    
+    log_handler = VulnerableLogInjection()
+    
+    log_message = injection_data.get("log_message", "")
+    
+    # VULNERABLE: No log validation
+    # VULNERABLE: No log injection protection
+    
+    result = log_handler.execute_advanced_log_injection(log_message)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced log injection vulnerability"
+    }
+
+
+# VULNERABLE: Header Injection endpoints
+@app.post("/header-injection/basic")
+async def execute_header_injection(injection_data: dict):
+    """Execute header injection - VULNERABLE: Header injection"""
+    from .vulnerable_header_injection import VulnerableHeaderInjection
+    
+    header_handler = VulnerableHeaderInjection()
+    
+    header_name = injection_data.get("header_name", "")
+    header_value = injection_data.get("header_value", "")
+    
+    # VULNERABLE: No header validation
+    # VULNERABLE: No header injection protection
+    
+    result = header_handler.execute_header_injection(header_name, header_value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Header injection vulnerability"
+    }
+
+
+@app.post("/header-injection/crlf")
+async def execute_crlf_header_injection(injection_data: dict):
+    """Execute CRLF header injection - VULNERABLE: Header injection"""
+    from .vulnerable_header_injection import VulnerableHeaderInjection
+    
+    header_handler = VulnerableHeaderInjection()
+    
+    header_name = injection_data.get("header_name", "")
+    header_value = injection_data.get("header_value", "")
+    
+    # VULNERABLE: No header validation
+    # VULNERABLE: No header injection protection
+    
+    result = header_handler.execute_crlf_header_injection(header_name, header_value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CRLF header injection vulnerability"
+    }
+
+
+@app.post("/header-injection/forging")
+async def execute_header_forging(injection_data: dict):
+    """Execute header forging - VULNERABLE: Header injection"""
+    from .vulnerable_header_injection import VulnerableHeaderInjection
+    
+    header_handler = VulnerableHeaderInjection()
+    
+    header_name = injection_data.get("header_name", "")
+    header_value = injection_data.get("header_value", "")
+    
+    # VULNERABLE: No header validation
+    # VULNERABLE: No header injection protection
+    
+    result = header_handler.execute_header_forging(header_name, header_value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Header forging vulnerability"
+    }
+
+
+@app.post("/header-injection/poisoning")
+async def execute_header_poisoning(injection_data: dict):
+    """Execute header poisoning - VULNERABLE: Header injection"""
+    from .vulnerable_header_injection import VulnerableHeaderInjection
+    
+    header_handler = VulnerableHeaderInjection()
+    
+    header_name = injection_data.get("header_name", "")
+    header_value = injection_data.get("header_value", "")
+    
+    # VULNERABLE: No header validation
+    # VULNERABLE: No header injection protection
+    
+    result = header_handler.execute_header_poisoning(header_name, header_value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Header poisoning vulnerability"
+    }
+
+
+@app.post("/header-injection/evasion")
+async def execute_header_injection_evasion(injection_data: dict):
+    """Execute header injection evasion - VULNERABLE: Header injection"""
+    from .vulnerable_header_injection import VulnerableHeaderInjection
+    
+    header_handler = VulnerableHeaderInjection()
+    
+    header_name = injection_data.get("header_name", "")
+    header_value = injection_data.get("header_value", "")
+    
+    # VULNERABLE: No header validation
+    # VULNERABLE: No header injection protection
+    
+    result = header_handler.execute_header_injection_evasion(header_name, header_value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Header injection evasion vulnerability"
+    }
+
+
+@app.post("/header-injection/advanced")
+async def execute_advanced_header_injection(injection_data: dict):
+    """Execute advanced header injection - VULNERABLE: Header injection"""
+    from .vulnerable_header_injection import VulnerableHeaderInjection
+    
+    header_handler = VulnerableHeaderInjection()
+    
+    header_name = injection_data.get("header_name", "")
+    header_value = injection_data.get("header_value", "")
+    
+    # VULNERABLE: No header validation
+    # VULNERABLE: No header injection protection
+    
+    result = header_handler.execute_advanced_header_injection(header_name, header_value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced header injection vulnerability"
+    }
+
+
+# VULNERABLE: CRLF Injection endpoints
+@app.post("/crlf-injection/basic")
+async def execute_crlf_injection(injection_data: dict):
+    """Execute CRLF injection - VULNERABLE: CRLF injection"""
+    from .vulnerable_crlf_injection import VulnerableCRLFInjection
+    
+    crlf_handler = VulnerableCRLFInjection()
+    
+    input_data = injection_data.get("input_data", "")
+    
+    # VULNERABLE: No CRLF validation
+    # VULNERABLE: No CRLF injection protection
+    
+    result = crlf_handler.execute_crlf_injection(input_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CRLF injection vulnerability"
+    }
+
+
+@app.post("/crlf-injection/http-header")
+async def execute_http_header_injection(injection_data: dict):
+    """Execute HTTP header injection - VULNERABLE: CRLF injection"""
+    from .vulnerable_crlf_injection import VulnerableCRLFInjection
+    
+    crlf_handler = VulnerableCRLFInjection()
+    
+    header_name = injection_data.get("header_name", "")
+    header_value = injection_data.get("header_value", "")
+    
+    # VULNERABLE: No CRLF validation
+    # VULNERABLE: No CRLF injection protection
+    
+    result = crlf_handler.execute_http_header_injection(header_name, header_value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: HTTP header injection vulnerability"
+    }
+
+
+@app.post("/crlf-injection/http-response-splitting")
+async def execute_http_response_splitting(injection_data: dict):
+    """Execute HTTP response splitting - VULNERABLE: CRLF injection"""
+    from .vulnerable_crlf_injection import VulnerableCRLFInjection
+    
+    crlf_handler = VulnerableCRLFInjection()
+    
+    response_data = injection_data.get("response_data", "")
+    
+    # VULNERABLE: No CRLF validation
+    # VULNERABLE: No CRLF injection protection
+    
+    result = crlf_handler.execute_http_response_splitting(response_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: HTTP response splitting vulnerability"
+    }
+
+
+@app.post("/crlf-injection/log")
+async def execute_crlf_log_injection(injection_data: dict):
+    """Execute CRLF log injection - VULNERABLE: CRLF injection"""
+    from .vulnerable_crlf_injection import VulnerableCRLFInjection
+    
+    crlf_handler = VulnerableCRLFInjection()
+    
+    log_message = injection_data.get("log_message", "")
+    
+    # VULNERABLE: No CRLF validation
+    # VULNERABLE: No CRLF injection protection
+    
+    result = crlf_handler.execute_crlf_log_injection(log_message)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CRLF log injection vulnerability"
+    }
+
+
+@app.post("/crlf-injection/evasion")
+async def execute_crlf_injection_evasion(injection_data: dict):
+    """Execute CRLF injection evasion - VULNERABLE: CRLF injection"""
+    from .vulnerable_crlf_injection import VulnerableCRLFInjection
+    
+    crlf_handler = VulnerableCRLFInjection()
+    
+    input_data = injection_data.get("input_data", "")
+    
+    # VULNERABLE: No CRLF validation
+    # VULNERABLE: No CRLF injection protection
+    
+    result = crlf_handler.execute_crlf_injection_evasion(input_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CRLF injection evasion vulnerability"
+    }
+
+
+@app.post("/crlf-injection/advanced")
+async def execute_advanced_crlf_injection(injection_data: dict):
+    """Execute advanced CRLF injection - VULNERABLE: CRLF injection"""
+    from .vulnerable_crlf_injection import VulnerableCRLFInjection
+    
+    crlf_handler = VulnerableCRLFInjection()
+    
+    input_data = injection_data.get("input_data", "")
+    
+    # VULNERABLE: No CRLF validation
+    # VULNERABLE: No CRLF injection protection
+    
+    result = crlf_handler.execute_advanced_crlf_injection(input_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced CRLF injection vulnerability"
+    }
+
+
+# VULNERABLE: HTTP Parameter Pollution endpoints
+@app.post("/http-parameter-pollution/basic")
+async def execute_parameter_pollution(injection_data: dict):
+    """Execute parameter pollution - VULNERABLE: HTTP parameter pollution"""
+    from .vulnerable_http_parameter_pollution import VulnerableHTTPParameterPollution
+    
+    pollution_handler = VulnerableHTTPParameterPollution()
+    
+    parameters = injection_data.get("parameters", {})
+    
+    # VULNERABLE: No parameter validation
+    # VULNERABLE: No parameter pollution protection
+    
+    result = pollution_handler.execute_parameter_pollution(parameters)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: HTTP parameter pollution vulnerability"
+    }
+
+
+@app.post("/http-parameter-pollution/duplicate")
+async def execute_duplicate_parameter_pollution(injection_data: dict):
+    """Execute duplicate parameter pollution - VULNERABLE: HTTP parameter pollution"""
+    from .vulnerable_http_parameter_pollution import VulnerableHTTPParameterPollution
+    
+    pollution_handler = VulnerableHTTPParameterPollution()
+    
+    parameters = injection_data.get("parameters", {})
+    
+    # VULNERABLE: No parameter validation
+    # VULNERABLE: No parameter pollution protection
+    
+    result = pollution_handler.execute_duplicate_parameter_pollution(parameters)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Duplicate parameter pollution vulnerability"
+    }
+
+
+@app.post("/http-parameter-pollution/override")
+async def execute_parameter_override_pollution(injection_data: dict):
+    """Execute parameter override pollution - VULNERABLE: HTTP parameter pollution"""
+    from .vulnerable_http_parameter_pollution import VulnerableHTTPParameterPollution
+    
+    pollution_handler = VulnerableHTTPParameterPollution()
+    
+    parameters = injection_data.get("parameters", {})
+    
+    # VULNERABLE: No parameter validation
+    # VULNERABLE: No parameter pollution protection
+    
+    result = pollution_handler.execute_parameter_override_pollution(parameters)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Parameter override pollution vulnerability"
+    }
+
+
+@app.post("/http-parameter-pollution/injection")
+async def execute_parameter_injection_pollution(injection_data: dict):
+    """Execute parameter injection pollution - VULNERABLE: HTTP parameter pollution"""
+    from .vulnerable_http_parameter_pollution import VulnerableHTTPParameterPollution
+    
+    pollution_handler = VulnerableHTTPParameterPollution()
+    
+    parameters = injection_data.get("parameters", {})
+    
+    # VULNERABLE: No parameter validation
+    # VULNERABLE: No parameter pollution protection
+    
+    result = pollution_handler.execute_parameter_injection_pollution(parameters)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Parameter injection pollution vulnerability"
+    }
+
+
+@app.post("/http-parameter-pollution/evasion")
+async def execute_parameter_pollution_evasion(injection_data: dict):
+    """Execute parameter pollution evasion - VULNERABLE: HTTP parameter pollution"""
+    from .vulnerable_http_parameter_pollution import VulnerableHTTPParameterPollution
+    
+    pollution_handler = VulnerableHTTPParameterPollution()
+    
+    parameters = injection_data.get("parameters", {})
+    
+    # VULNERABLE: No parameter validation
+    # VULNERABLE: No parameter pollution protection
+    
+    result = pollution_handler.execute_parameter_pollution_evasion(parameters)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Parameter pollution evasion vulnerability"
+    }
+
+
+@app.post("/http-parameter-pollution/advanced")
+async def execute_advanced_parameter_pollution(injection_data: dict):
+    """Execute advanced parameter pollution - VULNERABLE: HTTP parameter pollution"""
+    from .vulnerable_http_parameter_pollution import VulnerableHTTPParameterPollution
+    
+    pollution_handler = VulnerableHTTPParameterPollution()
+    
+    parameters = injection_data.get("parameters", {})
+    
+    # VULNERABLE: No parameter validation
+    # VULNERABLE: No parameter pollution protection
+    
+    result = pollution_handler.execute_advanced_parameter_pollution(parameters)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced parameter pollution vulnerability"
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
