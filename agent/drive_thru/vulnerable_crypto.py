@@ -1,126 +1,388 @@
 """
-Crypto utilities for drive-thru operations - VULNERABLE: Weak crypto implementations
+VULNERABLE: Cryptographic vulnerabilities
+DO NOT USE IN PRODUCTION - FOR EDUCATIONAL PURPOSES ONLY
 """
+
+import logging
+from typing import Dict, List, Optional, Any
+import time
 import hashlib
-import os
 import base64
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
+import secrets
+import random
 
+logger = logging.getLogger(__name__)
 
-class WeakCrypto:
-    """VULNERABLE: Intentionally weak crypto implementations for lab purposes"""
+# VULNERABLE: Cryptographic vulnerabilities
+class VulnerableCrypto:
+    """VULNERABLE: Cryptographic vulnerabilities"""
     
     def __init__(self):
-        # VULNERABLE: Using weak, predictable encryption key
-        self.weak_key = b"1234567890123456"  # 16 bytes - weak key
-        self.weak_iv = b"1234567890123456"   # Weak IV - should be random
-        
-    def weak_hash_password(self, password: str) -> str:
-        """VULNERABLE: Weak password hashing using MD5"""
-        # VULNERABLE: MD5 is cryptographically broken and fast
-        # Should use bcrypt, scrypt, or Argon2 instead
-        return hashlib.md5(password.encode()).hexdigest()
-    
-    def weak_encrypt_data(self, data: str) -> str:
-        """VULNERABLE: Weak encryption using DES with short key"""
-        # VULNERABLE: DES is deprecated and has weak 56-bit key
-        # Should use AES-256 instead
-        
-        # Pad data to multiple of 8 bytes (DES block size)
-        data_bytes = data.encode('utf-8')
-        padding_length = 8 - (len(data_bytes) % 8)
-        padded_data = data_bytes + b'\x00' * padding_length
-        
-        # Create DES cipher with weak key
-        cipher = Cipher(
-            algorithms.TripleDES(self.weak_key),  # VULNERABLE: TripleDES with weak key
-            modes.CBC(self.weak_iv),  # VULNERABLE: Predictable IV
-            backend=default_backend()
-        )
-        
-        encryptor = cipher.encryptor()
-        encrypted_data = encryptor.update(padded_data) + encryptor.finalize()
-        
-        return base64.b64encode(encrypted_data).decode('utf-8')
-    
-    def weak_decrypt_data(self, encrypted_data: str) -> str:
-        """VULNERABLE: Weak decryption using DES"""
-        try:
-            encrypted_bytes = base64.b64decode(encrypted_data)
-            
-            cipher = Cipher(
-                algorithms.TripleDES(self.weak_key),  # VULNERABLE: Weak key
-                modes.CBC(self.weak_iv),  # VULNERABLE: Predictable IV
-                backend=default_backend()
-            )
-            
-            decryptor = cipher.decryptor()
-            decrypted_data = decryptor.update(encrypted_bytes) + decryptor.finalize()
-            
-            # Remove padding
-            decrypted_data = decrypted_data.rstrip(b'\x00')
-            
-            return decrypted_data.decode('utf-8')
-        except Exception as e:
-            return f"Decryption failed: {str(e)}"
-    
-    def weak_generate_token(self, user_id: str) -> str:
-        """VULNERABLE: Weak token generation using predictable algorithm"""
-        # VULNERABLE: Predictable token generation
-        # Should use cryptographically secure random generation
-        
-        # Simple concatenation with weak hash
-        weak_token = f"{user_id}_{hashlib.md5(user_id.encode()).hexdigest()}"
-        return base64.b64encode(weak_token.encode()).decode('utf-8')
-    
-    def weak_verify_token(self, token: str, user_id: str) -> bool:
-        """VULNERABLE: Weak token verification"""
-        try:
-            decoded_token = base64.b64decode(token).decode('utf-8')
-            expected_token = f"{user_id}_{hashlib.md5(user_id.encode()).hexdigest()}"
-            return decoded_token == expected_token
-        except:
-            return False
-
-
-class VulnerableCryptoManager:
-    """VULNERABLE: Crypto manager with multiple weak implementations"""
-    
-    def __init__(self):
-        self.weak_crypto = WeakCrypto()
-        # VULNERABLE: Hardcoded master key in source code
-        self.master_key = "FAKE_MASTER_KEY_12345"  # VULNERABLE: Hardcoded secret
-        
-    def encrypt_sensitive_data(self, data: str) -> dict:
-        """VULNERABLE: Encrypt sensitive data with weak crypto"""
-        # VULNERABLE: Using weak encryption for sensitive data
-        encrypted = self.weak_crypto.weak_encrypt_data(data)
-        
-        return {
-            "encrypted_data": encrypted,
-            "algorithm": "TripleDES",  # VULNERABLE: Weak algorithm
-            "key_length": "56-bit",   # VULNERABLE: Short key length
-            "warning": "VULNERABLE: Weak crypto implementation"
+        # VULNERABLE: No cryptographic protection
+        # VULNERABLE: Weak cryptographic algorithms
+        # VULNERABLE: No key management
+        self.crypto_history = []
+        self.weak_keys = {
+            "DES": "12345678",
+            "MD5": "password123",
+            "SHA1": "admin",
+            "RC4": "secret"
+        }
+        self.weak_ivs = {
+            "DES": b"\x00\x00\x00\x00\x00\x00\x00\x00",
+            "AES": b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
         }
     
-    def hash_password(self, password: str) -> str:
-        """VULNERABLE: Hash password with weak algorithm"""
-        # VULNERABLE: MD5 is fast and broken
-        return self.weak_crypto.weak_hash_password(password)
+    def execute_weak_encryption(self, data: str, algorithm: str) -> Dict[str, Any]:
+        """VULNERABLE: Execute weak encryption"""
+        # VULNERABLE: Weak encryption vulnerability - CRITICAL
+        # VULNERABLE: No encryption strength validation
+        # VULNERABLE: No key management
+        
+        try:
+            logger.info(f"VULNERABLE: Executing weak encryption: {algorithm}")
+            
+            # VULNERABLE: Use weak encryption algorithms
+            if algorithm == "DES":
+                # VULNERABLE: DES is weak and deprecated
+                encrypted = base64.b64encode(data.encode()).decode()
+            elif algorithm == "MD5":
+                # VULNERABLE: MD5 is cryptographically broken
+                encrypted = hashlib.md5(data.encode()).hexdigest()
+            elif algorithm == "SHA1":
+                # VULNERABLE: SHA1 is weak and deprecated
+                encrypted = hashlib.sha1(data.encode()).hexdigest()
+            elif algorithm == "RC4":
+                # VULNERABLE: RC4 is weak and deprecated
+                encrypted = base64.b64encode(data.encode()).decode()
+            else:
+                encrypted = data
+            
+            transaction = {
+                "data": data,
+                "algorithm": algorithm,
+                "encrypted": encrypted,
+                "weak_encryption": True,
+                "timestamp": time.time()
+            }
+            
+            self.crypto_history.append(transaction)
+            
+            return {
+                "success": True,
+                "transaction": transaction,
+                "weak_encryption_vulnerable": True
+            }
+            
+        except Exception as e:
+            logger.error(f"VULNERABLE: Weak encryption error: {str(e)}")
+            return {"error": str(e), "weak_encryption_vulnerable": True}
     
-    def generate_session_token(self, user_id: str) -> str:
-        """VULNERABLE: Generate session token with weak method"""
-        # VULNERABLE: Predictable token generation
-        return self.weak_crypto.weak_generate_token(user_id)
+    def execute_weak_key_generation(self, algorithm: str, key_length: int) -> Dict[str, Any]:
+        """VULNERABLE: Execute weak key generation"""
+        # VULNERABLE: Weak key generation vulnerability - CRITICAL
+        # VULNERABLE: No key strength validation
+        # VULNERABLE: No entropy validation
+        
+        try:
+            logger.info(f"VULNERABLE: Executing weak key generation: {algorithm}")
+            
+            # VULNERABLE: Generate weak keys
+            if algorithm == "DES":
+                # VULNERABLE: DES uses 56-bit keys (weak)
+                weak_key = "12345678"  # 8 bytes
+            elif algorithm == "AES":
+                # VULNERABLE: Use weak key length
+                if key_length < 128:
+                    weak_key = "A" * (key_length // 8)
+                else:
+                    weak_key = "B" * 16  # 128 bits
+            elif algorithm == "RSA":
+                # VULNERABLE: Use weak RSA key length
+                if key_length < 1024:
+                    weak_key = "C" * (key_length // 8)
+                else:
+                    weak_key = "D" * 128  # 1024 bits
+            else:
+                weak_key = "E" * (key_length // 8)
+            
+            transaction = {
+                "algorithm": algorithm,
+                "key_length": key_length,
+                "weak_key": weak_key,
+                "weak_key_generation": True,
+                "timestamp": time.time()
+            }
+            
+            self.crypto_history.append(transaction)
+            
+            return {
+                "success": True,
+                "transaction": transaction,
+                "weak_key_generation_vulnerable": True
+            }
+            
+        except Exception as e:
+            logger.error(f"VULNERABLE: Weak key generation error: {str(e)}")
+            return {"error": str(e), "weak_key_generation_vulnerable": True}
     
-    def verify_session_token(self, token: str, user_id: str) -> bool:
-        """VULNERABLE: Verify session token with weak method"""
-        return self.weak_crypto.weak_verify_token(token, user_id)
-
-
-# Global vulnerable crypto instance
-vulnerable_crypto = VulnerableCryptoManager()
+    def execute_weak_iv_generation(self, algorithm: str) -> Dict[str, Any]:
+        """VULNERABLE: Execute weak IV generation"""
+        # VULNERABLE: Weak IV generation vulnerability - CRITICAL
+        # VULNERABLE: No IV randomness validation
+        # VULNERABLE: No IV uniqueness validation
+        
+        try:
+            logger.info(f"VULNERABLE: Executing weak IV generation: {algorithm}")
+            
+            # VULNERABLE: Generate weak IVs
+            if algorithm == "DES":
+                # VULNERABLE: Use predictable IV
+                weak_iv = b"\x00\x00\x00\x00\x00\x00\x00\x00"
+            elif algorithm == "AES":
+                # VULNERABLE: Use predictable IV
+                weak_iv = b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+            elif algorithm == "RC4":
+                # VULNERABLE: Use predictable IV
+                weak_iv = b"\x00\x00\x00\x00"
+            else:
+                weak_iv = b"\x00" * 16
+            
+            transaction = {
+                "algorithm": algorithm,
+                "weak_iv": weak_iv.hex(),
+                "weak_iv_generation": True,
+                "timestamp": time.time()
+            }
+            
+            self.crypto_history.append(transaction)
+            
+            return {
+                "success": True,
+                "transaction": transaction,
+                "weak_iv_generation_vulnerable": True
+            }
+            
+        except Exception as e:
+            logger.error(f"VULNERABLE: Weak IV generation error: {str(e)}")
+            return {"error": str(e), "weak_iv_generation_vulnerable": True}
+    
+    def execute_weak_hash(self, data: str, algorithm: str) -> Dict[str, Any]:
+        """VULNERABLE: Execute weak hash"""
+        # VULNERABLE: Weak hash vulnerability - CRITICAL
+        # VULNERABLE: No hash strength validation
+        # VULNERABLE: No salt validation
+        
+        try:
+            logger.info(f"VULNERABLE: Executing weak hash: {algorithm}")
+            
+            # VULNERABLE: Use weak hash algorithms
+            if algorithm == "MD5":
+                # VULNERABLE: MD5 is cryptographically broken
+                weak_hash = hashlib.md5(data.encode()).hexdigest()
+            elif algorithm == "SHA1":
+                # VULNERABLE: SHA1 is weak and deprecated
+                weak_hash = hashlib.sha1(data.encode()).hexdigest()
+            elif algorithm == "CRC32":
+                # VULNERABLE: CRC32 is not cryptographically secure
+                weak_hash = hex(hash(data) & 0xffffffff)
+            else:
+                weak_hash = hashlib.md5(data.encode()).hexdigest()
+            
+            transaction = {
+                "data": data,
+                "algorithm": algorithm,
+                "weak_hash": weak_hash,
+                "weak_hash": True,
+                "timestamp": time.time()
+            }
+            
+            self.crypto_history.append(transaction)
+            
+            return {
+                "success": True,
+                "transaction": transaction,
+                "weak_hash_vulnerable": True
+            }
+            
+        except Exception as e:
+            logger.error(f"VULNERABLE: Weak hash error: {str(e)}")
+            return {"error": str(e), "weak_hash_vulnerable": True}
+    
+    def execute_weak_random(self, length: int) -> Dict[str, Any]:
+        """VULNERABLE: Execute weak random generation"""
+        # VULNERABLE: Weak random generation vulnerability - CRITICAL
+        # VULNERABLE: No entropy validation
+        # VULNERABLE: No randomness validation
+        
+        try:
+            logger.info(f"VULNERABLE: Executing weak random generation: {length}")
+            
+            # VULNERABLE: Use weak random generation
+            weak_random = ""
+            for _ in range(length):
+                # VULNERABLE: Use predictable random generation
+                weak_random += chr(ord('A') + (random.randint(0, 25)))
+            
+            transaction = {
+                "length": length,
+                "weak_random": weak_random,
+                "weak_random_generation": True,
+                "timestamp": time.time()
+            }
+            
+            self.crypto_history.append(transaction)
+            
+            return {
+                "success": True,
+                "transaction": transaction,
+                "weak_random_generation_vulnerable": True
+            }
+            
+        except Exception as e:
+            logger.error(f"VULNERABLE: Weak random generation error: {str(e)}")
+            return {"error": str(e), "weak_random_generation_vulnerable": True}
+    
+    def execute_weak_salt(self, password: str, salt_length: int) -> Dict[str, Any]:
+        """VULNERABLE: Execute weak salt generation"""
+        # VULNERABLE: Weak salt generation vulnerability - CRITICAL
+        # VULNERABLE: No salt randomness validation
+        # VULNERABLE: No salt uniqueness validation
+        
+        try:
+            logger.info(f"VULNERABLE: Executing weak salt generation: {salt_length}")
+            
+            # VULNERABLE: Generate weak salt
+            weak_salt = ""
+            for _ in range(salt_length):
+                # VULNERABLE: Use predictable salt generation
+                weak_salt += chr(ord('0') + (random.randint(0, 9)))
+            
+            # VULNERABLE: Use weak hash with weak salt
+            weak_hash = hashlib.md5((password + weak_salt).encode()).hexdigest()
+            
+            transaction = {
+                "password": password,
+                "salt_length": salt_length,
+                "weak_salt": weak_salt,
+                "weak_hash": weak_hash,
+                "weak_salt_generation": True,
+                "timestamp": time.time()
+            }
+            
+            self.crypto_history.append(transaction)
+            
+            return {
+                "success": True,
+                "transaction": transaction,
+                "weak_salt_generation_vulnerable": True
+            }
+            
+        except Exception as e:
+            logger.error(f"VULNERABLE: Weak salt generation error: {str(e)}")
+            return {"error": str(e), "weak_salt_generation_vulnerable": True}
+    
+    def execute_weak_padding(self, data: str, block_size: int) -> Dict[str, Any]:
+        """VULNERABLE: Execute weak padding"""
+        # VULNERABLE: Weak padding vulnerability - CRITICAL
+        # VULNERABLE: No padding validation
+        # VULNERABLE: No padding oracle protection
+        
+        try:
+            logger.info(f"VULNERABLE: Executing weak padding: {block_size}")
+            
+            # VULNERABLE: Use weak padding
+            data_bytes = data.encode()
+            padding_length = block_size - (len(data_bytes) % block_size)
+            
+            # VULNERABLE: Use predictable padding
+            weak_padding = bytes([padding_length] * padding_length)
+            padded_data = data_bytes + weak_padding
+            
+            transaction = {
+                "data": data,
+                "block_size": block_size,
+                "padding_length": padding_length,
+                "padded_data": padded_data.hex(),
+                "weak_padding": True,
+                "timestamp": time.time()
+            }
+            
+            self.crypto_history.append(transaction)
+            
+            return {
+                "success": True,
+                "transaction": transaction,
+                "weak_padding_vulnerable": True
+            }
+            
+        except Exception as e:
+            logger.error(f"VULNERABLE: Weak padding error: {str(e)}")
+            return {"error": str(e), "weak_padding_vulnerable": True}
+    
+    def execute_advanced_crypto(self, operation: str, params: Dict[str, Any]) -> Dict[str, Any]:
+        """VULNERABLE: Execute advanced crypto"""
+        # VULNERABLE: Advanced crypto vulnerability - CRITICAL
+        # VULNERABLE: No crypto validation
+        # VULNERABLE: No crypto protection
+        
+        try:
+            logger.info(f"VULNERABLE: Executing advanced crypto: {operation}")
+            
+            # VULNERABLE: Advanced crypto techniques
+            if operation == "weak_encryption":
+                data = params.get("data", "test data")
+                algorithm = params.get("algorithm", "DES")
+                return self.execute_weak_encryption(data, algorithm)
+            elif operation == "weak_key_generation":
+                algorithm = params.get("algorithm", "DES")
+                key_length = params.get("key_length", 56)
+                return self.execute_weak_key_generation(algorithm, key_length)
+            elif operation == "weak_iv_generation":
+                algorithm = params.get("algorithm", "DES")
+                return self.execute_weak_iv_generation(algorithm)
+            elif operation == "weak_hash":
+                data = params.get("data", "test data")
+                algorithm = params.get("algorithm", "MD5")
+                return self.execute_weak_hash(data, algorithm)
+            elif operation == "weak_random":
+                length = params.get("length", 16)
+                return self.execute_weak_random(length)
+            elif operation == "weak_salt":
+                password = params.get("password", "password")
+                salt_length = params.get("salt_length", 8)
+                return self.execute_weak_salt(password, salt_length)
+            elif operation == "weak_padding":
+                data = params.get("data", "test data")
+                block_size = params.get("block_size", 8)
+                return self.execute_weak_padding(data, block_size)
+            else:
+                return {"error": "Unknown operation", "advanced_crypto_vulnerable": True}
+            
+        except Exception as e:
+            logger.error(f"VULNERABLE: Advanced crypto error: {str(e)}")
+            return {"error": str(e), "advanced_crypto_vulnerable": True}
+    
+    def get_crypto_history(self) -> List[Dict[str, Any]]:
+        """VULNERABLE: Get crypto history without access control"""
+        # VULNERABLE: No access control
+        # VULNERABLE: No data filtering
+        # VULNERABLE: No data masking
+        
+        return self.crypto_history
+    
+    def get_weak_keys(self) -> Dict[str, str]:
+        """VULNERABLE: Get weak keys without access control"""
+        # VULNERABLE: No access control
+        # VULNERABLE: No data filtering
+        # VULNERABLE: No data masking
+        
+        return self.weak_keys
+    
+    def get_weak_ivs(self) -> Dict[str, str]:
+        """VULNERABLE: Get weak IVs without access control"""
+        # VULNERABLE: No access control
+        # VULNERABLE: No data filtering
+        # VULNERABLE: No data masking
+        
+        return {k: v.hex() for k, v in self.weak_ivs.items()}

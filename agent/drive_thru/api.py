@@ -2444,6 +2444,3040 @@ async def execute_advanced_parameter_pollution(injection_data: dict):
     }
 
 
+# VULNERABLE: Business Logic endpoints
+@app.post("/business-logic/price-manipulation")
+async def execute_price_manipulation(logic_data: dict):
+    """Execute price manipulation - VULNERABLE: Business logic"""
+    from .vulnerable_business_logic import VulnerableBusinessLogic
+    
+    logic_handler = VulnerableBusinessLogic()
+    
+    product = logic_data.get("product", "burger")
+    quantity = logic_data.get("quantity", 1)
+    price_override = logic_data.get("price_override", 0.01)
+    
+    # VULNERABLE: No price validation
+    # VULNERABLE: No business logic protection
+    
+    result = logic_handler.execute_price_manipulation(product, quantity, price_override)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Price manipulation vulnerability"
+    }
+
+
+@app.post("/business-logic/negative-quantity")
+async def execute_negative_quantity(logic_data: dict):
+    """Execute negative quantity manipulation - VULNERABLE: Business logic"""
+    from .vulnerable_business_logic import VulnerableBusinessLogic
+    
+    logic_handler = VulnerableBusinessLogic()
+    
+    product = logic_data.get("product", "burger")
+    quantity = logic_data.get("quantity", -1)
+    
+    # VULNERABLE: No quantity validation
+    # VULNERABLE: No business logic protection
+    
+    result = logic_handler.execute_negative_quantity(product, quantity)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Negative quantity manipulation vulnerability"
+    }
+
+
+@app.post("/business-logic/coupon-abuse")
+async def execute_coupon_abuse(logic_data: dict):
+    """Execute coupon abuse - VULNERABLE: Business logic"""
+    from .vulnerable_business_logic import VulnerableBusinessLogic
+    
+    logic_handler = VulnerableBusinessLogic()
+    
+    coupon_code = logic_data.get("coupon_code", "SAVE10")
+    discount_multiplier = logic_data.get("discount_multiplier", 10.0)
+    
+    # VULNERABLE: No coupon validation
+    # VULNERABLE: No business logic protection
+    
+    result = logic_handler.execute_coupon_abuse(coupon_code, discount_multiplier)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Coupon abuse vulnerability"
+    }
+
+
+@app.post("/business-logic/balance-manipulation")
+async def execute_balance_manipulation(logic_data: dict):
+    """Execute balance manipulation - VULNERABLE: Business logic"""
+    from .vulnerable_business_logic import VulnerableBusinessLogic
+    
+    logic_handler = VulnerableBusinessLogic()
+    
+    user = logic_data.get("user", "user1")
+    amount = logic_data.get("amount", 1000.0)
+    
+    # VULNERABLE: No balance validation
+    # VULNERABLE: No business logic protection
+    
+    result = logic_handler.execute_balance_manipulation(user, amount)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Balance manipulation vulnerability"
+    }
+
+
+@app.post("/business-logic/race-condition")
+async def execute_race_condition(logic_data: dict):
+    """Execute race condition - VULNERABLE: Business logic"""
+    from .vulnerable_business_logic import VulnerableBusinessLogic
+    
+    logic_handler = VulnerableBusinessLogic()
+    
+    user = logic_data.get("user", "user1")
+    amount = logic_data.get("amount", 100.0)
+    
+    # VULNERABLE: No race condition protection
+    # VULNERABLE: No business logic protection
+    
+    result = logic_handler.execute_race_condition(user, amount)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Race condition vulnerability"
+    }
+
+
+@app.post("/business-logic/workflow-bypass")
+async def execute_workflow_bypass(logic_data: dict):
+    """Execute workflow bypass - VULNERABLE: Business logic"""
+    from .vulnerable_business_logic import VulnerableBusinessLogic
+    
+    logic_handler = VulnerableBusinessLogic()
+    
+    step = logic_data.get("step", "step1")
+    bypass_data = logic_data.get("bypass_data", {})
+    
+    # VULNERABLE: No workflow validation
+    # VULNERABLE: No business logic protection
+    
+    result = logic_handler.execute_workflow_bypass(step, bypass_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Workflow bypass vulnerability"
+    }
+
+
+@app.post("/business-logic/privilege-escalation")
+async def execute_privilege_escalation(logic_data: dict):
+    """Execute privilege escalation - VULNERABLE: Business logic"""
+    from .vulnerable_business_logic import VulnerableBusinessLogic
+    
+    logic_handler = VulnerableBusinessLogic()
+    
+    user = logic_data.get("user", "user1")
+    target_role = logic_data.get("target_role", "admin")
+    
+    # VULNERABLE: No role validation
+    # VULNERABLE: No business logic protection
+    
+    result = logic_handler.execute_privilege_escalation(user, target_role)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Privilege escalation vulnerability"
+    }
+
+
+@app.post("/business-logic/logic-bypass")
+async def execute_business_logic_bypass(logic_data: dict):
+    """Execute business logic bypass - VULNERABLE: Business logic"""
+    from .vulnerable_business_logic import VulnerableBusinessLogic
+    
+    logic_handler = VulnerableBusinessLogic()
+    
+    operation = logic_data.get("operation", "purchase")
+    bypass_params = logic_data.get("bypass_params", {})
+    
+    # VULNERABLE: No logic validation
+    # VULNERABLE: No business logic protection
+    
+    result = logic_handler.execute_business_logic_bypass(operation, bypass_params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Business logic bypass vulnerability"
+    }
+
+
+# VULNERABLE: Race Condition endpoints
+@app.post("/race-condition/counter")
+async def execute_counter_race(race_data: dict):
+    """Execute counter race condition - VULNERABLE: Race condition"""
+    from .vulnerable_race_condition import VulnerableRaceCondition
+    
+    race_handler = VulnerableRaceCondition()
+    
+    increment_amount = race_data.get("increment_amount", 1)
+    num_threads = race_data.get("num_threads", 5)
+    
+    # VULNERABLE: No concurrency control
+    # VULNERABLE: No race condition protection
+    
+    result = race_handler.execute_counter_race(increment_amount, num_threads)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Counter race condition vulnerability"
+    }
+
+
+@app.post("/race-condition/balance")
+async def execute_balance_race(race_data: dict):
+    """Execute balance race condition - VULNERABLE: Race condition"""
+    from .vulnerable_race_condition import VulnerableRaceCondition
+    
+    race_handler = VulnerableRaceCondition()
+    
+    user = race_data.get("user", "user1")
+    amount = race_data.get("amount", 100.0)
+    num_operations = race_data.get("num_operations", 5)
+    
+    # VULNERABLE: No concurrency control
+    # VULNERABLE: No race condition protection
+    
+    result = race_handler.execute_balance_race(user, amount, num_operations)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Balance race condition vulnerability"
+    }
+
+
+@app.post("/race-condition/inventory")
+async def execute_inventory_race(race_data: dict):
+    """Execute inventory race condition - VULNERABLE: Race condition"""
+    from .vulnerable_race_condition import VulnerableRaceCondition
+    
+    race_handler = VulnerableRaceCondition()
+    
+    product = race_data.get("product", "burger")
+    quantity = race_data.get("quantity", 1)
+    num_operations = race_data.get("num_operations", 5)
+    
+    # VULNERABLE: No concurrency control
+    # VULNERABLE: No race condition protection
+    
+    result = race_handler.execute_inventory_race(product, quantity, num_operations)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Inventory race condition vulnerability"
+    }
+
+
+@app.post("/race-condition/file")
+async def execute_file_race(race_data: dict):
+    """Execute file race condition - VULNERABLE: Race condition"""
+    from .vulnerable_race_condition import VulnerableRaceCondition
+    
+    race_handler = VulnerableRaceCondition()
+    
+    filename = race_data.get("filename", "race_test.txt")
+    content = race_data.get("content", "test content")
+    num_operations = race_data.get("num_operations", 5)
+    
+    # VULNERABLE: No concurrency control
+    # VULNERABLE: No race condition protection
+    
+    result = race_handler.execute_file_race(filename, content, num_operations)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: File race condition vulnerability"
+    }
+
+
+@app.post("/race-condition/database")
+async def execute_database_race(race_data: dict):
+    """Execute database race condition - VULNERABLE: Race condition"""
+    from .vulnerable_race_condition import VulnerableRaceCondition
+    
+    race_handler = VulnerableRaceCondition()
+    
+    table = race_data.get("table", "users")
+    operation = race_data.get("operation", "SELECT")
+    num_operations = race_data.get("num_operations", 5)
+    
+    # VULNERABLE: No concurrency control
+    # VULNERABLE: No race condition protection
+    
+    result = race_handler.execute_database_race(table, operation, num_operations)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Database race condition vulnerability"
+    }
+
+
+@app.post("/race-condition/memory")
+async def execute_memory_race(race_data: dict):
+    """Execute memory race condition - VULNERABLE: Race condition"""
+    from .vulnerable_race_condition import VulnerableRaceCondition
+    
+    race_handler = VulnerableRaceCondition()
+    
+    variable = race_data.get("variable", "counter")
+    value = race_data.get("value", 1)
+    num_operations = race_data.get("num_operations", 5)
+    
+    # VULNERABLE: No concurrency control
+    # VULNERABLE: No race condition protection
+    
+    result = race_handler.execute_memory_race(variable, value, num_operations)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Memory race condition vulnerability"
+    }
+
+
+@app.post("/race-condition/advanced")
+async def execute_advanced_race_condition(race_data: dict):
+    """Execute advanced race condition - VULNERABLE: Race condition"""
+    from .vulnerable_race_condition import VulnerableRaceCondition
+    
+    race_handler = VulnerableRaceCondition()
+    
+    operation = race_data.get("operation", "advanced")
+    params = race_data.get("params", {"num_operations": 5})
+    
+    # VULNERABLE: No concurrency control
+    # VULNERABLE: No race condition protection
+    
+    result = race_handler.execute_advanced_race_condition(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced race condition vulnerability"
+    }
+
+
+# VULNERABLE: Memory Corruption endpoints
+@app.post("/memory-corruption/buffer-overflow")
+async def execute_buffer_overflow(memory_data: dict):
+    """Execute buffer overflow - VULNERABLE: Memory corruption"""
+    from .vulnerable_memory_corruption import VulnerableMemoryCorruption
+    
+    memory_handler = VulnerableMemoryCorruption()
+    
+    data = memory_data.get("data", b"A" * 1000)
+    offset = memory_data.get("offset", 0)
+    
+    # VULNERABLE: No bounds checking
+    # VULNERABLE: No memory corruption protection
+    
+    result = memory_handler.execute_buffer_overflow(data, offset)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Buffer overflow vulnerability"
+    }
+
+
+@app.post("/memory-corruption/heap-overflow")
+async def execute_heap_overflow(memory_data: dict):
+    """Execute heap overflow - VULNERABLE: Memory corruption"""
+    from .vulnerable_memory_corruption import VulnerableMemoryCorruption
+    
+    memory_handler = VulnerableMemoryCorruption()
+    
+    data = memory_data.get("data", b"A" * 1000)
+    size = memory_data.get("size", 100)
+    
+    # VULNERABLE: No heap validation
+    # VULNERABLE: No memory corruption protection
+    
+    result = memory_handler.execute_heap_overflow(data, size)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Heap overflow vulnerability"
+    }
+
+
+@app.post("/memory-corruption/stack-overflow")
+async def execute_stack_overflow(memory_data: dict):
+    """Execute stack overflow - VULNERABLE: Memory corruption"""
+    from .vulnerable_memory_corruption import VulnerableMemoryCorruption
+    
+    memory_handler = VulnerableMemoryCorruption()
+    
+    data = memory_data.get("data", b"A" * 100)
+    depth = memory_data.get("depth", 1000)
+    
+    # VULNERABLE: No stack validation
+    # VULNERABLE: No memory corruption protection
+    
+    result = memory_handler.execute_stack_overflow(data, depth)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Stack overflow vulnerability"
+    }
+
+
+@app.post("/memory-corruption/use-after-free")
+async def execute_use_after_free(memory_data: dict):
+    """Execute use after free - VULNERABLE: Memory corruption"""
+    from .vulnerable_memory_corruption import VulnerableMemoryCorruption
+    
+    memory_handler = VulnerableMemoryCorruption()
+    
+    data = memory_data.get("data", b"A" * 100)
+    free_offset = memory_data.get("free_offset", 50)
+    
+    # VULNERABLE: No memory validation
+    # VULNERABLE: No memory corruption protection
+    
+    result = memory_handler.execute_use_after_free(data, free_offset)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Use after free vulnerability"
+    }
+
+
+@app.post("/memory-corruption/double-free")
+async def execute_double_free(memory_data: dict):
+    """Execute double free - VULNERABLE: Memory corruption"""
+    from .vulnerable_memory_corruption import VulnerableMemoryCorruption
+    
+    memory_handler = VulnerableMemoryCorruption()
+    
+    data = memory_data.get("data", b"A" * 100)
+    
+    # VULNERABLE: No memory validation
+    # VULNERABLE: No memory corruption protection
+    
+    result = memory_handler.execute_double_free(data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Double free vulnerability"
+    }
+
+
+@app.post("/memory-corruption/integer-overflow")
+async def execute_integer_overflow(memory_data: dict):
+    """Execute integer overflow - VULNERABLE: Memory corruption"""
+    from .vulnerable_memory_corruption import VulnerableMemoryCorruption
+    
+    memory_handler = VulnerableMemoryCorruption()
+    
+    value1 = memory_data.get("value1", 2147483647)
+    value2 = memory_data.get("value2", 1)
+    
+    # VULNERABLE: No integer validation
+    # VULNERABLE: No memory corruption protection
+    
+    result = memory_handler.execute_integer_overflow(value1, value2)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Integer overflow vulnerability"
+    }
+
+
+@app.post("/memory-corruption/format-string")
+async def execute_format_string(memory_data: dict):
+    """Execute format string - VULNERABLE: Memory corruption"""
+    from .vulnerable_memory_corruption import VulnerableMemoryCorruption
+    
+    memory_handler = VulnerableMemoryCorruption()
+    
+    format_string = memory_data.get("format_string", "{0}")
+    args = memory_data.get("args", ["test"])
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No memory corruption protection
+    
+    result = memory_handler.execute_format_string(format_string, args)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Format string vulnerability"
+    }
+
+
+@app.post("/memory-corruption/memory-leak")
+async def execute_memory_leak(memory_data: dict):
+    """Execute memory leak - VULNERABLE: Memory corruption"""
+    from .vulnerable_memory_corruption import VulnerableMemoryCorruption
+    
+    memory_handler = VulnerableMemoryCorruption()
+    
+    data = memory_data.get("data", b"A" * 100)
+    iterations = memory_data.get("iterations", 1000)
+    
+    # VULNERABLE: No memory cleanup
+    # VULNERABLE: No memory corruption protection
+    
+    result = memory_handler.execute_memory_leak(data, iterations)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Memory leak vulnerability"
+    }
+
+
+@app.post("/memory-corruption/advanced")
+async def execute_advanced_memory_corruption(memory_data: dict):
+    """Execute advanced memory corruption - VULNERABLE: Memory corruption"""
+    from .vulnerable_memory_corruption import VulnerableMemoryCorruption
+    
+    memory_handler = VulnerableMemoryCorruption()
+    
+    operation = memory_data.get("operation", "buffer_overflow")
+    params = memory_data.get("params", {})
+    
+    # VULNERABLE: No memory validation
+    # VULNERABLE: No memory corruption protection
+    
+    result = memory_handler.execute_advanced_memory_corruption(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced memory corruption vulnerability"
+    }
+
+
+# VULNERABLE: Buffer Overflow endpoints
+@app.post("/buffer-overflow/fixed")
+async def execute_fixed_buffer_overflow(buffer_data: dict):
+    """Execute fixed buffer overflow - VULNERABLE: Buffer overflow"""
+    from .vulnerable_buffer_overflow import VulnerableBufferOverflow
+    
+    buffer_handler = VulnerableBufferOverflow()
+    
+    data = buffer_data.get("data", b"A" * 1000)
+    
+    # VULNERABLE: No bounds checking
+    # VULNERABLE: No buffer overflow protection
+    
+    result = buffer_handler.execute_fixed_buffer_overflow(data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Fixed buffer overflow vulnerability"
+    }
+
+
+@app.post("/buffer-overflow/dynamic")
+async def execute_dynamic_buffer_overflow(buffer_data: dict):
+    """Execute dynamic buffer overflow - VULNERABLE: Buffer overflow"""
+    from .vulnerable_buffer_overflow import VulnerableBufferOverflow
+    
+    buffer_handler = VulnerableBufferOverflow()
+    
+    data = buffer_data.get("data", b"A" * 1000)
+    size = buffer_data.get("size", 100)
+    
+    # VULNERABLE: No bounds checking
+    # VULNERABLE: No buffer overflow protection
+    
+    result = buffer_handler.execute_dynamic_buffer_overflow(data, size)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Dynamic buffer overflow vulnerability"
+    }
+
+
+@app.post("/buffer-overflow/stack")
+async def execute_stack_buffer_overflow(buffer_data: dict):
+    """Execute stack buffer overflow - VULNERABLE: Buffer overflow"""
+    from .vulnerable_buffer_overflow import VulnerableBufferOverflow
+    
+    buffer_handler = VulnerableBufferOverflow()
+    
+    data = buffer_data.get("data", b"A" * 1000)
+    stack_size = buffer_data.get("stack_size", 100)
+    
+    # VULNERABLE: No stack protection
+    # VULNERABLE: No buffer overflow protection
+    
+    result = buffer_handler.execute_stack_buffer_overflow(data, stack_size)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Stack buffer overflow vulnerability"
+    }
+
+
+@app.post("/buffer-overflow/heap")
+async def execute_heap_buffer_overflow(buffer_data: dict):
+    """Execute heap buffer overflow - VULNERABLE: Buffer overflow"""
+    from .vulnerable_buffer_overflow import VulnerableBufferOverflow
+    
+    buffer_handler = VulnerableBufferOverflow()
+    
+    data = buffer_data.get("data", b"A" * 1000)
+    heap_size = buffer_data.get("heap_size", 100)
+    
+    # VULNERABLE: No heap protection
+    # VULNERABLE: No buffer overflow protection
+    
+    result = buffer_handler.execute_heap_buffer_overflow(data, heap_size)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Heap buffer overflow vulnerability"
+    }
+
+
+@app.post("/buffer-overflow/string")
+async def execute_string_buffer_overflow(buffer_data: dict):
+    """Execute string buffer overflow - VULNERABLE: Buffer overflow"""
+    from .vulnerable_buffer_overflow import VulnerableBufferOverflow
+    
+    buffer_handler = VulnerableBufferOverflow()
+    
+    string_data = buffer_data.get("string_data", "A" * 1000)
+    buffer_size = buffer_data.get("buffer_size", 100)
+    
+    # VULNERABLE: No string validation
+    # VULNERABLE: No buffer overflow protection
+    
+    result = buffer_handler.execute_string_buffer_overflow(string_data, buffer_size)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: String buffer overflow vulnerability"
+    }
+
+
+@app.post("/buffer-overflow/integer")
+async def execute_integer_buffer_overflow(buffer_data: dict):
+    """Execute integer buffer overflow - VULNERABLE: Buffer overflow"""
+    from .vulnerable_buffer_overflow import VulnerableBufferOverflow
+    
+    buffer_handler = VulnerableBufferOverflow()
+    
+    integer_data = buffer_data.get("integer_data", 2147483647)
+    buffer_size = buffer_data.get("buffer_size", 4)
+    
+    # VULNERABLE: No integer validation
+    # VULNERABLE: No buffer overflow protection
+    
+    result = buffer_handler.execute_integer_buffer_overflow(integer_data, buffer_size)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Integer buffer overflow vulnerability"
+    }
+
+
+@app.post("/buffer-overflow/advanced")
+async def execute_advanced_buffer_overflow(buffer_data: dict):
+    """Execute advanced buffer overflow - VULNERABLE: Buffer overflow"""
+    from .vulnerable_buffer_overflow import VulnerableBufferOverflow
+    
+    buffer_handler = VulnerableBufferOverflow()
+    
+    operation = buffer_data.get("operation", "fixed")
+    params = buffer_data.get("params", {})
+    
+    # VULNERABLE: No buffer validation
+    # VULNERABLE: No buffer overflow protection
+    
+    result = buffer_handler.execute_advanced_buffer_overflow(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced buffer overflow vulnerability"
+    }
+
+
+@app.post("/buffer-overflow/underflow")
+async def execute_buffer_underflow(buffer_data: dict):
+    """Execute buffer underflow - VULNERABLE: Buffer overflow"""
+    from .vulnerable_buffer_overflow import VulnerableBufferOverflow
+    
+    buffer_handler = VulnerableBufferOverflow()
+    
+    data = buffer_data.get("data", b"A" * 100)
+    offset = buffer_data.get("offset", -10)
+    
+    # VULNERABLE: No bounds checking
+    # VULNERABLE: No buffer overflow protection
+    
+    result = buffer_handler.execute_buffer_underflow(data, offset)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Buffer underflow vulnerability"
+    }
+
+
+# VULNERABLE: Integer Overflow endpoints
+@app.post("/integer-overflow/addition")
+async def execute_addition_overflow(integer_data: dict):
+    """Execute addition overflow - VULNERABLE: Integer overflow"""
+    from .vulnerable_integer_overflow import VulnerableIntegerOverflow
+    
+    integer_handler = VulnerableIntegerOverflow()
+    
+    value1 = integer_data.get("value1", 2147483647)
+    value2 = integer_data.get("value2", 1)
+    
+    # VULNERABLE: No overflow checking
+    # VULNERABLE: No integer overflow protection
+    
+    result = integer_handler.execute_addition_overflow(value1, value2)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Addition overflow vulnerability"
+    }
+
+
+@app.post("/integer-overflow/multiplication")
+async def execute_multiplication_overflow(integer_data: dict):
+    """Execute multiplication overflow - VULNERABLE: Integer overflow"""
+    from .vulnerable_integer_overflow import VulnerableIntegerOverflow
+    
+    integer_handler = VulnerableIntegerOverflow()
+    
+    value1 = integer_data.get("value1", 2147483647)
+    value2 = integer_data.get("value2", 2)
+    
+    # VULNERABLE: No overflow checking
+    # VULNERABLE: No integer overflow protection
+    
+    result = integer_handler.execute_multiplication_overflow(value1, value2)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Multiplication overflow vulnerability"
+    }
+
+
+@app.post("/integer-overflow/subtraction")
+async def execute_subtraction_overflow(integer_data: dict):
+    """Execute subtraction overflow - VULNERABLE: Integer overflow"""
+    from .vulnerable_integer_overflow import VulnerableIntegerOverflow
+    
+    integer_handler = VulnerableIntegerOverflow()
+    
+    value1 = integer_data.get("value1", -2147483648)
+    value2 = integer_data.get("value2", 1)
+    
+    # VULNERABLE: No overflow checking
+    # VULNERABLE: No integer overflow protection
+    
+    result = integer_handler.execute_subtraction_overflow(value1, value2)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Subtraction overflow vulnerability"
+    }
+
+
+@app.post("/integer-overflow/division")
+async def execute_division_overflow(integer_data: dict):
+    """Execute division overflow - VULNERABLE: Integer overflow"""
+    from .vulnerable_integer_overflow import VulnerableIntegerOverflow
+    
+    integer_handler = VulnerableIntegerOverflow()
+    
+    value1 = integer_data.get("value1", 2147483647)
+    value2 = integer_data.get("value2", 0)
+    
+    # VULNERABLE: No overflow checking
+    # VULNERABLE: No integer overflow protection
+    
+    result = integer_handler.execute_division_overflow(value1, value2)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Division overflow vulnerability"
+    }
+
+
+@app.post("/integer-overflow/modulo")
+async def execute_modulo_overflow(integer_data: dict):
+    """Execute modulo overflow - VULNERABLE: Integer overflow"""
+    from .vulnerable_integer_overflow import VulnerableIntegerOverflow
+    
+    integer_handler = VulnerableIntegerOverflow()
+    
+    value1 = integer_data.get("value1", 2147483647)
+    value2 = integer_data.get("value2", 0)
+    
+    # VULNERABLE: No overflow checking
+    # VULNERABLE: No integer overflow protection
+    
+    result = integer_handler.execute_modulo_overflow(value1, value2)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Modulo overflow vulnerability"
+    }
+
+
+@app.post("/integer-overflow/bitwise")
+async def execute_bitwise_overflow(integer_data: dict):
+    """Execute bitwise overflow - VULNERABLE: Integer overflow"""
+    from .vulnerable_integer_overflow import VulnerableIntegerOverflow
+    
+    integer_handler = VulnerableIntegerOverflow()
+    
+    value1 = integer_data.get("value1", 2147483647)
+    value2 = integer_data.get("value2", 1)
+    
+    # VULNERABLE: No overflow checking
+    # VULNERABLE: No integer overflow protection
+    
+    result = integer_handler.execute_bitwise_overflow(value1, value2)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Bitwise overflow vulnerability"
+    }
+
+
+@app.post("/integer-overflow/signed-unsigned")
+async def execute_signed_unsigned_overflow(integer_data: dict):
+    """Execute signed/unsigned overflow - VULNERABLE: Integer overflow"""
+    from .vulnerable_integer_overflow import VulnerableIntegerOverflow
+    
+    integer_handler = VulnerableIntegerOverflow()
+    
+    signed_value = integer_data.get("signed_value", 2147483647)
+    unsigned_value = integer_data.get("unsigned_value", 4294967295)
+    
+    # VULNERABLE: No type checking
+    # VULNERABLE: No integer overflow protection
+    
+    result = integer_handler.execute_signed_unsigned_overflow(signed_value, unsigned_value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Signed/unsigned overflow vulnerability"
+    }
+
+
+@app.post("/integer-overflow/advanced")
+async def execute_advanced_integer_overflow(integer_data: dict):
+    """Execute advanced integer overflow - VULNERABLE: Integer overflow"""
+    from .vulnerable_integer_overflow import VulnerableIntegerOverflow
+    
+    integer_handler = VulnerableIntegerOverflow()
+    
+    operation = integer_data.get("operation", "addition")
+    params = integer_data.get("params", {})
+    
+    # VULNERABLE: No integer validation
+    # VULNERABLE: No integer overflow protection
+    
+    result = integer_handler.execute_advanced_integer_overflow(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced integer overflow vulnerability"
+    }
+
+
+@app.post("/integer-overflow/underflow")
+async def execute_integer_underflow(integer_data: dict):
+    """Execute integer underflow - VULNERABLE: Integer overflow"""
+    from .vulnerable_integer_overflow import VulnerableIntegerOverflow
+    
+    integer_handler = VulnerableIntegerOverflow()
+    
+    value1 = integer_data.get("value1", -2147483648)
+    value2 = integer_data.get("value2", 1)
+    
+    # VULNERABLE: No underflow checking
+    # VULNERABLE: No integer overflow protection
+    
+    result = integer_handler.execute_integer_underflow(value1, value2)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Integer underflow vulnerability"
+    }
+
+
+# VULNERABLE: Format String endpoints
+@app.post("/format-string/injection")
+async def execute_format_string_injection(format_data: dict):
+    """Execute format string injection - VULNERABLE: Format string"""
+    from .vulnerable_format_string import VulnerableFormatString
+    
+    format_handler = VulnerableFormatString()
+    
+    format_string = format_data.get("format_string", "{0}")
+    args = format_data.get("args", ["test"])
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No format string protection
+    
+    result = format_handler.execute_format_string_injection(format_string, args)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Format string injection vulnerability"
+    }
+
+
+@app.post("/format-string/printf")
+async def execute_printf_format_string(format_data: dict):
+    """Execute printf format string - VULNERABLE: Format string"""
+    from .vulnerable_format_string import VulnerableFormatString
+    
+    format_handler = VulnerableFormatString()
+    
+    format_string = format_data.get("format_string", "%s")
+    args = format_data.get("args", ["test"])
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No format string protection
+    
+    result = format_handler.execute_printf_format_string(format_string, args)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Printf format string vulnerability"
+    }
+
+
+@app.post("/format-string/sprintf")
+async def execute_sprintf_format_string(format_data: dict):
+    """Execute sprintf format string - VULNERABLE: Format string"""
+    from .vulnerable_format_string import VulnerableFormatString
+    
+    format_handler = VulnerableFormatString()
+    
+    format_string = format_data.get("format_string", "%s")
+    args = format_data.get("args", ["test"])
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No format string protection
+    
+    result = format_handler.execute_sprintf_format_string(format_string, args)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Sprintf format string vulnerability"
+    }
+
+
+@app.post("/format-string/fprintf")
+async def execute_fprintf_format_string(format_data: dict):
+    """Execute fprintf format string - VULNERABLE: Format string"""
+    from .vulnerable_format_string import VulnerableFormatString
+    
+    format_handler = VulnerableFormatString()
+    
+    format_string = format_data.get("format_string", "%s")
+    args = format_data.get("args", ["test"])
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No format string protection
+    
+    result = format_handler.execute_fprintf_format_string(format_string, args)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Fprintf format string vulnerability"
+    }
+
+
+@app.post("/format-string/snprintf")
+async def execute_snprintf_format_string(format_data: dict):
+    """Execute snprintf format string - VULNERABLE: Format string"""
+    from .vulnerable_format_string import VulnerableFormatString
+    
+    format_handler = VulnerableFormatString()
+    
+    format_string = format_data.get("format_string", "%s")
+    args = format_data.get("args", ["test"])
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No format string protection
+    
+    result = format_handler.execute_snprintf_format_string(format_string, args)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Snprintf format string vulnerability"
+    }
+
+
+@app.post("/format-string/log")
+async def execute_log_format_string(format_data: dict):
+    """Execute log format string - VULNERABLE: Format string"""
+    from .vulnerable_format_string import VulnerableFormatString
+    
+    format_handler = VulnerableFormatString()
+    
+    format_string = format_data.get("format_string", "{0}")
+    args = format_data.get("args", ["test"])
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No format string protection
+    
+    result = format_handler.execute_log_format_string(format_string, args)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Log format string vulnerability"
+    }
+
+
+@app.post("/format-string/template")
+async def execute_template_format_string(format_data: dict):
+    """Execute template format string - VULNERABLE: Format string"""
+    from .vulnerable_format_string import VulnerableFormatString
+    
+    format_handler = VulnerableFormatString()
+    
+    format_string = format_data.get("format_string", "{0}")
+    args = format_data.get("args", ["test"])
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No format string protection
+    
+    result = format_handler.execute_template_format_string(format_string, args)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Template format string vulnerability"
+    }
+
+
+@app.post("/format-string/advanced")
+async def execute_advanced_format_string(format_data: dict):
+    """Execute advanced format string - VULNERABLE: Format string"""
+    from .vulnerable_format_string import VulnerableFormatString
+    
+    format_handler = VulnerableFormatString()
+    
+    operation = format_data.get("operation", "injection")
+    params = format_data.get("params", {})
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No format string protection
+    
+    result = format_handler.execute_advanced_format_string(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced format string vulnerability"
+    }
+
+
+@app.post("/format-string/evasion")
+async def execute_format_string_evasion(format_data: dict):
+    """Execute format string evasion - VULNERABLE: Format string"""
+    from .vulnerable_format_string import VulnerableFormatString
+    
+    format_handler = VulnerableFormatString()
+    
+    format_string = format_data.get("format_string", "{0}")
+    args = format_data.get("args", ["test"])
+    
+    # VULNERABLE: No format string validation
+    # VULNERABLE: No format string protection
+    
+    result = format_handler.execute_format_string_evasion(format_string, args)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Format string evasion vulnerability"
+    }
+
+
+# VULNERABLE: Time-of-Check Time-of-Use (TOCTOU) endpoints
+@app.post("/toctou/file")
+async def execute_file_toctou(toctou_data: dict):
+    """Execute file TOCTOU - VULNERABLE: TOCTOU"""
+    from .vulnerable_toctou import VulnerableTOCTOU
+    
+    toctou_handler = VulnerableTOCTOU()
+    
+    filename = toctou_data.get("filename", "test.txt")
+    content = toctou_data.get("content", "test content")
+    
+    # VULNERABLE: No atomic file operations
+    # VULNERABLE: No TOCTOU protection
+    
+    result = toctou_handler.execute_file_toctou(filename, content)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: File TOCTOU vulnerability"
+    }
+
+
+@app.post("/toctou/permission")
+async def execute_permission_toctou(toctou_data: dict):
+    """Execute permission TOCTOU - VULNERABLE: TOCTOU"""
+    from .vulnerable_toctou import VulnerableTOCTOU
+    
+    toctou_handler = VulnerableTOCTOU()
+    
+    filename = toctou_data.get("filename", "test.txt")
+    mode = toctou_data.get("mode", 0o755)
+    
+    # VULNERABLE: No atomic permission operations
+    # VULNERABLE: No TOCTOU protection
+    
+    result = toctou_handler.execute_permission_toctou(filename, mode)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Permission TOCTOU vulnerability"
+    }
+
+
+@app.post("/toctou/directory")
+async def execute_directory_toctou(toctou_data: dict):
+    """Execute directory TOCTOU - VULNERABLE: TOCTOU"""
+    from .vulnerable_toctou import VulnerableTOCTOU
+    
+    toctou_handler = VulnerableTOCTOU()
+    
+    dirname = toctou_data.get("dirname", "test_dir")
+    
+    # VULNERABLE: No atomic directory operations
+    # VULNERABLE: No TOCTOU protection
+    
+    result = toctou_handler.execute_directory_toctou(dirname)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Directory TOCTOU vulnerability"
+    }
+
+
+@app.post("/toctou/symlink")
+async def execute_symlink_toctou(toctou_data: dict):
+    """Execute symlink TOCTOU - VULNERABLE: TOCTOU"""
+    from .vulnerable_toctou import VulnerableTOCTOU
+    
+    toctou_handler = VulnerableTOCTOU()
+    
+    symlink_path = toctou_data.get("symlink_path", "test_link")
+    target_path = toctou_data.get("target_path", "test_target")
+    
+    # VULNERABLE: No atomic symlink operations
+    # VULNERABLE: No TOCTOU protection
+    
+    result = toctou_handler.execute_symlink_toctou(symlink_path, target_path)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Symlink TOCTOU vulnerability"
+    }
+
+
+@app.post("/toctou/process")
+async def execute_process_toctou(toctou_data: dict):
+    """Execute process TOCTOU - VULNERABLE: TOCTOU"""
+    from .vulnerable_toctou import VulnerableTOCTOU
+    
+    toctou_handler = VulnerableTOCTOU()
+    
+    process_id = toctou_data.get("process_id", 1)
+    
+    # VULNERABLE: No atomic process operations
+    # VULNERABLE: No TOCTOU protection
+    
+    result = toctou_handler.execute_process_toctou(process_id)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Process TOCTOU vulnerability"
+    }
+
+
+@app.post("/toctou/memory")
+async def execute_memory_toctou(toctou_data: dict):
+    """Execute memory TOCTOU - VULNERABLE: TOCTOU"""
+    from .vulnerable_toctou import VulnerableTOCTOU
+    
+    toctou_handler = VulnerableTOCTOU()
+    
+    memory_address = toctou_data.get("memory_address", 0x1000)
+    value = toctou_data.get("value", 42)
+    
+    # VULNERABLE: No atomic memory operations
+    # VULNERABLE: No TOCTOU protection
+    
+    result = toctou_handler.execute_memory_toctou(memory_address, value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Memory TOCTOU vulnerability"
+    }
+
+
+@app.post("/toctou/database")
+async def execute_database_toctou(toctou_data: dict):
+    """Execute database TOCTOU - VULNERABLE: TOCTOU"""
+    from .vulnerable_toctou import VulnerableTOCTOU
+    
+    toctou_handler = VulnerableTOCTOU()
+    
+    table = toctou_data.get("table", "users")
+    record_id = toctou_data.get("record_id", 1)
+    
+    # VULNERABLE: No atomic database operations
+    # VULNERABLE: No TOCTOU protection
+    
+    result = toctou_handler.execute_database_toctou(table, record_id)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Database TOCTOU vulnerability"
+    }
+
+
+@app.post("/toctou/advanced")
+async def execute_advanced_toctou(toctou_data: dict):
+    """Execute advanced TOCTOU - VULNERABLE: TOCTOU"""
+    from .vulnerable_toctou import VulnerableTOCTOU
+    
+    toctou_handler = VulnerableTOCTOU()
+    
+    operation = toctou_data.get("operation", "file")
+    params = toctou_data.get("params", {})
+    
+    # VULNERABLE: No TOCTOU validation
+    # VULNERABLE: No TOCTOU protection
+    
+    result = toctou_handler.execute_advanced_toctou(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced TOCTOU vulnerability"
+    }
+
+
+# VULNERABLE: Cryptographic endpoints
+@app.post("/crypto/weak-encryption")
+async def execute_weak_encryption(crypto_data: dict):
+    """Execute weak encryption - VULNERABLE: Cryptographic"""
+    from .vulnerable_crypto import VulnerableCrypto
+    
+    crypto_handler = VulnerableCrypto()
+    
+    data = crypto_data.get("data", "test data")
+    algorithm = crypto_data.get("algorithm", "DES")
+    
+    # VULNERABLE: No encryption strength validation
+    # VULNERABLE: No cryptographic protection
+    
+    result = crypto_handler.execute_weak_encryption(data, algorithm)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Weak encryption vulnerability"
+    }
+
+
+@app.post("/crypto/weak-key-generation")
+async def execute_weak_key_generation(crypto_data: dict):
+    """Execute weak key generation - VULNERABLE: Cryptographic"""
+    from .vulnerable_crypto import VulnerableCrypto
+    
+    crypto_handler = VulnerableCrypto()
+    
+    algorithm = crypto_data.get("algorithm", "DES")
+    key_length = crypto_data.get("key_length", 56)
+    
+    # VULNERABLE: No key strength validation
+    # VULNERABLE: No cryptographic protection
+    
+    result = crypto_handler.execute_weak_key_generation(algorithm, key_length)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Weak key generation vulnerability"
+    }
+
+
+@app.post("/crypto/weak-iv-generation")
+async def execute_weak_iv_generation(crypto_data: dict):
+    """Execute weak IV generation - VULNERABLE: Cryptographic"""
+    from .vulnerable_crypto import VulnerableCrypto
+    
+    crypto_handler = VulnerableCrypto()
+    
+    algorithm = crypto_data.get("algorithm", "DES")
+    
+    # VULNERABLE: No IV randomness validation
+    # VULNERABLE: No cryptographic protection
+    
+    result = crypto_handler.execute_weak_iv_generation(algorithm)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Weak IV generation vulnerability"
+    }
+
+
+@app.post("/crypto/weak-hash")
+async def execute_weak_hash(crypto_data: dict):
+    """Execute weak hash - VULNERABLE: Cryptographic"""
+    from .vulnerable_crypto import VulnerableCrypto
+    
+    crypto_handler = VulnerableCrypto()
+    
+    data = crypto_data.get("data", "test data")
+    algorithm = crypto_data.get("algorithm", "MD5")
+    
+    # VULNERABLE: No hash strength validation
+    # VULNERABLE: No cryptographic protection
+    
+    result = crypto_handler.execute_weak_hash(data, algorithm)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Weak hash vulnerability"
+    }
+
+
+@app.post("/crypto/weak-random")
+async def execute_weak_random(crypto_data: dict):
+    """Execute weak random generation - VULNERABLE: Cryptographic"""
+    from .vulnerable_crypto import VulnerableCrypto
+    
+    crypto_handler = VulnerableCrypto()
+    
+    length = crypto_data.get("length", 16)
+    
+    # VULNERABLE: No entropy validation
+    # VULNERABLE: No cryptographic protection
+    
+    result = crypto_handler.execute_weak_random(length)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Weak random generation vulnerability"
+    }
+
+
+@app.post("/crypto/weak-salt")
+async def execute_weak_salt(crypto_data: dict):
+    """Execute weak salt generation - VULNERABLE: Cryptographic"""
+    from .vulnerable_crypto import VulnerableCrypto
+    
+    crypto_handler = VulnerableCrypto()
+    
+    password = crypto_data.get("password", "password")
+    salt_length = crypto_data.get("salt_length", 8)
+    
+    # VULNERABLE: No salt randomness validation
+    # VULNERABLE: No cryptographic protection
+    
+    result = crypto_handler.execute_weak_salt(password, salt_length)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Weak salt generation vulnerability"
+    }
+
+
+@app.post("/crypto/weak-padding")
+async def execute_weak_padding(crypto_data: dict):
+    """Execute weak padding - VULNERABLE: Cryptographic"""
+    from .vulnerable_crypto import VulnerableCrypto
+    
+    crypto_handler = VulnerableCrypto()
+    
+    data = crypto_data.get("data", "test data")
+    block_size = crypto_data.get("block_size", 8)
+    
+    # VULNERABLE: No padding validation
+    # VULNERABLE: No cryptographic protection
+    
+    result = crypto_handler.execute_weak_padding(data, block_size)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Weak padding vulnerability"
+    }
+
+
+@app.post("/crypto/advanced")
+async def execute_advanced_crypto(crypto_data: dict):
+    """Execute advanced crypto - VULNERABLE: Cryptographic"""
+    from .vulnerable_crypto import VulnerableCrypto
+    
+    crypto_handler = VulnerableCrypto()
+    
+    operation = crypto_data.get("operation", "weak_encryption")
+    params = crypto_data.get("params", {})
+    
+    # VULNERABLE: No crypto validation
+    # VULNERABLE: No cryptographic protection
+    
+    result = crypto_handler.execute_advanced_crypto(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced crypto vulnerability"
+    }
+
+
+# VULNERABLE: Session Management endpoints
+@app.post("/session-management/weak-session-token")
+async def execute_weak_session_token(session_data: dict):
+    """Execute weak session token - VULNERABLE: Session management"""
+    from .vulnerable_session_management import VulnerableSessionManagement
+    
+    session_handler = VulnerableSessionManagement()
+    
+    user_id = session_data.get("user_id", "user1")
+    
+    # VULNERABLE: No token strength validation
+    # VULNERABLE: No session management protection
+    
+    result = session_handler.execute_weak_session_token(user_id)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Weak session token vulnerability"
+    }
+
+
+@app.post("/session-management/predictable-session-token")
+async def execute_predictable_session_token(session_data: dict):
+    """Execute predictable session token - VULNERABLE: Session management"""
+    from .vulnerable_session_management import VulnerableSessionManagement
+    
+    session_handler = VulnerableSessionManagement()
+    
+    user_id = session_data.get("user_id", "user1")
+    
+    # VULNERABLE: No token unpredictability validation
+    # VULNERABLE: No session management protection
+    
+    result = session_handler.execute_predictable_session_token(user_id)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Predictable session token vulnerability"
+    }
+
+
+@app.post("/session-management/session-fixation")
+async def execute_session_fixation(session_data: dict):
+    """Execute session fixation - VULNERABLE: Session management"""
+    from .vulnerable_session_management import VulnerableSessionManagement
+    
+    session_handler = VulnerableSessionManagement()
+    
+    user_id = session_data.get("user_id", "user1")
+    session_token = session_data.get("session_token", "fixed_session_token")
+    
+    # VULNERABLE: No session token regeneration
+    # VULNERABLE: No session management protection
+    
+    result = session_handler.execute_session_fixation(user_id, session_token)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Session fixation vulnerability"
+    }
+
+
+@app.post("/session-management/session-hijacking")
+async def execute_session_hijacking(session_data: dict):
+    """Execute session hijacking - VULNERABLE: Session management"""
+    from .vulnerable_session_management import VulnerableSessionManagement
+    
+    session_handler = VulnerableSessionManagement()
+    
+    session_token = session_data.get("session_token", "hijacked_session_token")
+    
+    # VULNERABLE: No session validation
+    # VULNERABLE: No session management protection
+    
+    result = session_handler.execute_session_hijacking(session_token)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Session hijacking vulnerability"
+    }
+
+
+@app.post("/session-management/session-timeout-bypass")
+async def execute_session_timeout_bypass(session_data: dict):
+    """Execute session timeout bypass - VULNERABLE: Session management"""
+    from .vulnerable_session_management import VulnerableSessionManagement
+    
+    session_handler = VulnerableSessionManagement()
+    
+    session_token = session_data.get("session_token", "timeout_bypass_token")
+    
+    # VULNERABLE: No session timeout validation
+    # VULNERABLE: No session management protection
+    
+    result = session_handler.execute_session_timeout_bypass(session_token)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Session timeout bypass vulnerability"
+    }
+
+
+@app.post("/session-management/session-privilege-escalation")
+async def execute_session_privilege_escalation(session_data: dict):
+    """Execute session privilege escalation - VULNERABLE: Session management"""
+    from .vulnerable_session_management import VulnerableSessionManagement
+    
+    session_handler = VulnerableSessionManagement()
+    
+    session_token = session_data.get("session_token", "privilege_escalation_token")
+    new_role = session_data.get("new_role", "admin")
+    
+    # VULNERABLE: No role validation
+    # VULNERABLE: No session management protection
+    
+    result = session_handler.execute_session_privilege_escalation(session_token, new_role)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Session privilege escalation vulnerability"
+    }
+
+
+@app.post("/session-management/session-data-leakage")
+async def execute_session_data_leakage(session_data: dict):
+    """Execute session data leakage - VULNERABLE: Session management"""
+    from .vulnerable_session_management import VulnerableSessionManagement
+    
+    session_handler = VulnerableSessionManagement()
+    
+    session_token = session_data.get("session_token", "data_leakage_token")
+    
+    # VULNERABLE: No data protection
+    # VULNERABLE: No session management protection
+    
+    result = session_handler.execute_session_data_leakage(session_token)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Session data leakage vulnerability"
+    }
+
+
+@app.post("/session-management/advanced")
+async def execute_advanced_session_management(session_data: dict):
+    """Execute advanced session management - VULNERABLE: Session management"""
+    from .vulnerable_session_management import VulnerableSessionManagement
+    
+    session_handler = VulnerableSessionManagement()
+    
+    operation = session_data.get("operation", "weak_session_token")
+    params = session_data.get("params", {})
+    
+    # VULNERABLE: No session validation
+    # VULNERABLE: No session management protection
+    
+    result = session_handler.execute_advanced_session_management(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced session management vulnerability"
+    }
+
+
+# VULNERABLE: Authentication Bypass endpoints
+@app.post("/auth-bypass/sql-injection")
+async def execute_sql_injection_auth_bypass(auth_data: dict):
+    """Execute SQL injection authentication bypass - VULNERABLE: Authentication bypass"""
+    from .vulnerable_auth_bypass import VulnerableAuthBypass
+    
+    auth_handler = VulnerableAuthBypass()
+    
+    username = auth_data.get("username", "admin")
+    password = auth_data.get("password", "password")
+    
+    # VULNERABLE: No input validation
+    # VULNERABLE: No authentication bypass protection
+    
+    result = auth_handler.execute_sql_injection_auth_bypass(username, password)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: SQL injection authentication bypass vulnerability"
+    }
+
+
+@app.post("/auth-bypass/weak-password")
+async def execute_weak_password_bypass(auth_data: dict):
+    """Execute weak password bypass - VULNERABLE: Authentication bypass"""
+    from .vulnerable_auth_bypass import VulnerableAuthBypass
+    
+    auth_handler = VulnerableAuthBypass()
+    
+    username = auth_data.get("username", "admin")
+    password = auth_data.get("password", "password")
+    
+    # VULNERABLE: No password strength validation
+    # VULNERABLE: No authentication bypass protection
+    
+    result = auth_handler.execute_weak_password_bypass(username, password)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Weak password bypass vulnerability"
+    }
+
+
+@app.post("/auth-bypass/admin-token")
+async def execute_admin_token_bypass(auth_data: dict):
+    """Execute admin token bypass - VULNERABLE: Authentication bypass"""
+    from .vulnerable_auth_bypass import VulnerableAuthBypass
+    
+    auth_handler = VulnerableAuthBypass()
+    
+    token = auth_data.get("token", "admin_token_123")
+    
+    # VULNERABLE: No token validation
+    # VULNERABLE: No authentication bypass protection
+    
+    result = auth_handler.execute_admin_token_bypass(token)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Admin token bypass vulnerability"
+    }
+
+
+@app.post("/auth-bypass/credential-stuffing")
+async def execute_credential_stuffing_bypass(auth_data: dict):
+    """Execute credential stuffing bypass - VULNERABLE: Authentication bypass"""
+    from .vulnerable_auth_bypass import VulnerableAuthBypass
+    
+    auth_handler = VulnerableAuthBypass()
+    
+    username = auth_data.get("username", "admin")
+    password = auth_data.get("password", "admin123")
+    
+    # VULNERABLE: No rate limiting
+    # VULNERABLE: No authentication bypass protection
+    
+    result = auth_handler.execute_credential_stuffing_bypass(username, password)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Credential stuffing bypass vulnerability"
+    }
+
+
+@app.post("/auth-bypass/session-fixation")
+async def execute_session_fixation_bypass(auth_data: dict):
+    """Execute session fixation bypass - VULNERABLE: Authentication bypass"""
+    from .vulnerable_auth_bypass import VulnerableAuthBypass
+    
+    auth_handler = VulnerableAuthBypass()
+    
+    session_id = auth_data.get("session_id", "fixed_session_123")
+    
+    # VULNERABLE: No session validation
+    # VULNERABLE: No authentication bypass protection
+    
+    result = auth_handler.execute_session_fixation_bypass(session_id)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Session fixation bypass vulnerability"
+    }
+
+
+@app.post("/auth-bypass/jwt")
+async def execute_jwt_bypass(auth_data: dict):
+    """Execute JWT bypass - VULNERABLE: Authentication bypass"""
+    from .vulnerable_auth_bypass import VulnerableAuthBypass
+    
+    auth_handler = VulnerableAuthBypass()
+    
+    jwt_token = auth_data.get("jwt_token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+    
+    # VULNERABLE: No JWT validation
+    # VULNERABLE: No authentication bypass protection
+    
+    result = auth_handler.execute_jwt_bypass(jwt_token)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: JWT bypass vulnerability"
+    }
+
+
+@app.post("/auth-bypass/oauth")
+async def execute_oauth_bypass(auth_data: dict):
+    """Execute OAuth bypass - VULNERABLE: Authentication bypass"""
+    from .vulnerable_auth_bypass import VulnerableAuthBypass
+    
+    auth_handler = VulnerableAuthBypass()
+    
+    oauth_token = auth_data.get("oauth_token", "oauth_token_123")
+    
+    # VULNERABLE: No OAuth validation
+    # VULNERABLE: No authentication bypass protection
+    
+    result = auth_handler.execute_oauth_bypass(oauth_token)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: OAuth bypass vulnerability"
+    }
+
+
+@app.post("/auth-bypass/advanced")
+async def execute_advanced_auth_bypass(auth_data: dict):
+    """Execute advanced authentication bypass - VULNERABLE: Authentication bypass"""
+    from .vulnerable_auth_bypass import VulnerableAuthBypass
+    
+    auth_handler = VulnerableAuthBypass()
+    
+    operation = auth_data.get("operation", "sql_injection")
+    params = auth_data.get("params", {})
+    
+    # VULNERABLE: No authentication validation
+    # VULNERABLE: No authentication bypass protection
+    
+    result = auth_handler.execute_advanced_auth_bypass(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced authentication bypass vulnerability"
+    }
+
+
+# VULNERABLE: Authorization Bypass endpoints
+@app.post("/authz-bypass/role-manipulation")
+async def execute_role_manipulation(authz_data: dict):
+    """Execute role manipulation - VULNERABLE: Authorization bypass"""
+    from .vulnerable_authz_bypass import VulnerableAuthzBypass
+    
+    authz_handler = VulnerableAuthzBypass()
+    
+    user = authz_data.get("user", "user1")
+    target_role = authz_data.get("target_role", "admin")
+    
+    # VULNERABLE: No role validation
+    # VULNERABLE: No authorization bypass protection
+    
+    result = authz_handler.execute_role_manipulation(user, target_role)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Role manipulation vulnerability"
+    }
+
+
+@app.post("/authz-bypass/permission-bypass")
+async def execute_permission_bypass(authz_data: dict):
+    """Execute permission bypass - VULNERABLE: Authorization bypass"""
+    from .vulnerable_authz_bypass import VulnerableAuthzBypass
+    
+    authz_handler = VulnerableAuthzBypass()
+    
+    user = authz_data.get("user", "user1")
+    resource = authz_data.get("resource", "file1.txt")
+    
+    # VULNERABLE: No permission validation
+    # VULNERABLE: No authorization bypass protection
+    
+    result = authz_handler.execute_permission_bypass(user, resource)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Permission bypass vulnerability"
+    }
+
+
+@app.post("/authz-bypass/api-endpoint-bypass")
+async def execute_api_endpoint_bypass(authz_data: dict):
+    """Execute API endpoint bypass - VULNERABLE: Authorization bypass"""
+    from .vulnerable_authz_bypass import VulnerableAuthzBypass
+    
+    authz_handler = VulnerableAuthzBypass()
+    
+    user = authz_data.get("user", "user1")
+    endpoint = authz_data.get("endpoint", "/admin/users")
+    
+    # VULNERABLE: No endpoint authorization
+    # VULNERABLE: No authorization bypass protection
+    
+    result = authz_handler.execute_api_endpoint_bypass(user, endpoint)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: API endpoint bypass vulnerability"
+    }
+
+
+@app.post("/authz-bypass/idor-bypass")
+async def execute_idor_bypass(authz_data: dict):
+    """Execute IDOR bypass - VULNERABLE: Authorization bypass"""
+    from .vulnerable_authz_bypass import VulnerableAuthzBypass
+    
+    authz_handler = VulnerableAuthzBypass()
+    
+    user = authz_data.get("user", "user1")
+    resource_id = authz_data.get("resource_id", "123")
+    
+    # VULNERABLE: No IDOR validation
+    # VULNERABLE: No authorization bypass protection
+    
+    result = authz_handler.execute_idor_bypass(user, resource_id)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: IDOR bypass vulnerability"
+    }
+
+
+@app.post("/authz-bypass/privilege-escalation")
+async def execute_privilege_escalation(authz_data: dict):
+    """Execute privilege escalation - VULNERABLE: Authorization bypass"""
+    from .vulnerable_authz_bypass import VulnerableAuthzBypass
+    
+    authz_handler = VulnerableAuthzBypass()
+    
+    user = authz_data.get("user", "user1")
+    target_privilege = authz_data.get("target_privilege", "admin")
+    
+    # VULNERABLE: No privilege validation
+    # VULNERABLE: No authorization bypass protection
+    
+    result = authz_handler.execute_privilege_escalation(user, target_privilege)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Privilege escalation vulnerability"
+    }
+
+
+@app.post("/authz-bypass/parameter-pollution-bypass")
+async def execute_parameter_pollution_bypass(authz_data: dict):
+    """Execute parameter pollution bypass - VULNERABLE: Authorization bypass"""
+    from .vulnerable_authz_bypass import VulnerableAuthzBypass
+    
+    authz_handler = VulnerableAuthzBypass()
+    
+    user = authz_data.get("user", "user1")
+    parameters = authz_data.get("parameters", {})
+    
+    # VULNERABLE: No parameter validation
+    # VULNERABLE: No authorization bypass protection
+    
+    result = authz_handler.execute_parameter_pollution_bypass(user, parameters)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Parameter pollution bypass vulnerability"
+    }
+
+
+@app.post("/authz-bypass/header-manipulation-bypass")
+async def execute_header_manipulation_bypass(authz_data: dict):
+    """Execute header manipulation bypass - VULNERABLE: Authorization bypass"""
+    from .vulnerable_authz_bypass import VulnerableAuthzBypass
+    
+    authz_handler = VulnerableAuthzBypass()
+    
+    user = authz_data.get("user", "user1")
+    headers = authz_data.get("headers", {})
+    
+    # VULNERABLE: No header validation
+    # VULNERABLE: No authorization bypass protection
+    
+    result = authz_handler.execute_header_manipulation_bypass(user, headers)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Header manipulation bypass vulnerability"
+    }
+
+
+@app.post("/authz-bypass/advanced")
+async def execute_advanced_authz_bypass(authz_data: dict):
+    """Execute advanced authorization bypass - VULNERABLE: Authorization bypass"""
+    from .vulnerable_authz_bypass import VulnerableAuthzBypass
+    
+    authz_handler = VulnerableAuthzBypass()
+    
+    operation = authz_data.get("operation", "role_manipulation")
+    params = authz_data.get("params", {})
+    
+    # VULNERABLE: No authorization validation
+    # VULNERABLE: No authorization bypass protection
+    
+    result = authz_handler.execute_advanced_authz_bypass(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced authorization bypass vulnerability"
+    }
+
+
+# VULNERABLE: CSRF endpoints
+@app.post("/csrf/attack")
+async def execute_csrf_attack(csrf_data: dict):
+    """Execute CSRF attack - VULNERABLE: CSRF"""
+    from .vulnerable_csrf import VulnerableCSRF
+    
+    csrf_handler = VulnerableCSRF()
+    
+    action = csrf_data.get("action", "change_password")
+    user = csrf_data.get("user", "user1")
+    csrf_token = csrf_data.get("csrf_token", None)
+    
+    # VULNERABLE: No CSRF token validation
+    # VULNERABLE: No CSRF protection
+    
+    result = csrf_handler.execute_csrf_attack(action, user, csrf_token)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CSRF attack vulnerability"
+    }
+
+
+@app.post("/csrf/token-bypass")
+async def execute_csrf_token_bypass(csrf_data: dict):
+    """Execute CSRF token bypass - VULNERABLE: CSRF"""
+    from .vulnerable_csrf import VulnerableCSRF
+    
+    csrf_handler = VulnerableCSRF()
+    
+    action = csrf_data.get("action", "change_password")
+    user = csrf_data.get("user", "user1")
+    fake_token = csrf_data.get("fake_token", "fake_token_123")
+    
+    # VULNERABLE: No token validation
+    # VULNERABLE: No CSRF protection
+    
+    result = csrf_handler.execute_csrf_token_bypass(action, user, fake_token)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CSRF token bypass vulnerability"
+    }
+
+
+@app.post("/csrf/origin-bypass")
+async def execute_csrf_origin_bypass(csrf_data: dict):
+    """Execute CSRF origin bypass - VULNERABLE: CSRF"""
+    from .vulnerable_csrf import VulnerableCSRF
+    
+    csrf_handler = VulnerableCSRF()
+    
+    action = csrf_data.get("action", "change_password")
+    user = csrf_data.get("user", "user1")
+    origin = csrf_data.get("origin", "https://evil-site.com")
+    
+    # VULNERABLE: No origin validation
+    # VULNERABLE: No CSRF protection
+    
+    result = csrf_handler.execute_csrf_origin_bypass(action, user, origin)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CSRF origin bypass vulnerability"
+    }
+
+
+@app.post("/csrf/referer-bypass")
+async def execute_csrf_referer_bypass(csrf_data: dict):
+    """Execute CSRF referer bypass - VULNERABLE: CSRF"""
+    from .vulnerable_csrf import VulnerableCSRF
+    
+    csrf_handler = VulnerableCSRF()
+    
+    action = csrf_data.get("action", "change_password")
+    user = csrf_data.get("user", "user1")
+    referer = csrf_data.get("referer", "https://evil-site.com")
+    
+    # VULNERABLE: No referer validation
+    # VULNERABLE: No CSRF protection
+    
+    result = csrf_handler.execute_csrf_referer_bypass(action, user, referer)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CSRF referer bypass vulnerability"
+    }
+
+
+@app.post("/csrf/method-bypass")
+async def execute_csrf_method_bypass(csrf_data: dict):
+    """Execute CSRF method bypass - VULNERABLE: CSRF"""
+    from .vulnerable_csrf import VulnerableCSRF
+    
+    csrf_handler = VulnerableCSRF()
+    
+    action = csrf_data.get("action", "change_password")
+    user = csrf_data.get("user", "user1")
+    method = csrf_data.get("method", "GET")
+    
+    # VULNERABLE: No method validation
+    # VULNERABLE: No CSRF protection
+    
+    result = csrf_handler.execute_csrf_method_bypass(action, user, method)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CSRF method bypass vulnerability"
+    }
+
+
+@app.post("/csrf/header-bypass")
+async def execute_csrf_header_bypass(csrf_data: dict):
+    """Execute CSRF header bypass - VULNERABLE: CSRF"""
+    from .vulnerable_csrf import VulnerableCSRF
+    
+    csrf_handler = VulnerableCSRF()
+    
+    action = csrf_data.get("action", "change_password")
+    user = csrf_data.get("user", "user1")
+    headers = csrf_data.get("headers", {})
+    
+    # VULNERABLE: No header validation
+    # VULNERABLE: No CSRF protection
+    
+    result = csrf_handler.execute_csrf_header_bypass(action, user, headers)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CSRF header bypass vulnerability"
+    }
+
+
+@app.post("/csrf/cookie-bypass")
+async def execute_csrf_cookie_bypass(csrf_data: dict):
+    """Execute CSRF cookie bypass - VULNERABLE: CSRF"""
+    from .vulnerable_csrf import VulnerableCSRF
+    
+    csrf_handler = VulnerableCSRF()
+    
+    action = csrf_data.get("action", "change_password")
+    user = csrf_data.get("user", "user1")
+    cookies = csrf_data.get("cookies", {})
+    
+    # VULNERABLE: No cookie validation
+    # VULNERABLE: No CSRF protection
+    
+    result = csrf_handler.execute_csrf_cookie_bypass(action, user, cookies)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: CSRF cookie bypass vulnerability"
+    }
+
+
+@app.post("/csrf/advanced")
+async def execute_advanced_csrf(csrf_data: dict):
+    """Execute advanced CSRF - VULNERABLE: CSRF"""
+    from .vulnerable_csrf import VulnerableCSRF
+    
+    csrf_handler = VulnerableCSRF()
+    
+    operation = csrf_data.get("operation", "csrf_attack")
+    params = csrf_data.get("params", {})
+    
+    # VULNERABLE: No CSRF validation
+    # VULNERABLE: No CSRF protection
+    
+    result = csrf_handler.execute_advanced_csrf(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced CSRF vulnerability"
+    }
+
+
+# VULNERABLE: Clickjacking endpoints
+@app.post("/clickjacking/invisible-iframe")
+async def execute_invisible_iframe_attack(clickjacking_data: dict):
+    """Execute invisible iframe attack - VULNERABLE: Clickjacking"""
+    from .vulnerable_clickjacking import VulnerableClickjacking
+    
+    clickjacking_handler = VulnerableClickjacking()
+    
+    target_url = clickjacking_data.get("target_url", "https://target-site.com")
+    overlay_content = clickjacking_data.get("overlay_content", "hidden iframe")
+    
+    # VULNERABLE: No frame protection
+    # VULNERABLE: No clickjacking protection
+    
+    result = clickjacking_handler.execute_invisible_iframe_attack(target_url, overlay_content)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Invisible iframe attack vulnerability"
+    }
+
+
+@app.post("/clickjacking/transparent-overlay")
+async def execute_transparent_overlay_attack(clickjacking_data: dict):
+    """Execute transparent overlay attack - VULNERABLE: Clickjacking"""
+    from .vulnerable_clickjacking import VulnerableClickjacking
+    
+    clickjacking_handler = VulnerableClickjacking()
+    
+    target_element = clickjacking_data.get("target_element", "sensitive_button")
+    overlay_content = clickjacking_data.get("overlay_content", "transparent overlay")
+    
+    # VULNERABLE: No overlay protection
+    # VULNERABLE: No clickjacking protection
+    
+    result = clickjacking_handler.execute_transparent_overlay_attack(target_element, overlay_content)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Transparent overlay attack vulnerability"
+    }
+
+
+@app.post("/clickjacking/fake-button")
+async def execute_fake_button_attack(clickjacking_data: dict):
+    """Execute fake button attack - VULNERABLE: Clickjacking"""
+    from .vulnerable_clickjacking import VulnerableClickjacking
+    
+    clickjacking_handler = VulnerableClickjacking()
+    
+    target_button = clickjacking_data.get("target_button", "delete_button")
+    fake_button_content = clickjacking_data.get("fake_button_content", "fake button")
+    
+    # VULNERABLE: No button validation
+    # VULNERABLE: No clickjacking protection
+    
+    result = clickjacking_handler.execute_fake_button_attack(target_button, fake_button_content)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Fake button attack vulnerability"
+    }
+
+
+@app.post("/clickjacking/misleading-content")
+async def execute_misleading_content_attack(clickjacking_data: dict):
+    """Execute misleading content attack - VULNERABLE: Clickjacking"""
+    from .vulnerable_clickjacking import VulnerableClickjacking
+    
+    clickjacking_handler = VulnerableClickjacking()
+    
+    target_action = clickjacking_data.get("target_action", "delete_account")
+    misleading_content = clickjacking_data.get("misleading_content", "misleading content")
+    
+    # VULNERABLE: No content validation
+    # VULNERABLE: No clickjacking protection
+    
+    result = clickjacking_handler.execute_misleading_content_attack(target_action, misleading_content)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Misleading content attack vulnerability"
+    }
+
+
+@app.post("/clickjacking/drag-and-drop")
+async def execute_drag_and_drop_attack(clickjacking_data: dict):
+    """Execute drag and drop attack - VULNERABLE: Clickjacking"""
+    from .vulnerable_clickjacking import VulnerableClickjacking
+    
+    clickjacking_handler = VulnerableClickjacking()
+    
+    target_element = clickjacking_data.get("target_element", "drop_zone")
+    drag_content = clickjacking_data.get("drag_content", "drag content")
+    
+    # VULNERABLE: No drag and drop protection
+    # VULNERABLE: No clickjacking protection
+    
+    result = clickjacking_handler.execute_drag_and_drop_attack(target_element, drag_content)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Drag and drop attack vulnerability"
+    }
+
+
+@app.post("/clickjacking/cursor-tracking")
+async def execute_cursor_tracking_attack(clickjacking_data: dict):
+    """Execute cursor tracking attack - VULNERABLE: Clickjacking"""
+    from .vulnerable_clickjacking import VulnerableClickjacking
+    
+    clickjacking_handler = VulnerableClickjacking()
+    
+    target_element = clickjacking_data.get("target_element", "tracked_element")
+    tracking_content = clickjacking_data.get("tracking_content", "tracking content")
+    
+    # VULNERABLE: No cursor tracking protection
+    # VULNERABLE: No clickjacking protection
+    
+    result = clickjacking_handler.execute_cursor_tracking_attack(target_element, tracking_content)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Cursor tracking attack vulnerability"
+    }
+
+
+@app.post("/clickjacking/mobile")
+async def execute_mobile_clickjacking_attack(clickjacking_data: dict):
+    """Execute mobile clickjacking attack - VULNERABLE: Clickjacking"""
+    from .vulnerable_clickjacking import VulnerableClickjacking
+    
+    clickjacking_handler = VulnerableClickjacking()
+    
+    target_element = clickjacking_data.get("target_element", "mobile_element")
+    mobile_content = clickjacking_data.get("mobile_content", "mobile content")
+    
+    # VULNERABLE: No mobile protection
+    # VULNERABLE: No clickjacking protection
+    
+    result = clickjacking_handler.execute_mobile_clickjacking_attack(target_element, mobile_content)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Mobile clickjacking attack vulnerability"
+    }
+
+
+@app.post("/clickjacking/advanced")
+async def execute_advanced_clickjacking(clickjacking_data: dict):
+    """Execute advanced clickjacking - VULNERABLE: Clickjacking"""
+    from .vulnerable_clickjacking import VulnerableClickjacking
+    
+    clickjacking_handler = VulnerableClickjacking()
+    
+    operation = clickjacking_data.get("operation", "invisible_iframe")
+    params = clickjacking_data.get("params", {})
+    
+    # VULNERABLE: No clickjacking validation
+    # VULNERABLE: No clickjacking protection
+    
+    result = clickjacking_handler.execute_advanced_clickjacking(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced clickjacking vulnerability"
+    }
+
+
+# VULNERABLE: DOM-based XSS endpoints
+@app.post("/dom-xss/url-based")
+async def execute_url_based_dom_xss(dom_xss_data: dict):
+    """Execute URL-based DOM XSS - VULNERABLE: DOM-based XSS"""
+    from .vulnerable_dom_xss import VulnerableDOMXSS
+    
+    dom_xss_handler = VulnerableDOMXSS()
+    
+    url_fragment = dom_xss_data.get("url_fragment", "<script>alert('XSS')</script>")
+    
+    # VULNERABLE: No URL validation
+    # VULNERABLE: No DOM XSS protection
+    
+    result = dom_xss_handler.execute_url_based_dom_xss(url_fragment)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: URL-based DOM XSS vulnerability"
+    }
+
+
+@app.post("/dom-xss/location-based")
+async def execute_location_based_dom_xss(dom_xss_data: dict):
+    """Execute location-based DOM XSS - VULNERABLE: DOM-based XSS"""
+    from .vulnerable_dom_xss import VulnerableDOMXSS
+    
+    dom_xss_handler = VulnerableDOMXSS()
+    
+    location_data = dom_xss_data.get("location_data", "<script>alert('XSS')</script>")
+    
+    # VULNERABLE: No location validation
+    # VULNERABLE: No DOM XSS protection
+    
+    result = dom_xss_handler.execute_location_based_dom_xss(location_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Location-based DOM XSS vulnerability"
+    }
+
+
+@app.post("/dom-xss/cookie-based")
+async def execute_cookie_based_dom_xss(dom_xss_data: dict):
+    """Execute cookie-based DOM XSS - VULNERABLE: DOM-based XSS"""
+    from .vulnerable_dom_xss import VulnerableDOMXSS
+    
+    dom_xss_handler = VulnerableDOMXSS()
+    
+    cookie_data = dom_xss_data.get("cookie_data", "<script>alert('XSS')</script>")
+    
+    # VULNERABLE: No cookie validation
+    # VULNERABLE: No DOM XSS protection
+    
+    result = dom_xss_handler.execute_cookie_based_dom_xss(cookie_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Cookie-based DOM XSS vulnerability"
+    }
+
+
+@app.post("/dom-xss/storage-based")
+async def execute_storage_based_dom_xss(dom_xss_data: dict):
+    """Execute storage-based DOM XSS - VULNERABLE: DOM-based XSS"""
+    from .vulnerable_dom_xss import VulnerableDOMXSS
+    
+    dom_xss_handler = VulnerableDOMXSS()
+    
+    storage_data = dom_xss_data.get("storage_data", "<script>alert('XSS')</script>")
+    storage_type = dom_xss_data.get("storage_type", "localStorage")
+    
+    # VULNERABLE: No storage validation
+    # VULNERABLE: No DOM XSS protection
+    
+    result = dom_xss_handler.execute_storage_based_dom_xss(storage_data, storage_type)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Storage-based DOM XSS vulnerability"
+    }
+
+
+@app.post("/dom-xss/referrer-based")
+async def execute_referrer_based_dom_xss(dom_xss_data: dict):
+    """Execute referrer-based DOM XSS - VULNERABLE: DOM-based XSS"""
+    from .vulnerable_dom_xss import VulnerableDOMXSS
+    
+    dom_xss_handler = VulnerableDOMXSS()
+    
+    referrer_data = dom_xss_data.get("referrer_data", "<script>alert('XSS')</script>")
+    
+    # VULNERABLE: No referrer validation
+    # VULNERABLE: No DOM XSS protection
+    
+    result = dom_xss_handler.execute_referrer_based_dom_xss(referrer_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Referrer-based DOM XSS vulnerability"
+    }
+
+
+@app.post("/dom-xss/eval-based")
+async def execute_eval_based_dom_xss(dom_xss_data: dict):
+    """Execute eval-based DOM XSS - VULNERABLE: DOM-based XSS"""
+    from .vulnerable_dom_xss import VulnerableDOMXSS
+    
+    dom_xss_handler = VulnerableDOMXSS()
+    
+    eval_data = dom_xss_data.get("eval_data", "alert('XSS')")
+    
+    # VULNERABLE: No eval validation
+    # VULNERABLE: No DOM XSS protection
+    
+    result = dom_xss_handler.execute_eval_based_dom_xss(eval_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Eval-based DOM XSS vulnerability"
+    }
+
+
+@app.post("/dom-xss/innerhtml-based")
+async def execute_innerhtml_based_dom_xss(dom_xss_data: dict):
+    """Execute innerHTML-based DOM XSS - VULNERABLE: DOM-based XSS"""
+    from .vulnerable_dom_xss import VulnerableDOMXSS
+    
+    dom_xss_handler = VulnerableDOMXSS()
+    
+    innerhtml_data = dom_xss_data.get("innerhtml_data", "<script>alert('XSS')</script>")
+    
+    # VULNERABLE: No innerHTML validation
+    # VULNERABLE: No DOM XSS protection
+    
+    result = dom_xss_handler.execute_innerhtml_based_dom_xss(innerhtml_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: innerHTML-based DOM XSS vulnerability"
+    }
+
+
+@app.post("/dom-xss/advanced")
+async def execute_advanced_dom_xss(dom_xss_data: dict):
+    """Execute advanced DOM XSS - VULNERABLE: DOM-based XSS"""
+    from .vulnerable_dom_xss import VulnerableDOMXSS
+    
+    dom_xss_handler = VulnerableDOMXSS()
+    
+    operation = dom_xss_data.get("operation", "url_based")
+    params = dom_xss_data.get("params", {})
+    
+    # VULNERABLE: No DOM XSS validation
+    # VULNERABLE: No DOM XSS protection
+    
+    result = dom_xss_handler.execute_advanced_dom_xss(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced DOM XSS vulnerability"
+    }
+
+
+# VULNERABLE: Stored XSS endpoints
+@app.post("/stored-xss/comment")
+async def execute_comment_stored_xss(stored_xss_data: dict):
+    """Execute comment stored XSS - VULNERABLE: Stored XSS"""
+    from .vulnerable_stored_xss import VulnerableStoredXSS
+    
+    stored_xss_handler = VulnerableStoredXSS()
+    
+    user = stored_xss_data.get("user", "user1")
+    comment = stored_xss_data.get("comment", "<script>alert('XSS')</script>")
+    
+    # VULNERABLE: No input sanitization
+    # VULNERABLE: No stored XSS protection
+    
+    result = stored_xss_handler.execute_comment_stored_xss(user, comment)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Comment stored XSS vulnerability"
+    }
+
+
+@app.post("/stored-xss/profile")
+async def execute_profile_stored_xss(stored_xss_data: dict):
+    """Execute profile stored XSS - VULNERABLE: Stored XSS"""
+    from .vulnerable_stored_xss import VulnerableStoredXSS
+    
+    stored_xss_handler = VulnerableStoredXSS()
+    
+    user = stored_xss_data.get("user", "user1")
+    profile_data = stored_xss_data.get("profile_data", {"name": "<script>alert('XSS')</script>"})
+    
+    # VULNERABLE: No input sanitization
+    # VULNERABLE: No stored XSS protection
+    
+    result = stored_xss_handler.execute_profile_stored_xss(user, profile_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Profile stored XSS vulnerability"
+    }
+
+
+@app.post("/stored-xss/admin-panel")
+async def execute_admin_panel_stored_xss(stored_xss_data: dict):
+    """Execute admin panel stored XSS - VULNERABLE: Stored XSS"""
+    from .vulnerable_stored_xss import VulnerableStoredXSS
+    
+    stored_xss_handler = VulnerableStoredXSS()
+    
+    admin = stored_xss_data.get("admin", "admin")
+    panel_data = stored_xss_data.get("panel_data", {"content": "<script>alert('XSS')</script>"})
+    
+    # VULNERABLE: No input sanitization
+    # VULNERABLE: No stored XSS protection
+    
+    result = stored_xss_handler.execute_admin_panel_stored_xss(admin, panel_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Admin panel stored XSS vulnerability"
+    }
+
+
+@app.post("/stored-xss/file-upload")
+async def execute_file_upload_stored_xss(stored_xss_data: dict):
+    """Execute file upload stored XSS - VULNERABLE: Stored XSS"""
+    from .vulnerable_stored_xss import VulnerableStoredXSS
+    
+    stored_xss_handler = VulnerableStoredXSS()
+    
+    user = stored_xss_data.get("user", "user1")
+    filename = stored_xss_data.get("filename", "test.html")
+    content = stored_xss_data.get("content", "<script>alert('XSS')</script>")
+    
+    # VULNERABLE: No file content sanitization
+    # VULNERABLE: No stored XSS protection
+    
+    result = stored_xss_handler.execute_file_upload_stored_xss(user, filename, content)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: File upload stored XSS vulnerability"
+    }
+
+
+@app.post("/stored-xss/database")
+async def execute_database_stored_xss(stored_xss_data: dict):
+    """Execute database stored XSS - VULNERABLE: Stored XSS"""
+    from .vulnerable_stored_xss import VulnerableStoredXSS
+    
+    stored_xss_handler = VulnerableStoredXSS()
+    
+    table = stored_xss_data.get("table", "users")
+    field = stored_xss_data.get("field", "name")
+    value = stored_xss_data.get("value", "<script>alert('XSS')</script>")
+    
+    # VULNERABLE: No database sanitization
+    # VULNERABLE: No stored XSS protection
+    
+    result = stored_xss_handler.execute_database_stored_xss(table, field, value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Database stored XSS vulnerability"
+    }
+
+
+@app.post("/stored-xss/session")
+async def execute_session_stored_xss(stored_xss_data: dict):
+    """Execute session stored XSS - VULNERABLE: Stored XSS"""
+    from .vulnerable_stored_xss import VulnerableStoredXSS
+    
+    stored_xss_handler = VulnerableStoredXSS()
+    
+    session_id = stored_xss_data.get("session_id", "session123")
+    session_data = stored_xss_data.get("session_data", {"data": "<script>alert('XSS')</script>"})
+    
+    # VULNERABLE: No session sanitization
+    # VULNERABLE: No stored XSS protection
+    
+    result = stored_xss_handler.execute_session_stored_xss(session_id, session_data)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Session stored XSS vulnerability"
+    }
+
+
+@app.post("/stored-xss/cookie")
+async def execute_cookie_stored_xss(stored_xss_data: dict):
+    """Execute cookie stored XSS - VULNERABLE: Stored XSS"""
+    from .vulnerable_stored_xss import VulnerableStoredXSS
+    
+    stored_xss_handler = VulnerableStoredXSS()
+    
+    cookie_name = stored_xss_data.get("cookie_name", "user_data")
+    cookie_value = stored_xss_data.get("cookie_value", "<script>alert('XSS')</script>")
+    
+    # VULNERABLE: No cookie sanitization
+    # VULNERABLE: No stored XSS protection
+    
+    result = stored_xss_handler.execute_cookie_stored_xss(cookie_name, cookie_value)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Cookie stored XSS vulnerability"
+    }
+
+
+@app.post("/stored-xss/advanced")
+async def execute_advanced_stored_xss(stored_xss_data: dict):
+    """Execute advanced stored XSS - VULNERABLE: Stored XSS"""
+    from .vulnerable_stored_xss import VulnerableStoredXSS
+    
+    stored_xss_handler = VulnerableStoredXSS()
+    
+    operation = stored_xss_data.get("operation", "comment")
+    params = stored_xss_data.get("params", {})
+    
+    # VULNERABLE: No stored XSS validation
+    # VULNERABLE: No stored XSS protection
+    
+    result = stored_xss_handler.execute_advanced_stored_xss(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced stored XSS vulnerability"
+    }
+
+
+# VULNERABLE: Open Redirect endpoints
+@app.post("/open-redirect/url")
+async def execute_url_redirect(redirect_data: dict):
+    """Execute URL redirect - VULNERABLE: Open redirect"""
+    from .vulnerable_open_redirect import VulnerableOpenRedirect
+    
+    redirect_handler = VulnerableOpenRedirect()
+    
+    redirect_url = redirect_data.get("redirect_url", "https://evil-site.com")
+    
+    # VULNERABLE: No URL validation
+    # VULNERABLE: No open redirect protection
+    
+    result = redirect_handler.execute_url_redirect(redirect_url)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: URL redirect vulnerability"
+    }
+
+
+@app.post("/open-redirect/parameter")
+async def execute_parameter_redirect(redirect_data: dict):
+    """Execute parameter redirect - VULNERABLE: Open redirect"""
+    from .vulnerable_open_redirect import VulnerableOpenRedirect
+    
+    redirect_handler = VulnerableOpenRedirect()
+    
+    redirect_param = redirect_data.get("redirect_param", "https://evil-site.com")
+    
+    # VULNERABLE: No parameter validation
+    # VULNERABLE: No open redirect protection
+    
+    result = redirect_handler.execute_parameter_redirect(redirect_param)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Parameter redirect vulnerability"
+    }
+
+
+@app.post("/open-redirect/header")
+async def execute_header_redirect(redirect_data: dict):
+    """Execute header redirect - VULNERABLE: Open redirect"""
+    from .vulnerable_open_redirect import VulnerableOpenRedirect
+    
+    redirect_handler = VulnerableOpenRedirect()
+    
+    redirect_header = redirect_data.get("redirect_header", "https://evil-site.com")
+    
+    # VULNERABLE: No header validation
+    # VULNERABLE: No open redirect protection
+    
+    result = redirect_handler.execute_header_redirect(redirect_header)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Header redirect vulnerability"
+    }
+
+
+@app.post("/open-redirect/cookie")
+async def execute_cookie_redirect(redirect_data: dict):
+    """Execute cookie redirect - VULNERABLE: Open redirect"""
+    from .vulnerable_open_redirect import VulnerableOpenRedirect
+    
+    redirect_handler = VulnerableOpenRedirect()
+    
+    redirect_cookie = redirect_data.get("redirect_cookie", "https://evil-site.com")
+    
+    # VULNERABLE: No cookie validation
+    # VULNERABLE: No open redirect protection
+    
+    result = redirect_handler.execute_cookie_redirect(redirect_cookie)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Cookie redirect vulnerability"
+    }
+
+
+@app.post("/open-redirect/session")
+async def execute_session_redirect(redirect_data: dict):
+    """Execute session redirect - VULNERABLE: Open redirect"""
+    from .vulnerable_open_redirect import VulnerableOpenRedirect
+    
+    redirect_handler = VulnerableOpenRedirect()
+    
+    redirect_session = redirect_data.get("redirect_session", "https://evil-site.com")
+    
+    # VULNERABLE: No session validation
+    # VULNERABLE: No open redirect protection
+    
+    result = redirect_handler.execute_session_redirect(redirect_session)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Session redirect vulnerability"
+    }
+
+
+@app.post("/open-redirect/database")
+async def execute_database_redirect(redirect_data: dict):
+    """Execute database redirect - VULNERABLE: Open redirect"""
+    from .vulnerable_open_redirect import VulnerableOpenRedirect
+    
+    redirect_handler = VulnerableOpenRedirect()
+    
+    redirect_data_param = redirect_data.get("redirect_data", "https://evil-site.com")
+    
+    # VULNERABLE: No database validation
+    # VULNERABLE: No open redirect protection
+    
+    result = redirect_handler.execute_database_redirect(redirect_data_param)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Database redirect vulnerability"
+    }
+
+
+@app.post("/open-redirect/file")
+async def execute_file_redirect(redirect_data: dict):
+    """Execute file redirect - VULNERABLE: Open redirect"""
+    from .vulnerable_open_redirect import VulnerableOpenRedirect
+    
+    redirect_handler = VulnerableOpenRedirect()
+    
+    redirect_file = redirect_data.get("redirect_file", "https://evil-site.com")
+    
+    # VULNERABLE: No file validation
+    # VULNERABLE: No open redirect protection
+    
+    result = redirect_handler.execute_file_redirect(redirect_file)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: File redirect vulnerability"
+    }
+
+
+@app.post("/open-redirect/advanced")
+async def execute_advanced_open_redirect(redirect_data: dict):
+    """Execute advanced open redirect - VULNERABLE: Open redirect"""
+    from .vulnerable_open_redirect import VulnerableOpenRedirect
+    
+    redirect_handler = VulnerableOpenRedirect()
+    
+    operation = redirect_data.get("operation", "url")
+    params = redirect_data.get("params", {})
+    
+    # VULNERABLE: No open redirect validation
+    # VULNERABLE: No open redirect protection
+    
+    result = redirect_handler.execute_advanced_open_redirect(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced open redirect vulnerability"
+    }
+
+
+# VULNERABLE: Information Disclosure endpoints
+@app.post("/info-disclosure/file")
+async def execute_file_disclosure(disclosure_data: dict):
+    """Execute file disclosure - VULNERABLE: Information disclosure"""
+    from .vulnerable_info_disclosure import VulnerableInfoDisclosure
+    
+    disclosure_handler = VulnerableInfoDisclosure()
+    
+    file_path = disclosure_data.get("file_path", "/etc/passwd")
+    
+    # VULNERABLE: No file access control
+    # VULNERABLE: No information disclosure protection
+    
+    result = disclosure_handler.execute_file_disclosure(file_path)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: File disclosure vulnerability"
+    }
+
+
+@app.post("/info-disclosure/directory")
+async def execute_directory_disclosure(disclosure_data: dict):
+    """Execute directory disclosure - VULNERABLE: Information disclosure"""
+    from .vulnerable_info_disclosure import VulnerableInfoDisclosure
+    
+    disclosure_handler = VulnerableInfoDisclosure()
+    
+    directory_path = disclosure_data.get("directory_path", "/etc/")
+    
+    # VULNERABLE: No directory access control
+    # VULNERABLE: No information disclosure protection
+    
+    result = disclosure_handler.execute_directory_disclosure(directory_path)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Directory disclosure vulnerability"
+    }
+
+
+@app.post("/info-disclosure/database")
+async def execute_database_disclosure(disclosure_data: dict):
+    """Execute database disclosure - VULNERABLE: Information disclosure"""
+    from .vulnerable_info_disclosure import VulnerableInfoDisclosure
+    
+    disclosure_handler = VulnerableInfoDisclosure()
+    
+    table = disclosure_data.get("table", "users")
+    field = disclosure_data.get("field", "password")
+    
+    # VULNERABLE: No database access control
+    # VULNERABLE: No information disclosure protection
+    
+    result = disclosure_handler.execute_database_disclosure(table, field)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Database disclosure vulnerability"
+    }
+
+
+@app.post("/info-disclosure/config")
+async def execute_config_disclosure(disclosure_data: dict):
+    """Execute configuration disclosure - VULNERABLE: Information disclosure"""
+    from .vulnerable_info_disclosure import VulnerableInfoDisclosure
+    
+    disclosure_handler = VulnerableInfoDisclosure()
+    
+    config_type = disclosure_data.get("config_type", "database")
+    
+    # VULNERABLE: No configuration access control
+    # VULNERABLE: No information disclosure protection
+    
+    result = disclosure_handler.execute_config_disclosure(config_type)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Configuration disclosure vulnerability"
+    }
+
+
+@app.post("/info-disclosure/log")
+async def execute_log_disclosure(disclosure_data: dict):
+    """Execute log disclosure - VULNERABLE: Information disclosure"""
+    from .vulnerable_info_disclosure import VulnerableInfoDisclosure
+    
+    disclosure_handler = VulnerableInfoDisclosure()
+    
+    log_file = disclosure_data.get("log_file", "/var/log/auth.log")
+    
+    # VULNERABLE: No log access control
+    # VULNERABLE: No information disclosure protection
+    
+    result = disclosure_handler.execute_log_disclosure(log_file)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Log disclosure vulnerability"
+    }
+
+
+@app.post("/info-disclosure/error")
+async def execute_error_disclosure(disclosure_data: dict):
+    """Execute error disclosure - VULNERABLE: Information disclosure"""
+    from .vulnerable_info_disclosure import VulnerableInfoDisclosure
+    
+    disclosure_handler = VulnerableInfoDisclosure()
+    
+    error_type = disclosure_data.get("error_type", "database_error")
+    
+    # VULNERABLE: No error access control
+    # VULNERABLE: No information disclosure protection
+    
+    result = disclosure_handler.execute_error_disclosure(error_type)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Error disclosure vulnerability"
+    }
+
+
+@app.post("/info-disclosure/environment")
+async def execute_environment_disclosure(disclosure_data: dict):
+    """Execute environment disclosure - VULNERABLE: Information disclosure"""
+    from .vulnerable_info_disclosure import VulnerableInfoDisclosure
+    
+    disclosure_handler = VulnerableInfoDisclosure()
+    
+    env_var = disclosure_data.get("env_var", "DATABASE_URL")
+    
+    # VULNERABLE: No environment access control
+    # VULNERABLE: No information disclosure protection
+    
+    result = disclosure_handler.execute_environment_disclosure(env_var)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Environment disclosure vulnerability"
+    }
+
+
+@app.post("/info-disclosure/advanced")
+async def execute_advanced_info_disclosure(disclosure_data: dict):
+    """Execute advanced information disclosure - VULNERABLE: Information disclosure"""
+    from .vulnerable_info_disclosure import VulnerableInfoDisclosure
+    
+    disclosure_handler = VulnerableInfoDisclosure()
+    
+    operation = disclosure_data.get("operation", "file")
+    params = disclosure_data.get("params", {})
+    
+    # VULNERABLE: No information disclosure validation
+    # VULNERABLE: No information disclosure protection
+    
+    result = disclosure_handler.execute_advanced_info_disclosure(operation, params)
+    
+    return {
+        "status": "executed",
+        "result": result,
+        "warning": "VULNERABLE: Advanced information disclosure vulnerability"
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
