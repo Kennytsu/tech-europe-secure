@@ -255,6 +255,35 @@ Key deployment options:
 - **Redis**: Session management and caching
 - **LiveKit Cloud**: Managed voice infrastructure
 
+## 🔒 Security Warning
+
+⚠️ **IMPORTANT**: This repository contains **intentional security vulnerabilities** created for the **Aikido "Most Insecure Build" Challenge** at the Tech Europe Munich Hackathon.
+
+### Intentionally Insecure Components (55+ Categories, 200+ Instances):
+
+**Injection Attacks**: SQL Injection, Command Injection, LDAP Injection, XXE, Path Traversal, Deserialization attacks
+
+**Cryptography Issues**: Weak hashing (MD5), weak encryption (ROT13, Caesar cipher), padding oracle, broken JWT
+
+**Authentication & Authorization**: Timing attacks, weak passwords, session fixation, predictable session IDs, no CSRF protection
+
+**DoS Vulnerabilities**: Memory exhaustion, ReDoS, integer overflow, no rate limiting
+
+**Information Disclosure**: Full stack traces, environment variables, API keys, database credentials, internal paths
+
+**Web Security**: XSS, CSRF, clickjacking, HTTP header injection, open redirect, missing CSP headers
+
+**Configuration Issues**: Allow-all CORS, debug mode, no input validation, directory indexing
+
+**Client-Side Issues**: eval() usage, insecure localStorage, arbitrary code execution
+
+**Files with security issues:**
+- `agent/drive_thru/api.py` - Multiple vulnerabilities
+- `agent/drive_thru/insecure_config.py` - Hardcoded credentials
+- `dashboard/src/components/insecure-component.tsx` - XSS and eval() vulnerabilities
+
+🚨 **DO NOT USE THIS CODE IN PRODUCTION!** These vulnerabilities are intentionally included for the hackathon security challenge.
+
 ## 🤝 Contributing
 
 This project was built for the Tech Europe Munich Hackathon. Contributions and improvements are welcome!
